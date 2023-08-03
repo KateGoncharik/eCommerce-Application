@@ -1,10 +1,13 @@
 {
     "parser": "@typescript-eslint/parser",
-    "plugins": ["prettier", "import", "@typescript-eslint"],
+    "plugins": [
+        "prettier",
+        "import",
+        "@typescript-eslint"
+    ],
     "extends": [
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
-        "plugin:prettier/recommended",
         "prettier"
     ],
     "parserOptions": {
@@ -17,10 +20,10 @@
         "node": true
     },
     "rules": {
-        "@typescript-eslint/no-explicit-any": 2,
+        "@typescript-eslint/no-explicit-any": "error",
         "@typescript-eslint/no-var-requires": "off",
         "no-debugger": "off",
-        "no-console": 0,
+        "no-console": "off",
         "class-methods-use-this": "off"
     }
 }
