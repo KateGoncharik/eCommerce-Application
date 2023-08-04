@@ -1,0 +1,4 @@
+{
+  "*.ts": ["npm run lint", "prettier --write"],
+  "*.{css,scss}": "stylelint"
+}
