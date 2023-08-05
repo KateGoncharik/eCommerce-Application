@@ -5,7 +5,7 @@
 <br />
 <div align="center">
   <a href ="https://github.com/KateGoncharik/eCommerce-Application.git" target="_blank">
-    <img src="./images/logo1.jpg" alt="Logo" width="100" height="100">
+    <img src="./src/assets/icons/logo.jpg" alt="Logo" width="100" height="100">
   </a>
 
   <h1 align="center">"𝕎𝕠𝕟𝕕𝕖𝕣𝕝𝕒𝕟𝕕- 𝕓𝕒𝕝𝕠𝕠𝕟𝕤 𝕒𝕟𝕕 𝕡𝕒𝕣𝕥𝕪 𝕟𝕖𝕖𝕕𝕤"</h1>
