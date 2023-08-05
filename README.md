@@ -50,7 +50,7 @@ Users can browse through a vast range of products, view detailed descriptions, a
 
 An important aspect of our application is that it's responsive, ensuring it looks great on various devices with a minimum resolution of 320px. This feature makes the shopping experience enjoyable, irrespective of the device users prefer.
 
-####[Link to task](https://github.com/rolling-scopes-school/tasks/tree/master/tasks/eCommerce-Application)
+#### [Link to task](https://github.com/rolling-scopes-school/tasks/tree/master/tasks/eCommerce-Application)
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
 
