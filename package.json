@@ -7,10 +7,10 @@
     "start": "webpack serve --open --config ./webpack.config.js --env mode=dev",
     "build": "webpack --config ./webpack.config.js --env mode=prod",
     "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint --fix --ext .ts .",
     "test": "jest",
     "prepare": "husky install",
     "stylelint": "stylelint src/**/*.scss",
-    "lint:fix": "eslint --fix --ext .ts .",
     "prettier": "npx prettier --check ."
   },
   "repository": {
