@@ -5,10 +5,10 @@
 <br />
 <div align="center">
   <a href ="https://github.com/KateGoncharik/eCommerce-Application.git" target="_blank">
-    <img src="./src/assets/icons/logo.jpg" alt="Logo" width="100" height="100">
+    <img src="./src/assets/icons/logo.png" alt="Logo" width="140" height="100">
   </a>
 
-  <h1 align="center">"𝕎𝕠𝕟𝕕𝕖𝕣𝕝𝕒𝕟𝕕- 𝕓𝕒𝕝𝕠𝕠𝕟𝕤 𝕒𝕟𝕕 𝕡𝕒𝕣𝕥𝕪 𝕟𝕖𝕖𝕕𝕤"</h1>
+  <h1 align="center">𝕎𝕠𝕟𝕕𝕖𝕣𝕝𝕒𝕟𝕕 - 𝕓𝕒𝕝𝕠𝕠𝕟𝕤 𝕒𝕟𝕕 𝕡𝕒𝕣𝕥𝕪 𝕟𝕖𝕖𝕕𝕤</h1>
 
 </div>
 
@@ -32,7 +32,6 @@
     </li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#contact">Contact</a></li>
   </ol>
 </details>
 
@@ -44,23 +43,22 @@
 ***Completed: September 2023***
 
 #### Wonderland -  online store for modern, stylish party decorations and supplies.
-#### Team project by [Kate](https://github.com/KateGoncharik), [Irina](https://github.com/Irina-Grebennikova) and [Sandr](https://github.com/Sardn).
+#### Team project by [Kate](https://github.com/KateGoncharik) and [Irina](https://github.com/Irina-Grebennikova).
 
 Users can browse through a vast range of products, view detailed descriptions, add their favorite items to the basket, and proceed to checkout . It includes features such as user registration and login, product search, product categorization, and sorting to make the shopping experience more streamlined and convenient.
 
 An important aspect of our application is that it's responsive, ensuring it looks great on various devices with a minimum resolution of 320px. This feature makes the shopping experience enjoyable, irrespective of the device users prefer.
 
-#### [Link to task](https://github.com/rolling-scopes-school/tasks/tree/master/tasks/eCommerce-Application)
-
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+#### [Link to task from RS School](https://github.com/rolling-scopes-school/tasks/tree/master/tasks/eCommerce-Application)
 
 ### Functionality:
 
 - Application is SPA
+- Product cards
+- Products by category
 - Registration and login
 - Basket for goods
+- User Profile
 
 ### Technology stack
 
@@ -87,19 +85,18 @@ To get a local copy up and running follow these simple example steps.
 
 _Below is an example of how to install and configure the application._
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
+1. Clone the repo
    ```sh
    git clone https://github.com/KateGoncharik/eCommerce-Application.git
    ```
-3. Install NPM packages
+2. Install NPM packages
    ```sh
    npm install
    ```
-4. Start project
-```sh
+3. Start project
+   ```sh
    npm run start
-```
+   ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -108,11 +105,11 @@ _Below is an example of how to install and configure the application._
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Space, project use. Additional screenshots, code samples, and demos work well in this space.
-
 **Available scripts**:
 
-* **Webpack** "build": "webpack --config ./webpack.config.js --env mode=prod"
+* **Webpack**  
+  * "build": "webpack --config ./webpack.config.js --env mode=prod"  
+  * "start": "webpack serve --open --config ./webpack.config.js --env mode=dev",
 * **Eslint** "lint:fix": "eslint --fix --ext .ts ."
 * **Stylelint** "stylelint": "stylelint */.scss"
 * **Prettier** "prettier": "npx prettier --check ."
@@ -145,20 +142,9 @@ Don't forget to give the project a star! Thanks again!
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [contributors-shield]: https://img.shields.io/github/contributors/othneildrew/Best-README-Template.svg?style=for-the-badge
 [contributors-url]: https://github.com/othneildrew/Best-README-Template/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/othneildrew/Best-README-Template.svg?style=for-the-badge
-[forks-url]: https://github.com/othneildrew/Best-README-Template/network/members
-[stars-shield]: https://img.shields.io/github/stars/othneildrew/Best-README-Template.svg?style=for-the-badge
-[stars-url]: https://github.com/othneildrew/Best-README-Template/stargazers
-[issues-shield]: https://img.shields.io/github/issues/othneildrew/Best-README-Template.svg?style=for-the-badge
-[issues-url]: https://github.com/othneildrew/Best-README-Template/issues
-[license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
-[license-url]: https://github.com/othneildrew/Best-README-Template/blob/master/LICENSE.txt
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/othneildrew
 [product-screenshot]: images/screenshot.png
 [NPM]: https://img.shields.io/badge/NPM-%23CB3837.svg?style=for-the-badge&logo=npm&logoColor=white
 [NPM-url]: https://www.npmjs.com
-[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
 [HTML5]: https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white
 [HTML5-url]: https://html.com/html5/
 [SASS]: https://img.shields.io/badge/SASS-hotpink.svg?style=for-the-badge&logo=SASS&logoColor=white
@@ -167,8 +153,5 @@ Don't forget to give the project a star! Thanks again!
 [Jest-url]: https://jestjs.io
 [TypeScript]: https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white
 [TypeScript-url]: https://www.typescriptlang.org
-[Svelte.dev]: https://img.shields.io/badge/Svelte-4A4A55?style=for-the-badge&logo=svelte&logoColor=FF3E00
-[Svelte-url]: https://svelte.dev/
-[Laravel.com]: https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white
 [Webpack]: https://img.shields.io/badge/webpack-%238DD6F9.svg?style=for-the-badge&logo=webpack&logoColor=black
 [Webpack-url]: https://webpack.js.org
