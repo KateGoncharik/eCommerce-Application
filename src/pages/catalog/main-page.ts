@@ -1,4 +1,4 @@
-import Page from '../../templates/Page';
+import { Page } from '../../templates/page';
 
 class MainPage extends Page {
   protected textObject = {
@@ -6,4 +6,4 @@ class MainPage extends Page {
   };
 }
 
-export default MainPage;
+export { MainPage };

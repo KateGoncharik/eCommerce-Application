@@ -1,4 +1,4 @@
-import Page from '../../templates/Page';
+import { Page } from '../../templates/page';
 
 class RegistrationPage extends Page {
   protected textObject = {
