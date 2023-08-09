@@ -1,10 +1,10 @@
 import { bindRoutes } from './router';
-import { Route } from './types/route';
-import { Page } from './templates/page';
-import { MainPage } from './pages/catalog/main-page';
-import { LoginPage } from './pages/service-pages/login-page';
-import { RegistrationPage } from './pages/service-pages/registration-page';
-import { NotFoundPage } from './pages/service-pages/404-page';
+import { Route } from '@customTypes/route';
+import { Page } from '@templates/page';
+import { MainPage } from '@pages/main-page';
+import { LoginPage } from '@servicePages/login-page';
+import { RegistrationPage } from '@servicePages/registration-page';
+import { NotFoundPage } from '@servicePages/404-page';
 
 const main = document.createElement('main');
 const routes: Record<Route, Page> = {
