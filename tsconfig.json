@@ -10,23 +10,26 @@
     "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
     "paths": {
+      "@app/*": [
+        "./src/app/*"
+      ],
       "@components/*": [
-        "./src/ts/components/*"
+        "./src/app/components/*"
       ],
       "@templates/*": [
-        "./src/ts/templates/*"
+        "./src/app/templates/*"
       ],
       "@customTypes/*": [
-        "./src/ts/types/*"
+        "./src/app/types/*"
       ],
       "@pages/*": [
-        "./src/ts/pages/*"
+        "./src/app/pages/*"
       ],
       "@catalog/*": [
-        "./src/ts/pages/catalog/*"
+        "./src/app/pages/catalog/*"
       ],
       "@servicePages/*": [
-        "./src/ts/pages/service-pages/*"
+        "./src/app/pages/service-pages/*"
       ],
       "@fonts/*": [
         "./src/assets/fonts/*"
