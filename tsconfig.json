@@ -9,6 +9,38 @@
     "module": "ES2022",
     "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
+    "paths": {
+      "@app/*": [
+        "./src/app/*"
+      ],
+      "@components/*": [
+        "./src/app/components/*"
+      ],
+      "@templates/*": [
+        "./src/app/templates/*"
+      ],
+      "@customTypes/*": [
+        "./src/app/types/*"
+      ],
+      "@pages/*": [
+        "./src/app/pages/*"
+      ],
+      "@catalog/*": [
+        "./src/app/pages/catalog/*"
+      ],
+      "@servicePages/*": [
+        "./src/app/pages/service-pages/*"
+      ],
+      "@fonts/*": [
+        "./src/assets/fonts/*"
+      ],
+      "@icons/*": [
+        "./src/assets/icons/*"
+      ],
+      "@images/*": [
+        "./src/assets/images/*"
+      ],
+    }
   },
   "files": [
     "src/index.ts"

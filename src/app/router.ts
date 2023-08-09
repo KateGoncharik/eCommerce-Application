@@ -1,6 +1,6 @@
 import Navigo from 'navigo';
-import { Page } from './templates/page';
-import { Route } from './types/route';
+import { Page } from '@templates/page';
+import { Route } from '@customTypes/route';
 
 const router = new Navigo('/');
 
