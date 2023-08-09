@@ -7,11 +7,11 @@ import { RegistrationPage } from './pages/service-pages/registration-page';
 import { NotFoundPage } from './pages/service-pages/404-page';
 
 const main = document.createElement('main');
-const routes: Record<string, Page> = {
-  '/': new MainPage(),
-  '/login': new LoginPage(),
-  '/registration': new RegistrationPage(),
-  '404': new NotFoundPage(),
+const routes: Record<Route, Page> = {
+  [Route.Main]: new MainPage(),
+  [Route.Login]: new LoginPage(),
+  [Route.Registration]: new RegistrationPage(),
+  [Route.NotFound]: new NotFoundPage(),
 };
 
 class App {
@@ -24,6 +24,9 @@ class App {
   private createHeader(): HTMLElement {
     const header = document.createElement('header');
     for (const [pageName, pageLink] of Object.entries(Route)) {
+      if (pageName === 'NotFound') {
+        continue;
+      }
       const link = document.createElement('a');
       link.href = pageLink;
       link.dataset.navigo = '';

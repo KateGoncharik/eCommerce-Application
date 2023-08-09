@@ -4,7 +4,7 @@ import { Route } from './types/route';
 
 const router = new Navigo('/');
 
-function bindRoutes(routes: Record<string, Page>): void {
+function bindRoutes(routes: Record<Route, Page>): void {
   router
     .on(Route.Main, () => {
       const page = routes[Route.Main];
@@ -19,7 +19,7 @@ function bindRoutes(routes: Record<string, Page>): void {
       page.render();
     })
     .notFound(() => {
-      const page = routes['404'];
+      const page = routes[Route.NotFound];
       page.render();
     })
     .resolve();
