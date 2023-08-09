@@ -1,4 +1,5 @@
 import { bindRoutes } from './router';
+import { Route } from './types/route';
 import { Page } from './templates/page';
 import { MainPage } from './pages/catalog/main-page';
 import { LoginPage } from './pages/service-pages/login-page';
@@ -12,31 +13,23 @@ const routes: Record<string, Page> = {
   '/registration': new RegistrationPage(),
   '404': new NotFoundPage(),
 };
-const headerLinks: Record<string, string> = {
-  Main: '/',
-  Login: '/login',
-  Registration: '/registration',
-};
 
 class App {
   public run(): void {
     const wrapper = this.build();
     document.body.append(wrapper);
-    const pathname = window.location.pathname;
     bindRoutes(routes);
-    const page = routes[pathname];
-    page.render();
   }
 
   private createHeader(): HTMLElement {
     const header = document.createElement('header');
-    Object.keys(headerLinks).forEach((pageName) => {
+    for (const [pageName, pageLink] of Object.entries(Route)) {
       const link = document.createElement('a');
-      link.href = headerLinks[pageName];
+      link.href = pageLink;
       link.dataset.navigo = '';
       link.textContent = pageName;
       header.append(link);
-    });
+    }
     return header;
   }
 
