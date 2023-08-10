@@ -58,6 +58,7 @@
     "webpack-merge": "^5.7.3"
   },
   "dependencies": {
-    "navigo": "^8.11.1"
+    "navigo": "^8.11.1",
+    "redom": "^3.29.1"
   }
 }
