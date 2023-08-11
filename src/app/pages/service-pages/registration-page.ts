@@ -11,10 +11,12 @@ class RegistrationPage extends Page {
     const form = el('.form');
     const blockInput = this.createInput();
     const title = this.header();
+    const blockButton = this.createButton();
 
     mount(blockForm, form);
     mount(form, title);
     mount(form, blockInput);
+    mount(form, blockButton);
     return blockForm;
   }
 
@@ -41,6 +43,16 @@ class RegistrationPage extends Page {
 
     blockTitle.textContent = 'Sign up';
     return blockTitle;
+  }
+
+  private createButton(): HTMLElement {
+    const blockInput = el('.blockButton');
+    const button = el('button', { class: 'btn__registration' });
+
+    button.textContent = 'Join us';
+
+    mount(blockInput, button);
+    return blockInput;
   }
 
   protected build(): HTMLElement {
