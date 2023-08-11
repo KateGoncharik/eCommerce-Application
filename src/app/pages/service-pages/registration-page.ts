@@ -10,8 +10,10 @@ class RegistrationPage extends Page {
     const blockForm = el('.block-form');
     const form = el('.form');
     const blockInput = this.createInput();
+    const title = this.header();
 
     mount(blockForm, form);
+    mount(form, title);
     mount(form, blockInput);
     return blockForm;
   }
@@ -33,6 +35,14 @@ class RegistrationPage extends Page {
     mount(blockPassword, passwordInput);
     return blockInput;
   }
+
+  protected header(): HTMLElement {
+    const blockTitle = el('h2', { class: 'header__registration' });
+
+    blockTitle.textContent = 'Sign up';
+    return blockTitle;
+  }
+
   protected build(): HTMLElement {
     const wrapper = el('.form-wrapper');
     const form = this.createForm();
