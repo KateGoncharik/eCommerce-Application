@@ -15,7 +15,7 @@ abstract class Page {
     return title;
   }
 
-  private build(): HTMLElement {
+  protected build(): HTMLElement {
     const container = document.createElement('div');
     const title = this.createTitle();
     container.append(title);
