@@ -1,0 +1,49 @@
+@font-face {
+  font-family: Gilroy;
+  src:
+    local('Gilroy Regular'),
+    local('Gilroy-Regular'),
+    url('@fonts/Gilroy-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Gilroy;
+  src:
+    local('Gilroy Bold'),
+    local('Gilroy-Bold'),
+    url('@fonts/Gilroy-Bold.woff2') format('woff2');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Gilroy;
+  src:
+    local('Gilroy Light'),
+    local('Gilroy-Light'),
+    url('@fonts/Gilroy-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Gilroy;
+  src:
+    local('Gilroy Medium'),
+    local('Gilroy-Medium'),
+    url('@fonts/Gilroy-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Gilroy;
+  src:
+    local('Gilroy Regular Italic'),
+    local('Gilroy-RegularItalic'),
+    url('@fonts/Gilroy-RegularItalic.woff2') format('woff2');
+  font-weight: normal;
+  font-style: italic;
+}
