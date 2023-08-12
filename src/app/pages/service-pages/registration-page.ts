@@ -24,10 +24,10 @@ class RegistrationPage extends Page {
     const blockInput = el('.inputs-block');
     // const blockName = el('.block-input-name');
     // const blockPassword = el('.block-input-password');
-    const nameInput = el('input', { class: 'name-input input', type: 'text', placeholder: 'name' });
+    const loginInput = el('input', { class: 'login-input input', type: 'text', placeholder: 'name' });
     const passwordInput = el('input', { class: 'password-input input', type: 'password', placeholder: 'password' });
 
-    mount(blockInput, nameInput);
+    mount(blockInput, loginInput);
     mount(blockInput, passwordInput);
     // mount(blockName, nameInput);
     // mount(blockPassword, passwordInput);
