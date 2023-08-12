@@ -1,5 +1,6 @@
+
 .form-wrapper {
-    width: 60%;
+    width: 70%;
     margin: 0 auto;
     border: 1px solid black;
     background-color: #fff;
@@ -8,45 +9,45 @@
 .form-block {
     display: flex;
     justify-content: center;
-    width: 70%;
+    width: 80%;
     min-height: 400px;
     margin: 0 auto;
 }
 
+
 .form {
     width: 100%;
-    min-height: 75%;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
+    gap: 16px;
 }
+
 
 .inputs-block {
     margin: 0 auto;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    max-width: 60%;
+    width: 100%;
     min-height: 100px;
+    gap: 16px;
 }
 
-.email-input {
-    width: 90%;
-    border: 1px solid #ccc;
-}
-
+.email-input,
 .password-input {
-    width: 90%;
+    width: 100%;
+    height: 56px;
+    padding: 2%;
     border: 1px solid #ccc;
 }
 
 .form-title {
+    align-self: start;
     font-family: Gilroy, serif;
-    font-size: 50px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 120%;
+
+    @include font(56px, 120%, 600, normal);
 }
 
 .form-button {
@@ -55,10 +56,40 @@
     color: #fff;
     height: 56px;
     font-family: Gilroy, serif;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 120%;
+
+    @include font(16px, 120%, 500, normal);
+    
     letter-spacing: 0.48px;
     text-transform: uppercase;
-  }
+}
+
+@media (width <= 900px) {
+    .form-wrapper {
+      max-width: 80%;
+    }
+
+    .form-block {
+      max-width: 85%;
+    }
+}
+  
+@media (width <= 500px) {
+    .form-wrapper {
+      min-width: 95%;
+    }
+
+    .form-title {
+      font-size: 34px;
+    }
+
+    .form-button {
+      font-size: 14px;
+    }
+    
+    .email-input,
+    .password-input,
+    .form-button {
+        max-height: 46px;
+    }
+}
+
