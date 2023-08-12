@@ -22,15 +22,11 @@ class RegistrationPage extends Page {
 
   private createInput(): HTMLElement {
     const blockInput = el('.inputs-block');
-    // const blockName = el('.block-input-name');
-    // const blockPassword = el('.block-input-password');
     const emailInput = el('input', { class: 'email-input input', type: 'text', placeholder: 'email' });
     const passwordInput = el('input', { class: 'password-input input', type: 'password', placeholder: 'password' });
 
     mount(blockInput, emailInput);
     mount(blockInput, passwordInput);
-    // mount(blockName, nameInput);
-    // mount(blockPassword, passwordInput);
     return blockInput;
   }
 
@@ -42,12 +38,8 @@ class RegistrationPage extends Page {
   }
 
   private createButton(): HTMLElement {
-    // const blockButton = el('.blockButton');
     const button = el('button', { class: 'form-button btn' });
-
     button.textContent = 'Join us';
-
-    // mount(blockButton, button);
     return button;
   }
 
