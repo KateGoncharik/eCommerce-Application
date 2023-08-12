@@ -22,7 +22,7 @@ const baseConfig = {
         use: ['style-loader', 'css-loader', 'sass-loader'],
       },
       {
-        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        test: /.(png|svg|jpg|jpeg|gif|woff(2)?)$/i,
         type: 'asset/resource',
       },
       {
