@@ -37,6 +37,7 @@
     "eslint-import-resolver-typescript": "^3.5.5",
     "eslint-plugin-import": "^2.23.3",
     "eslint-webpack-plugin": "^4.0.1",
+    "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.5.3",
     "husky": "^8.0.3",
     "jest": "^29.6.2",
@@ -58,6 +59,7 @@
     "webpack-merge": "^5.7.3"
   },
   "dependencies": {
+    "font-awesome": "^4.7.0",
     "navigo": "^8.11.1",
     "redom": "^3.29.1"
   }
