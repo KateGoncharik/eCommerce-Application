@@ -56,11 +56,10 @@
     color: #fff;
     height: 56px;
     font-family: Gilroy, serif;
-
-    @include font(16px, 120%, 500, normal);
-    
     letter-spacing: 0.48px;
     text-transform: uppercase;
+
+    @include font(16px, 120%, 500, normal);
 }
 
 @media (width <= 900px) {
