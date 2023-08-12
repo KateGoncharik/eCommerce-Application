@@ -29,22 +29,22 @@ class LoginPage extends Page {
 
   private createInputs(): HTMLElement {
     const inputsBlock = el('.inputs-block');
-    const blockName = el('.name-input');
-    const blockPassword = el('.password-input');
+    const blockEmail = el('.login-input-block');
+    const blockPassword = el('.login-input-block');
     const emailInput = el('input', {
-      class: 'input__registration-name',
+      class: 'login-input',
       type: 'text',
       placeholder: 'login or email',
     });
     const passwordInput = el('input', {
-      class: 'input__registration-password',
+      class: 'login-input',
       type: 'password',
       placeholder: 'password',
     });
 
-    mount(inputsBlock, blockName);
+    mount(inputsBlock, blockEmail);
     mount(inputsBlock, blockPassword);
-    mount(blockName, emailInput);
+    mount(blockEmail, emailInput);
     mount(blockPassword, passwordInput);
     return inputsBlock;
   }
