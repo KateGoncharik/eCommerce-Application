@@ -1,5 +1,6 @@
 import { Page } from '@templates/page';
 import { el, mount } from 'redom';
+import { z } from 'zod';
 
 class LoginPage extends Page {
   protected textObject = {
@@ -56,10 +57,23 @@ class LoginPage extends Page {
     return button;
   }
 
+  protected isFormValid(userData: { name: string; email: string }): boolean {
+    const formSchema = z.object({
+      email: z.string().email('Email is incorrect').trim().includes('@'),
+      password: z.string().min(8).trim(),
+    });
+    const validationResult = formSchema.safeParse(userData);
+    if (!validationResult.success) {
+      const errors = validationResult.error.format();
+      console.log(errors);
+    }
+    return true;
+  }
+
   protected build(): HTMLElement {
     const wrapper = el('.form-wrapper');
     const form = this.createForm();
-
+    this.isFormValid({ name: '1', email: 'wmm@ww.sds' });
     mount(wrapper, form);
     return wrapper;
   }
