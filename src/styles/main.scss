@@ -1,4 +1,9 @@
+$black: #121212;
+$hover-color: #777;
+
 @import 'fonts';
 @import 'null';
+@import 'general';
+@import 'header';
 @import 'login-form';
 @import 'registration-form';
