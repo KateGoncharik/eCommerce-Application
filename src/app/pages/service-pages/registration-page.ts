@@ -30,7 +30,7 @@ class RegistrationPage extends Page {
     const streetInput = el('input', { class: 'street-input input', type: 'text', placeholder: 'street' });
     const cityInput = el('input', { class: 'city-input input', type: 'text', placeholder: 'city' });
     const postalCodeInput = el('input', { class: 'postal-code-input input', type: 'text', placeholder: 'postal code' });
-    const countryInput = el('input', { class: 'postal-code-input input', type: 'text', placeholder: 'postal code' });
+    const countryInput = el('input', { class: 'country-code-input input', type: 'text', placeholder: 'country' });
 
     mount(blockInput, emailInput);
     mount(blockInput, passwordInput);
