@@ -7,7 +7,7 @@ class RegistrationPage extends Page {
   };
 
   private createForm(): HTMLElement {
-    const blockForm = el('.form-block');
+    const blockForm = el('.registration-form-block');
     const form = el('.form');
     const blockInput = this.createInput();
     const title = this.title();
@@ -24,9 +24,23 @@ class RegistrationPage extends Page {
     const blockInput = el('.inputs-block');
     const emailInput = el('input', { class: 'email-input input', type: 'text', placeholder: 'email' });
     const passwordInput = el('input', { class: 'password-input input', type: 'password', placeholder: 'password' });
+    const firstNameInput = el('input', { class: 'first-nameInput input', type: 'text', placeholder: 'first name' });
+    const lastNameInput = el('input', { class: 'last-nameInput input', type: 'text', placeholder: 'last name' });
+    const dateInput = el('input', { class: 'date-input input', type: 'date', placeholder: 'date' });
+    const streetInput = el('input', { class: 'street-input input', type: 'text', placeholder: 'street' });
+    const cityInput = el('input', { class: 'city-input input', type: 'text', placeholder: 'city' });
+    const postalCodeInput = el('input', { class: 'postal-code-input input', type: 'text', placeholder: 'postal code' });
+    const countryInput = el('input', { class: 'postal-code-input input', type: 'text', placeholder: 'postal code' });
 
     mount(blockInput, emailInput);
     mount(blockInput, passwordInput);
+    mount(blockInput, firstNameInput);
+    mount(blockInput, lastNameInput);
+    mount(blockInput, dateInput);
+    mount(blockInput, streetInput);
+    mount(blockInput, cityInput);
+    mount(blockInput, postalCodeInput);
+    mount(blockInput, countryInput);
     return blockInput;
   }
 
