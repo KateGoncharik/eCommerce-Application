@@ -34,7 +34,7 @@ class LoginPage extends Page {
     const emailInput = el('input', {
       class: 'login-input',
       type: 'text',
-      placeholder: 'login or email',
+      placeholder: 'email',
     });
     const passwordInput = el('input', {
       class: 'login-input',
