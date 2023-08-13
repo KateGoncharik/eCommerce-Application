@@ -9,13 +9,13 @@ abstract class Page {
 
   protected abstract textObject: Record<string, string>;
 
-  private createTitle(): HTMLHeadingElement {
+  protected createTitle(): HTMLHeadingElement {
     const title = document.createElement('h1');
     title.textContent = this.textObject.title;
     return title;
   }
 
-  private build(): HTMLElement {
+  protected build(): HTMLElement {
     const container = document.createElement('div');
     const title = this.createTitle();
     container.append(title);
