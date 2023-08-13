@@ -5,6 +5,7 @@ import { MainPage } from '@pages/main-page';
 import { LoginPage } from '@servicePages/login-page';
 import { RegistrationPage } from '@servicePages/registration-page';
 import { NotFoundPage } from '@servicePages/404-page';
+import { Header } from '@components/header';
 
 const main = document.createElement('main');
 const routes: Record<Route, Page> = {
@@ -22,18 +23,7 @@ class App {
   }
 
   private createHeader(): HTMLElement {
-    const header = document.createElement('header');
-    for (const [pageName, pageLink] of Object.entries(Route)) {
-      if (pageName === 'NotFound') {
-        continue;
-      }
-      const link = document.createElement('a');
-      link.href = pageLink;
-      link.dataset.navigo = '';
-      link.textContent = pageName;
-      header.append(link);
-    }
-    return header;
+    return new Header().create();
   }
 
   private build(): HTMLElement {
