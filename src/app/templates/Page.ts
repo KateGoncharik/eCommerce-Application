@@ -9,7 +9,7 @@ abstract class Page {
 
   protected abstract textObject: Record<string, string>;
 
-  private createTitle(): HTMLHeadingElement {
+  protected createTitle(): HTMLHeadingElement {
     const title = document.createElement('h1');
     title.textContent = this.textObject.title;
     return title;
