@@ -26,7 +26,7 @@ class RegistrationPage extends Page {
     const passwordInput = el('input', { class: 'password-input input', type: 'password', placeholder: 'password' });
     const firstNameInput = el('input', { class: 'first-nameInput input', type: 'text', placeholder: 'first name' });
     const lastNameInput = el('input', { class: 'last-nameInput input', type: 'text', placeholder: 'last name' });
-    const dateInput = el('input', { class: 'date-input input', type: 'date', placeholder: 'date' });
+    const dateOfBirthInput = el('input', { class: 'date-input input', type: 'date', placeholder: 'date' });
     const streetInput = el('input', { class: 'street-input input', type: 'text', placeholder: 'street' });
     const cityInput = el('input', { class: 'city-input input', type: 'text', placeholder: 'city' });
     const postalCodeInput = el('input', { class: 'postal-code-input input', type: 'text', placeholder: 'postal code' });
@@ -36,7 +36,7 @@ class RegistrationPage extends Page {
     mount(blockInput, passwordInput);
     mount(blockInput, firstNameInput);
     mount(blockInput, lastNameInput);
-    mount(blockInput, dateInput);
+    mount(blockInput, dateOfBirthInput);
     mount(blockInput, streetInput);
     mount(blockInput, cityInput);
     mount(blockInput, postalCodeInput);
