@@ -36,10 +36,31 @@
   font-size: 20px;
 }
 
-.login-input {
+.email-input,
+.password-input {
   width: 100%;
   height: 100%;
+  font-family: Gilroy, serif;
   padding: 2%;
+}
+
+.password-visability-block {
+  font-size: 15px;
+  margin: 2%;
+  width: 50%;
+  font-family: Gilroy, serif;
+}
+
+.password-checkbox {
+  margin: 2%;
+}
+
+.email-error-block,
+.password-error-block {
+  font:
+    14px Gilroy,
+    serif;
+  color: red;
 }
 
 .form-header {
