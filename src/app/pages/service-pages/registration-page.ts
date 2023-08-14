@@ -21,7 +21,7 @@ class RegistrationPage extends Page {
   }
 
   private createInput(): HTMLElement {
-    const blockInput = el('.inputs-block');
+    const blockInput = el('.input-block');
     const emailInput = el('input', { class: 'email-input input', type: 'text', placeholder: 'email' });
     const passwordInput = el('input', { class: 'password-input input', type: 'password', placeholder: 'password' });
     const firstNameInput = el('input', { class: 'first-nameInput input', type: 'text', placeholder: 'first name' });
@@ -58,7 +58,7 @@ class RegistrationPage extends Page {
   }
 
   protected build(): HTMLElement {
-    const wrapper = el('.form-wrapper');
+    const wrapper = el('.registration-form-wrapper');
     const form = this.createForm();
 
     mount(wrapper, form);
