@@ -1,11 +1,13 @@
 import { z } from 'zod';
 
-export const loginFormSchema = z.object({
+export const emailSchema = z.object({
   email: z
     .string()
     .email("Email is incorrect. It must contain a domain name and '@' symbol")
     .trim()
     .regex(/^(?! )[A-Za-z0-9.@]*(?<! )/g),
+});
+export const passwordSchema = z.object({
   password: z
     .string()
     .min(8, 'Password must be at least 8 characters long')

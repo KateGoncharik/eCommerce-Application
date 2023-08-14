@@ -55,9 +55,6 @@ class LoginPage extends Page {
 
   private createButton(): HTMLElement {
     const button = el('button', { class: 'form-button', type: 'submit' });
-    document.addEventListener('input', function () {
-      isFormValid();
-    });
     button.textContent = 'Continue';
     return button;
   }
@@ -66,6 +63,7 @@ class LoginPage extends Page {
     const formWrapper = el('div');
     const formBlock = el('.form-block');
     const form = el('form', { name: 'login', class: 'form' });
+    form.addEventListener('input', (event) => isFormValid(event));
     const inputs = this.createInputs();
     const buttonBlock = this.createButton();
     const header = this.createHeader();
@@ -80,8 +78,8 @@ class LoginPage extends Page {
 
   protected build(): HTMLElement {
     const wrapper = el('.form-wrapper');
-    const form = this.createForm();
-    mount(wrapper, form);
+    const formBlock = this.createForm();
+    mount(wrapper, formBlock);
     return wrapper;
   }
 }
