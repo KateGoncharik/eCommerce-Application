@@ -1,7 +1,7 @@
 import { Shemas, obj } from '../schemas/schemas-registration-form';
 
 export class ValidationForm {
-  private getValidation(userData: Shemas, element: HTMLInputElement): string[] | undefined {
+  public getValidation(userData: Shemas, element: Element): string[] | undefined {
     const validationResult = Shemas.safeParse(userData);
     let arrayErros: string[] | undefined;
     // console.log(validationResult)
@@ -13,22 +13,18 @@ export class ValidationForm {
         arrayErros = fieldErrors[key as keyof typeof fieldErrors];
         // console.log( arrayErros)
         // console.log( fieldErrors)
-
+        this.showValidation(element);
         return arrayErros;
       }
     } else {
-      console.log('dad' + element);
-      if (element.classList.contains('input-error')) {
-        element.classList.remove('input-error');
-        element.classList.add('input-valid');
-      }
+      this.showValidation(element);
     }
   }
 
-  public eventInput(): void {
-    const Input = document.getElementsByClassName('input') as HTMLCollectionOf<HTMLInputElement>;
-
-    Array.from(Input).forEach((element) => {
+  public eventInput(el: HTMLElement): void {
+    // const Input = document.getElementsByClassName('input') as HTMLCollectionOf<HTMLInputElement>;
+    console.log(el.children);
+    Array.from(el.children).forEach((element) => {
       element.addEventListener('input', (event) => {
         const target = event.target as HTMLInputElement;
         const placeholder = target.placeholder as string;
@@ -44,5 +40,10 @@ export class ValidationForm {
         console.log(this.getValidation(data, element));
       });
     });
+  }
+
+  private showValidation(element: Element): void {
+    element.classList.toggle('input-valid');
+    element.classList.toggle('input-error');
   }
 }

@@ -1,7 +1,10 @@
 import { Page } from '@templates/page';
 import { el, mount } from 'redom';
+import { ValidationForm } from '../../validation-registration-form';
 
 class RegistrationPage extends Page {
+  validation = new ValidationForm();
+
   protected textObject = {
     title: 'Registration page',
   };
@@ -41,6 +44,9 @@ class RegistrationPage extends Page {
     mount(blockInput, cityInput);
     mount(blockInput, postalCodeInput);
     mount(blockInput, countryInput);
+
+    this.validation.eventInput(blockInput);
+
     return blockInput;
   }
 
