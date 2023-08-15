@@ -7,7 +7,10 @@
 }
 
 .show-validation {
+  display: none;
   font: 14px Gilroy serif;
   color: red;
-  height: 25px;
+  height: 30px;
+  border: 1px solid #ccc;
+  align-items: center;
 }

@@ -40,10 +40,15 @@ export const Shemas = z.object({
     .string()
     .regex(/^[a-zA-Z]+$/, 'First name must contain at least one character and no special characters or numbers')
     .optional(),
-    
+
   "postal code": z
     .string()
-    .regex(/^(\d{5}|[A-Z]\d[A-Z] ?\d[A-Z]\d)$/)
+    .regex(/^(\d{5}|[A-Z]\d[A-Z] ?\d[A-Z]\d)$/, "Postal code must follow the format for the country")
+    .optional(),
+
+  country: z
+  .string()
+    .regex(/^[a-zA-Z]+$/, 'First name must contain at least one character and no special characters or numbers')
     .optional(),
 
 });

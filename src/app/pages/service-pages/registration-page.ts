@@ -28,31 +28,31 @@ class RegistrationPage extends Page {
     el('.registration-inputs-block', [
       el('.input-block', [
         el('input', { class: 'email-input input', type: 'text', placeholder: 'email' }),
-        el('.show-validation')]),
+        el('.show-validation-email-input show-validation')]),
       el('.input-block', [
         el('input', { class: 'password-input input', type: 'password', placeholder: 'password' }),
-        el('.show-validation')]), 
+        el('.show-validation-password-input show-validation')]), 
       el('.input-block', [
         el('input', { class: 'first-nameInput input', type: 'text', placeholder: 'first name' }),
-        el('.show-validation')]), 
+        el('.show-validation-first-nameInput show-validation')]), 
       el('.input-block', [
         el('input', { class: 'last-nameInput input', type: 'text', placeholder: 'last name' }),
-        el('.show-validation')]), 
+        el('.show-validation-last-nameInput show-validation')]), 
       el('.input-block', [
         el('input', { class: 'date-input input', type: 'date', placeholder: 'date' }),
-        el('.show-validation')]), 
+        el('.show-validation-date-input show-validation')]), 
       el('.input-block', [
         el('input', { class: 'street-input input', type: 'text', placeholder: 'street' }),
-        el('.show-validation')]), 
+        el('.show-validation-street-input show-validation')]), 
       el('.input-block', [
         el('input', { class: 'city-input input', type: 'text', placeholder: 'city' }),
-        el('.show-validation')]),  
+        el('.show-validation-city-input show-validation')]),  
       el('.input-block', [
         el('input', { class: 'postal-code-input input', type: 'text', placeholder: 'postal code' }),
-        el('.show-validation')]),
+        el('.show-validation-postal-code-input  show-validation')]),
       el('.input-block', [
         el('input', { class: 'country-code-input input', type: 'text', placeholder: 'country' }),
-        el('.show-validation')]), 
+        el('.show-validation-country-code-input show-validation')]), 
     ]);
     // const blockInput = el('.input-block');
     // const emailInput = el('input', { class: 'email-input input', type: 'text', placeholder: 'email' });
@@ -93,7 +93,7 @@ class RegistrationPage extends Page {
   }
 
   private createButton(): HTMLElement {
-    const button = el('button', { class: 'form-button btn' });
+    const button = el('button', { class: 'form-btn btn' });
     button.textContent = 'Join us';
     return button;
   }
