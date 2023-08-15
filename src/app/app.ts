@@ -1,6 +1,6 @@
 import { bindRoutes } from './router';
 import { Route } from '@customTypes/route';
-import { Page } from '@templates/page';
+import { Page } from '@app/templates/page';
 import { MainPage } from '@pages/main-page';
 import { LoginPage } from '@servicePages/login-page';
 import { RegistrationPage } from '@servicePages/registration-page';

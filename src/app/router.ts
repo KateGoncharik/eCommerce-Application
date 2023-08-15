@@ -1,5 +1,5 @@
 import Navigo from 'navigo';
-import { Page } from '@templates/page';
+import { Page } from '@app/templates/page';
 import { Route } from '@customTypes/route';
 
 const router = new Navigo('/');
