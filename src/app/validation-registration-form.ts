@@ -3,16 +3,18 @@ import { Shemas, dataObj } from '../schemas/schemas-registration-form';
 export class ValidationForm {
   public getValidation(userData: Shemas, element: Element): void {
     const validationResult = Shemas.safeParse(userData);
-    let arrayErros: string[] | undefined;
+    console.log(userData)
 
     if (!validationResult.success) {
       for (const key in validationResult.error.formErrors.fieldErrors) {
         const fieldErrors = validationResult.error.formErrors.fieldErrors;
-        arrayErros = fieldErrors[key as keyof typeof fieldErrors];
+        const arrayErros = fieldErrors[key as keyof typeof fieldErrors];
 
-        console.log(arrayErros);
-        console.log(fieldErrors);
-
+        // console.log(arrayErros);
+        // console.log(fieldErrors);
+        if(arrayErros !== undefined){
+          this.showErrors(arrayErros)
+        }
         element.classList.remove('input-valid');
         element.classList.add('input-error');
       }
@@ -41,4 +43,6 @@ export class ValidationForm {
       });
     });
   }
+
+ 
 }
