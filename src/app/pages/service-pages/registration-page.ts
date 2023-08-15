@@ -61,15 +61,12 @@ class RegistrationPage extends Page {
   }
 
   protected title(): HTMLElement {
-    const blockTitle = el('h2', { class: 'form-title title' });
-
-    blockTitle.textContent = 'Sign up';
+    const blockTitle = el('h2', 'Sign up',{ class: 'form-title title' });
     return blockTitle;
   }
 
   private createButton(): HTMLElement {
-    const button = el('button', { class: 'form-btn btn' });
-    button.textContent = 'Join us';
+    const button = el('button', 'Join us', { type: 'submit', class: 'form-btn btn' });
     return button;
   }
 

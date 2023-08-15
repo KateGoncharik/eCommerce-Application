@@ -10,11 +10,11 @@ export class ValidationForm {
       const fieldErrors = validationResult.error.formErrors.fieldErrors;
 
       for (const key in fieldErrors) {
-        const arrayErros = fieldErrors[key as keyof typeof fieldErrors];
+        const arrayErrors = fieldErrors[key as keyof typeof fieldErrors];
 
-        if(arrayErros !== undefined){
+        if(arrayErrors !== undefined){
           showBlock.style.display = 'flex';
-          showBlock.textContent = this.showErrors(arrayErros);
+          showBlock.textContent = this.showErrors(arrayErrors);
         }
   
         element.classList.remove('input-valid');
@@ -33,14 +33,18 @@ export class ValidationForm {
  
     Array.from(element.children).forEach((el) => {
       Array.from(el.children).forEach((input) => {
-        
-        input.addEventListener('input', (event) => {
-          const target = event.target as HTMLInputElement;
-          const placeholder = target.placeholder;
-          const showBlock = document.getElementsByClassName(`show-validation-${target.classList[0]}`)[0]!;
+
+        if (!(input instanceof HTMLInputElement)) {
+          return;
+        }
+
+        input.addEventListener('input', () => {
+      
+          const placeholder = input.placeholder;
+          const showBlock = document.getElementsByClassName(`show-validation-${input.classList[0]}`)[0]!;
 
           const data: dataValue = {
-            [placeholder]: target.value
+            [placeholder]: input.value
           };
           
           this.getValidation(data, input, showBlock);
@@ -51,8 +55,6 @@ export class ValidationForm {
 
   public showErrors(arr: string[]): string {
     const createError = arr[0]
-    
-    console.log(arr)
     return createError
   }
 

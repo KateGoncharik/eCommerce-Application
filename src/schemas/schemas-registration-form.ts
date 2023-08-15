@@ -22,7 +22,7 @@ export const Shemas = z.object({
 
   "last name": z
     .string()
-    .regex(/^[a-zA-Z0-9_]*[a-zA-Z][a-zA-Z0-9_]*$/, 'First name must contain at least one character and no special characters or numbers')
+    .regex(/^[a-zA-Z0-9_]*[a-zA-Z][a-zA-Z0-9_]*$/, 'Last name must contain at least one character and no special characters or numbers')
     .optional(),
 
   date: z.coerce
@@ -38,7 +38,7 @@ export const Shemas = z.object({
 
   city: z
     .string()
-    .regex(/^[a-zA-Z]+$/, 'First name must contain at least one character and no special characters or numbers')
+    .regex(/^[a-zA-Z]+$/, 'City must contain at least one character and no special characters or numbers')
     .optional(),
 
   "postal code": z
@@ -48,10 +48,10 @@ export const Shemas = z.object({
 
   country: z
   .string()
-    .regex(/^[a-zA-Z]+$/, 'First name must contain at least one character and no special characters or numbers')
+    .regex(/^[a-zA-Z]+$/, 'Country must be a valid country')
     .optional(),
 
 });
 
 export type Shemas = z.infer<typeof Shemas>;
-export type dataValue = { [key: string]: string };
+export type dataValue =  Record<string, string>;
