@@ -12,4 +12,4 @@ export const Shemas = z.object({
 });
 
 export type Shemas = z.infer<typeof Shemas>;
-export type obj = { [key: string]: string };
+export type dataObj = { [key: string]: string };

@@ -1,4 +1,4 @@
-import { Shemas, obj } from '../schemas/schemas-registration-form';
+import { Shemas, dataObj } from '../schemas/schemas-registration-form';
 
 export class ValidationForm {
   public getValidation(userData: Shemas, element: Element): void {
@@ -32,12 +32,12 @@ export class ValidationForm {
         console.log(target.placeholder);
         console.log(target.value);
 
-        const data: obj = {};
-        data[placeholder] = target.value;
-
+        const data: dataObj = {
+          [placeholder]: target.value
+        };
+        
         this.getValidation(data, element);
 
-        console.log(this.getValidation(data, element));
       });
     });
   }
