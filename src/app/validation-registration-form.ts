@@ -1,6 +1,7 @@
 import { Shemas, dataObj } from '../schemas/schemas-registration-form';
 
 export class ValidationForm {
+  
   public getValidation(userData: Shemas, element: Element): void {
     const validationResult = Shemas.safeParse(userData);
     console.log(userData)
@@ -25,21 +26,23 @@ export class ValidationForm {
   }
 
   public eventInput(el: HTMLElement): void {
+ 
     Array.from(el.children).forEach((element) => {
-      console.log(element);
-      element.addEventListener('input', (event) => {
-        const target = event.target as HTMLInputElement;
-        const placeholder = target.placeholder as string;
-
-        console.log(target.placeholder);
-        console.log(target.value);
-
-        const data: dataObj = {
-          [placeholder]: target.value
-        };
-        
-        this.getValidation(data, element);
-
+      Array.from(element.children).forEach((input) => {
+        console.log(input);
+        input.addEventListener('input', (event) => {
+          const target = event.target as HTMLInputElement;
+          const placeholder = target.placeholder as string;
+  
+          console.log(target.placeholder);
+          console.log(target.value);
+  
+          const data: dataObj = {
+            [placeholder]: target.value
+          };
+          
+          this.getValidation(data, input);
+        })
       });
     });
   }

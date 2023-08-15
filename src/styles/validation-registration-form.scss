@@ -1,7 +1,13 @@
 .input-error {
-    border-color: #f13131;
+    border-color: red;
 }
 
 .input-valid {
-    border-color: #37f131;
+    border-color: green;
+}
+
+.show-validation {
+  font: 14px Gilroy serif;
+  color: red;
+  height: 25px;
 }
