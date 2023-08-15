@@ -54,32 +54,7 @@ class RegistrationPage extends Page {
         el('input', { class: 'country-code-input input', type: 'text', placeholder: 'country' }),
         el('.show-validation-country-code-input show-validation')]), 
     ]);
-    // const blockInput = el('.input-block');
-    // const emailInput = el('input', { class: 'email-input input', type: 'text', placeholder: 'email' });
-    // const passwordInput = el('input', { class: 'password-input input', type: 'password', placeholder: 'password' });
-    // const firstNameInput = el('input', { class: 'first-nameInput input', type: 'text', placeholder: 'first name' });
-    // const lastNameInput = el('input', { class: 'last-nameInput input', type: 'text', placeholder: 'last name' });
-    // const dateOfBirthInput = el('input', { class: 'date-input input', type: 'date', placeholder: 'date' });
-    // const streetInput = el('input', { class: 'street-input input', type: 'text', placeholder: 'street' });
-    // const cityInput = el('input', { class: 'city-input input', type: 'text', placeholder: 'city' });
-    // const postalCodeInput = el('input', { class: 'postal-code-input input', type: 'text', placeholder: 'postal code' });
-    // const countryInput = el('input', { class: 'country-code-input input', type: 'text', placeholder: 'country' });
 
-    
-
-
-
-    // mount(blockInputsRegistration, blockInput)
-    // mount(blockInput, emailInput);
-    // mount(blockInput, passwordInput);
-    // mount(blockInput, firstNameInput);
-    // mount(blockInput, lastNameInput);
-    // mount(blockInput, dateOfBirthInput);
-    // mount(blockInput, streetInput);
-    // mount(blockInput, cityInput);
-    // mount(blockInput, postalCodeInput);
-    // mount(blockInput, countryInput);
-    
     this.validation.eventInput(blockInputsRegistration);
 
     return blockInputsRegistration;
