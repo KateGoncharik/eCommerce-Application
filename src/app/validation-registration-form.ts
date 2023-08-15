@@ -1,13 +1,15 @@
-import { Shemas, dataObj } from '../schemas/schemas-registration-form';
+import { Shemas, dataValue } from '../schemas/schemas-registration-form';
 
 export class ValidationForm {
 
-  public getValidation(userData: Shemas, element: Element, showBlock: HTMLElement): void {
+  public getValidation(userData: Shemas, element: Element, showElement: Element): void {
     const validationResult = Shemas.safeParse(userData);
- 
+    const showBlock = showElement as HTMLElement
+
     if (!validationResult.success) {
-      for (const key in validationResult.error.formErrors.fieldErrors) {
-        const fieldErrors = validationResult.error.formErrors.fieldErrors;
+      const fieldErrors = validationResult.error.formErrors.fieldErrors;
+
+      for (const key in fieldErrors) {
         const arrayErros = fieldErrors[key as keyof typeof fieldErrors];
 
         if(arrayErros !== undefined){
@@ -34,10 +36,10 @@ export class ValidationForm {
         
         input.addEventListener('input', (event) => {
           const target = event.target as HTMLInputElement;
-          const placeholder = target.placeholder as string;
-          const showBlock = document.querySelector(`.show-validation-${target.classList[0]}`) as HTMLElement;
+          const placeholder = target.placeholder;
+          const showBlock = document.getElementsByClassName(`show-validation-${target.classList[0]}`)[0]!;
 
-          const data: dataObj = {
+          const data: dataValue = {
             [placeholder]: target.value
           };
           
@@ -53,4 +55,6 @@ export class ValidationForm {
     console.log(arr)
     return createError
   }
+
+  
 }

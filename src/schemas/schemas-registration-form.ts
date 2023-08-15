@@ -54,4 +54,4 @@ export const Shemas = z.object({
 });
 
 export type Shemas = z.infer<typeof Shemas>;
-export type dataObj = { [key: string]: string };
+export type dataValue = { [key: string]: string };
