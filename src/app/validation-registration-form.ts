@@ -44,5 +44,10 @@ export class ValidationForm {
     });
   }
 
- 
+  public showErrors(arr: string[]): string {
+    const createError = arr.join(', ')
+    
+    console.log(createError)
+    return createError
+  }
 }
