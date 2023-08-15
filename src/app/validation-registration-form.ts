@@ -55,9 +55,9 @@ export class ValidationForm {
   }
 
   public showErrors(arr: string[]): string {
-    const createError = arr.slice(0,3).join(', ')
+    const createError = arr[0]
     
-    console.log(createError)
+    console.log(arr)
     return createError
   }
 }

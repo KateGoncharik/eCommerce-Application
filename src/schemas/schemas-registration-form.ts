@@ -8,10 +8,10 @@ export const Shemas = z.object({
 
   password: z
     .string()
+    .regex(/(?=.*[0-9])/, 'Password must contain at least 1 number')
+    .regex(/(?=.*[a-z])/, 'Password must contain at least 1 lowercase letter')
+    .regex(/(?=.*[A-Z])/, 'Password must contain at least 1 uppercase letter')
     .regex(/^[^\s].+[^\s]$/, 'Password must not contain leading or trailing whitespace')
-    .regex(/(?=.*\d)/, 'Password must contain at least one digit')
-    .regex(/(?=.*[a-z])/, 'Password must contain at least one lowercase letter')
-    .regex(/(?=.*[A-Z])/, 'Password must contain at least one uppercase letter')
     .min(8, 'Password must be at least 8 characters long')
     .optional(),
 
