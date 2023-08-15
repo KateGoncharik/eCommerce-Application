@@ -1,4 +1,4 @@
-import { Page } from '@templates/page';
+import { Page } from '@app/templates/page';
 
 class NotFoundPage extends Page {
   protected textObject = {

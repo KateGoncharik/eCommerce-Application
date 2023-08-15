@@ -1,4 +1,4 @@
-import { Page } from '@templates/page';
+import { Page } from '@app/templates/page';
 
 class MainPage extends Page {
   protected textObject = {
