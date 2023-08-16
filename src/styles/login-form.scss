@@ -32,7 +32,6 @@
 .login-input-block {
   width: 100%;
   min-height: 56px;
-  border: 1px solid #ccc;
   font-size: 20px;
 }
 
@@ -86,7 +85,7 @@
   text-transform: uppercase;
 }
 
-@media (width <= 900px) {
+@media (width <=900px) {
   .form-wrapper {
     max-width: 80%;
   }
@@ -96,7 +95,7 @@
   }
 }
 
-@media (width <= 500px) {
+@media (width <=500px) {
   .form-wrapper {
     min-width: 95%;
   }
