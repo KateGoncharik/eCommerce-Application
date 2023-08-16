@@ -32,7 +32,7 @@ class LoginPage extends Page {
       type: 'password',
       placeholder: 'password',
     });
-    const passwordVisibility = el('input', { class: 'password-checkbox', type: 'checkbox' });
+    const passwordVisibility = el('input.password-checkbox', { type: 'checkbox' });
     passwordVisibility.addEventListener('click', () => {
       if (passwordInput.type === 'password') {
         passwordInput.type = 'text';
@@ -53,14 +53,14 @@ class LoginPage extends Page {
   }
 
   private createButton(): HTMLElement {
-    const button = el('button', 'Continue', { class: 'form-button', type: 'submit' });
+    const button = el('button.form-button', 'Continue', { type: 'submit' });
     return button;
   }
 
   private createForm(): HTMLDivElement {
     const formWrapper = el('div');
     const formBlock = el('.form-block');
-    const form = el('form', { name: 'login', class: 'form' });
+    const form = el('form.form', { name: 'login' });
     form.addEventListener('input', (event) => validateForm(event));
     const inputs = this.createInputs();
     const buttonBlock = this.createButton();
