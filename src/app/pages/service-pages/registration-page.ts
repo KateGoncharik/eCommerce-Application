@@ -11,7 +11,7 @@ class RegistrationPage extends Page {
 
   private createForm(): HTMLElement {
     const blockForm = el('.registration-form-block');
-    const form = el('.form');
+    const form = el('.registration-form');
     const blockInput = this.createInput();
     const title = this.title();
     const blockButton = this.createButton();
