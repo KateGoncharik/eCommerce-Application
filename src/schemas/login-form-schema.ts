@@ -4,7 +4,6 @@ export const emailSchema = z.object({
   email: z
     .string()
     .email("Email is incorrect. It must contain a domain name and '@' symbol")
-    .trim()
     .regex(/^(?! )[A-Za-z0-9.@]*(?<! )/g),
 });
 export const passwordSchema = z.object({

@@ -1,7 +1,6 @@
-// import { loginFormSchema } from './../../../schemas/login-form-schema';
 import { Page } from '@templates/page';
 import { el, mount } from 'redom';
-import { isFormValid } from '@app/validation';
+import { validateForm } from '@validation/validation';
 
 class LoginPage extends Page {
   protected textObject = {
@@ -19,8 +18,8 @@ class LoginPage extends Page {
     const blockEmail = el('.login-input-block');
     const blockPassword = el('.login-input-block');
     const passwordVisibilityBlock = el('.password-visability-block', 'Show password');
-    const emailErrorBlock = el('.error-block', { class: 'email-error-block' });
-    const passwordErrorBlock = el('.error-block', { class: 'password-error-block' });
+    const emailErrorBlock = el('.error-block.email-error-block');
+    const passwordErrorBlock = el('.error-block.password-error-block');
     const emailInput = el('input', {
       name: 'email',
       class: 'email-input',
@@ -54,8 +53,7 @@ class LoginPage extends Page {
   }
 
   private createButton(): HTMLElement {
-    const button = el('button', { class: 'form-button', type: 'submit' });
-    button.textContent = 'Continue';
+    const button = el('button', 'Continue', { class: 'form-button', type: 'submit' });
     return button;
   }
 
@@ -63,7 +61,7 @@ class LoginPage extends Page {
     const formWrapper = el('div');
     const formBlock = el('.form-block');
     const form = el('form', { name: 'login', class: 'form' });
-    form.addEventListener('input', (event) => isFormValid(event));
+    form.addEventListener('input', (event) => validateForm(event));
     const inputs = this.createInputs();
     const buttonBlock = this.createButton();
     const header = this.createHeader();

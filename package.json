@@ -60,7 +60,6 @@
   "dependencies": {
     "navigo": "^8.11.1",
     "redom": "^3.29.1",
-    "vanilla-toast": "^0.5.0",
     "zod": "^3.21.4"
   }
 }

@@ -22,6 +22,9 @@
       "@customTypes/*": [
         "./src/app/types/*"
       ],
+      "@validation/*": [
+        "./src/app/validation/*"
+      ],
       "@pages/*": [
         "./src/app/pages/*"
       ],
