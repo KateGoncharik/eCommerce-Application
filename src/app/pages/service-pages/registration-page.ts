@@ -27,31 +27,31 @@ class RegistrationPage extends Page {
     const blockInputsRegistration = 
     el('.registration-inputs-block', [
       el('.input-block', [
-        el('input', { class: 'email-input input', type: 'text', placeholder: 'email' }),
+        el('input.email-input.input', { type: 'text', placeholder: 'email' }),
         el('.show-validation-email-input show-validation')]),
       el('.input-block', [
-        el('input', { class: 'password-input input', type: 'password', placeholder: 'password' }),
+        el('input.password-input.input', { type: 'password', placeholder: 'password' }),
         el('.show-validation-password-input show-validation')]), 
       el('.input-block', [
-        el('input', { class: 'first-nameInput input', type: 'text', placeholder: 'first name' }),
-        el('.show-validation-first-nameInput show-validation')]), 
+        el('input.first-name-input.input', { type: 'text', placeholder: 'first name' }),
+        el('.show-validation-first-name-input show-validation')]), 
       el('.input-block', [
-        el('input', { class: 'last-nameInput input', type: 'text', placeholder: 'last name' }),
-        el('.show-validation-last-nameInput show-validation')]), 
+        el('input.last-name-input.input', { type: 'text', placeholder: 'last name' }),
+        el('.show-validation-last-name-input show-validation')]), 
       el('.input-block', [
-        el('input', { class: 'date-input input', type: 'date', placeholder: 'date' }),
+        el('input.date-input.input', { type: 'date', placeholder: 'date' }),
         el('.show-validation-date-input show-validation')]), 
       el('.input-block', [
-        el('input', { class: 'street-input input', type: 'text', placeholder: 'street' }),
+        el('input.street-input.input', { type: 'text', placeholder: 'street' }),
         el('.show-validation-street-input show-validation')]), 
       el('.input-block', [
-        el('input', { class: 'city-input input', type: 'text', placeholder: 'city' }),
+        el('input.city-input.input', { type: 'text', placeholder: 'city' }),
         el('.show-validation-city-input show-validation')]),  
       el('.input-block', [
-        el('input', { class: 'postal-code-input input', type: 'text', placeholder: 'postal code' }),
+        el('input.postal-code-input.input', { type: 'text', placeholder: 'postal code' }),
         el('.show-validation-postal-code-input  show-validation')]),
       el('.input-block', [
-        el('input', { class: 'country-code-input input', type: 'text', placeholder: 'country' }),
+        el('input.country-code-input.input', { type: 'text', placeholder: 'country' }),
         el('.show-validation-country-code-input show-validation')]), 
     ]);
 
@@ -66,7 +66,7 @@ class RegistrationPage extends Page {
   }
 
   private createButton(): HTMLElement {
-    const button = el('button', 'Join us', { type: 'submit', class: 'form-btn btn' });
+    const button = el('button', 'Join us', { class: 'form-btn btn', type: 'submit' });
 
     this.validation.checkValidationAllForm(button)
 

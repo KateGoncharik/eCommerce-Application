@@ -52,7 +52,7 @@ export class ValidationForm {
     const data: dataValue = {
       [placeholder]: input.value
     };
-          
+
     this.checkValidation(data, input, showErrorBlock);
   }
 
