@@ -3,7 +3,7 @@ import { el, mount } from 'redom';
 import { ValidationForm } from '@validation/validation-registration-form';
 
 class RegistrationPage extends Page {
-  validation = new ValidationForm();
+  private validation = new ValidationForm();
 
   protected textObject = {
     title: 'Registration page',

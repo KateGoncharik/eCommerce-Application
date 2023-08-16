@@ -1,9 +1,9 @@
-import { Shemas, dataValue } from '@schemas/schemas-registration-form';
+import { Sсhemas , dataValue } from '@schemas/schemas-registration-form';
 
 export class ValidationForm {
 
-  public checkValidation(userData: Shemas, element: Element, showElement: Element): void {
-    const validationResult = Shemas.safeParse(userData);
+  public checkValidation(userData: Sсhemas , element: Element, showElement: Element): void {
+    const validationResult = Sсhemas .safeParse(userData);
     const showBlock = showElement as HTMLElement
 
     if (!validationResult.success) {
