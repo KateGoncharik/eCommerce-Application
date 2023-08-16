@@ -22,7 +22,7 @@ export const Shemas = z.object({
 
   "last name": z
     .string()
-    .regex(/^[a-zA-Z0-9_]*[a-zA-Z][a-zA-Z0-9_]*$/, 'Last name must contain at least one character and no special characters or numbers')
+    .regex(/^[a-zA-Z]+$/, 'Last name must contain at least one character and no special characters or numbers')
     .optional(),
 
   date: z.coerce
@@ -46,11 +46,13 @@ export const Shemas = z.object({
     .regex(/^(\d{5}|[A-Z]\d[A-Z] ?\d[A-Z]\d)$/, "Postal code must follow the format for the country")
     .optional(),
 
-  country: z
-  .string()
-    .regex(/^[a-zA-Z]+$/, 'Country must be a valid country')
-    .optional(),
-
+  "country code": z
+    .enum(["DE", "US", "AU", "ES"], { 
+      errorMap: () => ({ 
+        message: "Enter the correct country code from this list: DE | US | AU | ES" 
+      })
+    })
+    .optional()
 });
 
 export type Shemas = z.infer<typeof Shemas>;

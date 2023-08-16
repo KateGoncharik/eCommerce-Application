@@ -1,6 +1,6 @@
 import { Page } from '@templates/page';
 import { el, mount } from 'redom';
-import { ValidationForm } from '../../validation-registration-form';
+import { ValidationForm } from '@validation/validation-registration-form';
 
 class RegistrationPage extends Page {
   validation = new ValidationForm();
@@ -51,7 +51,7 @@ class RegistrationPage extends Page {
         el('input.postal-code-input.input', { type: 'text', placeholder: 'postal code' }),
         el('.show-validation-postal-code-input  show-validation')]),
       el('.input-block', [
-        el('input.country-code-input.input', { type: 'text', placeholder: 'country' }),
+        el('input.country-code-input.input', { type: 'text', placeholder: 'country code' }),
         el('.show-validation-country-code-input show-validation')]), 
     ]);
 
@@ -61,12 +61,12 @@ class RegistrationPage extends Page {
   }
 
   protected title(): HTMLElement {
-    const blockTitle = el('h2', 'Sign up', { class: 'form-title title' });
+    const blockTitle = el('h2.form-title.title', 'Sign up');
     return blockTitle;
   }
 
   private createButton(): HTMLElement {
-    const button = el('button', 'Join us', { class: 'form-btn btn', type: 'submit' });
+    const button = el('button.form-btn.btn', 'Join us', { type: 'submit' });
 
     this.validation.checkValidationAllForm(button)
 
