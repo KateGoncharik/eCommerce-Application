@@ -1,4 +1,4 @@
-import { Page } from '@app/templates/page';
+import { Page } from '@templates/page';
 import { el, mount } from 'redom';
 
 class LoginPage extends Page {
