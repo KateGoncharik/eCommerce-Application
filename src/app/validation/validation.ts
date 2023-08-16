@@ -1,5 +1,5 @@
-import { emailSchema } from '../../schemas/login-form-schema';
-import { passwordSchema } from '../../schemas/login-form-schema';
+import { emailSchema } from '@schemas/login-form-schema';
+import { passwordSchema } from '@schemas/login-form-schema';
 
 export function validateForm(event: Event): void {
   const form = document.forms[0];
