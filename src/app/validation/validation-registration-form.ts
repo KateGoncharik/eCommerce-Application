@@ -1,10 +1,9 @@
-import { Sсhemas , dataValue } from '@schemas/schemas-registration-form';
+import { Schemas, dataValue } from '@schemas/schemas-registration-form';
 
 export class ValidationForm {
-
-  public checkValidation(userData: Sсhemas , element: Element, showElement: Element): void {
-    const validationResult = Sсhemas .safeParse(userData);
-    const showBlock = showElement as HTMLElement
+  public checkValidation(userData: Schemas, element: Element, showElement: Element): void {
+    const validationResult = Schemas.safeParse(userData);
+    const showBlock = showElement as HTMLElement;
 
     if (!validationResult.success) {
       const fieldErrors = validationResult.error.formErrors.fieldErrors;
@@ -12,7 +11,7 @@ export class ValidationForm {
       for (const key in fieldErrors) {
         const arrayErrors = fieldErrors[key as keyof typeof fieldErrors];
 
-        if(arrayErrors !== undefined){
+        if (arrayErrors !== undefined) {
           showBlock.style.display = 'flex';
           showBlock.textContent = this.showErrors(arrayErrors);
 
@@ -30,17 +29,15 @@ export class ValidationForm {
   }
 
   public eventInput(blockRegistration: HTMLElement): void {
- 
     Array.from(blockRegistration.children).forEach((blockInputs) => {
       Array.from(blockInputs.children).forEach((input) => {
-
         if (!(input instanceof HTMLInputElement)) {
           return;
         }
 
         input.addEventListener('input', () => {
-          this.checkChangeInput(input)
-        })
+          this.checkChangeInput(input);
+        });
       });
     });
   }
@@ -50,7 +47,7 @@ export class ValidationForm {
     const showErrorBlock = input.nextElementSibling!;
 
     const data: dataValue = {
-      [placeholder]: input.value
+      [placeholder]: input.value,
     };
 
     this.checkValidation(data, input, showErrorBlock);
@@ -59,7 +56,7 @@ export class ValidationForm {
   public checkValidationAllForm(elementBtn: HTMLElement): void {
     const inputs = document.getElementsByClassName('input');
 
-    const checkInputsValid = ():void => {
+    const checkInputsValid = (): void => {
       let countTrue = 0;
 
       Array.from(inputs).forEach((input) => {
@@ -67,21 +64,19 @@ export class ValidationForm {
           return;
         }
 
-        if(input.classList.contains('input-valid')) {
-         return countTrue++
+        if (input.classList.contains('input-valid')) {
+          return countTrue++;
         }
 
-        this.checkChangeInput(input)
-      })
+        this.checkChangeInput(input);
+      });
+    };
 
-    }
-
-    elementBtn.addEventListener('click', checkInputsValid)
+    elementBtn.addEventListener('click', checkInputsValid);
   }
 
   public showErrors(arr: string[]): string {
     const createError = arr[0];
     return createError;
   }
-
 }

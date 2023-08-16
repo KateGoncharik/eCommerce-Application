@@ -10,6 +10,9 @@
     "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
     "paths": {
+      "@schemas/*": [
+        "./src/app/validation/schemas/*"
+      ],
       "@app/*": [
         "./src/app/*"
       ],
@@ -21,6 +24,9 @@
       ],
       "@customTypes/*": [
         "./src/app/types/*"
+      ],
+      "@validation/*": [
+        "./src/app/validation/*"
       ],
       "@pages/*": [
         "./src/app/pages/*"
