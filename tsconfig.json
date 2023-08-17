@@ -52,6 +52,9 @@
       "@styles/*": [
         "./src/styles/*"
       ],
+      "@sdk/*": [
+        "./src/app/sdk/*"
+      ],
     }
   },
   "files": [
