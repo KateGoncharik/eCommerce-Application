@@ -1,8 +1,10 @@
 import { Page } from '@templates/page';
 import { el, mount } from 'redom';
-import { validateForm } from '@validation/validation';
+import { formValidation } from '@validation/validation';
 
 class LoginPage extends Page {
+  private validation = new formValidation();
+
   protected textObject = {
     title: 'Login page',
   };
@@ -20,18 +22,19 @@ class LoginPage extends Page {
     const passwordVisibilityBlock = el('.password-visability-block', 'Show password');
     const emailErrorBlock = el('.error-block.email-error-block');
     const passwordErrorBlock = el('.error-block.password-error-block');
-    const emailInput = el('input', {
+    const emailInput = el('input.email-input.input', {
       name: 'email',
-      class: 'email-input',
       type: 'text',
       placeholder: 'email',
     });
-    const passwordInput = el('input', {
+    const passwordInput = el('input.password-input.input', {
       name: 'password',
-      class: 'password-input',
       type: 'password',
       placeholder: 'password',
     });
+    if (!(passwordInput instanceof HTMLInputElement)) {
+      throw new Error('Input expected');
+    }
     const passwordVisibility = el('input.password-checkbox', { type: 'checkbox' });
     passwordVisibility.addEventListener('click', () => {
       if (passwordInput.type === 'password') {
@@ -54,6 +57,14 @@ class LoginPage extends Page {
 
   private createButton(): HTMLElement {
     const button = el('button.form-button', 'Continue', { type: 'submit' });
+    if (!(button instanceof HTMLButtonElement)) {
+      throw new Error('Button expected');
+    }
+    button.disabled = true;
+    button.addEventListener('click', (event) => {
+      event.preventDefault();
+      this.validation.checkValidationAllForm();
+    });
     return button;
   }
 
@@ -61,7 +72,7 @@ class LoginPage extends Page {
     const formWrapper = el('div');
     const formBlock = el('.form-block');
     const form = el('form.form', { name: 'login' });
-    form.addEventListener('input', (event) => validateForm(event));
+    form.addEventListener('input', (event) => this.validation.validateForm(event));
     const inputs = this.createInputs();
     const buttonBlock = this.createButton();
     const header = this.createHeader();

@@ -1,45 +1,77 @@
 import { emailSchema } from '@schemas/login-form-schema';
 import { passwordSchema } from '@schemas/login-form-schema';
+import { safeQuerySelector } from '@helpers/safe-query-selector';
 
-export function validateForm(event: Event): void {
-  const form = document.forms[0];
-  const emailErrorBlock = document.querySelector('.email-error-block');
-  const passwordErrorBlock = document.querySelector('.password-error-block');
-  if (!emailErrorBlock || !passwordErrorBlock) {
-    throw new Error('error block not found');
+export class formValidation {
+  public validateForm(event: Event): void {
+    const form = document.forms[0];
+    const emailErrorBlock = safeQuerySelector('.email-error-block', document);
+    const passwordErrorBlock = safeQuerySelector('.password-error-block', document);
+    if (!emailErrorBlock || !passwordErrorBlock) {
+      throw new Error('error block not found');
+    }
+
+    if (!(event.target instanceof HTMLInputElement)) {
+      throw new Error('HTMLInputElement expected');
+    }
+
+    if (event.target.classList.contains('email-input')) {
+      const emailValidationResult = emailSchema.safeParse({ email: form.email.value });
+      if (emailValidationResult.success) {
+        emailErrorBlock.textContent = '';
+        form.email.style = 'border-color: green';
+        return;
+      } else {
+        const errors = emailValidationResult.error.format();
+        form.email.style = 'border-color: red';
+        emailErrorBlock.textContent = `${errors?.email?._errors.join(', ')}`;
+        return;
+      }
+    }
+
+    if (event.target.classList.contains('password-input')) {
+      const passwordValidationResult = passwordSchema.safeParse({ password: form.password.value });
+      if (passwordValidationResult.success) {
+        passwordErrorBlock.textContent = '';
+        form.password.style = 'border-color: green';
+        return;
+      } else {
+        const errors = passwordValidationResult.error.format();
+        passwordErrorBlock.textContent = `${errors?.password?._errors.join(', ')}`;
+        form.password.style = 'border-color: red';
+        return;
+      }
+    }
+
+    return;
   }
+  public checkValidationAllForm(): void {
+    const inputs = document.getElementsByClassName('input');
+    const errorBlocks = document.getElementsByClassName('error-block');
 
-  if (!(event.target instanceof HTMLInputElement)) {
-    throw new Error('HTMLInputElement expected');
-  }
+    let inputsWithText = 0;
+    let emptyErrorBlocks = 0;
 
-  if (event.target.classList.contains('email-input')) {
-    const emailValidationResult = emailSchema.safeParse({ email: form.email.value });
-    if (emailValidationResult.success) {
-      emailErrorBlock.textContent = '';
-      form.email.style = 'border-color: green';
-      return;
-    } else {
-      const errors = emailValidationResult.error.format();
-      form.email.style = 'border-color: red';
-      emailErrorBlock.textContent = `${errors?.email?._errors.join(', ')}`;
-      return;
+    Array.from(inputs).forEach((input) => {
+      if (!(input instanceof HTMLInputElement)) {
+        return;
+      }
+
+      if (input.value) {
+        inputsWithText++;
+      }
+    });
+    Array.from(errorBlocks).forEach((errorBlock) => {
+      if (errorBlock.innerHTML === '') {
+        emptyErrorBlocks++;
+      }
+    });
+    if (inputsWithText === emptyErrorBlocks) {
+      const submitButton = safeQuerySelector('.form-button', document);
+      if (!(submitButton instanceof HTMLButtonElement)) {
+        throw new Error('Button expected');
+      }
+      submitButton.disabled = false;
     }
   }
-
-  if (event.target.classList.contains('password-input')) {
-    const passwordValidationResult = passwordSchema.safeParse({ password: form.password.value });
-    if (passwordValidationResult.success) {
-      passwordErrorBlock.textContent = '';
-      form.password.style = 'border-color: green';
-      return;
-    } else {
-      const errors = passwordValidationResult.error.format();
-      passwordErrorBlock.textContent = `${errors?.password?._errors.join(', ')}`;
-      form.password.style = 'border-color: red';
-      return;
-    }
-  }
-
-  return;
 }
