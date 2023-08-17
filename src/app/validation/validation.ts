@@ -45,7 +45,7 @@ export class formValidation {
 
     return;
   }
-  public checkValidationAllForm(): void {
+  public isFormValid(): boolean {
     const inputs = document.getElementsByClassName('input');
     const errorBlocks = document.getElementsByClassName('error-block');
 
@@ -71,7 +71,9 @@ export class formValidation {
       if (!(submitButton instanceof HTMLButtonElement)) {
         throw new Error('Button expected');
       }
-      submitButton.disabled = false;
+      return true;
+    } else {
+      return false;
     }
   }
 }

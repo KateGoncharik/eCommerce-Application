@@ -60,10 +60,9 @@ class LoginPage extends Page {
     if (!(button instanceof HTMLButtonElement)) {
       throw new Error('Button expected');
     }
-    button.disabled = true;
     button.addEventListener('click', (event) => {
       event.preventDefault();
-      this.validation.checkValidationAllForm();
+      this.validation.isFormValid();
     });
     return button;
   }
