@@ -1,14 +1,80 @@
 import { Page } from '@app/templates/page';
 import { el, mount } from 'redom';
+import { formValidation } from '@validation/validation';
 
 class LoginPage extends Page {
+  private validation = new formValidation();
+
   protected textObject = {
     title: 'Login page',
   };
+
+  protected createHeader(): HTMLHeadingElement {
+    const headerBlock = el('h2.form-header');
+    if (!(headerBlock instanceof HTMLHeadingElement)) {
+      throw new Error('HTMLHeadingElement expected');
+    }
+    headerBlock.textContent = 'Sign in';
+    return headerBlock;
+  }
+
+  private createInputs(): HTMLElement {
+    const inputsBlock = el('.inputs-block');
+    const blockEmail = el('.login-input-block');
+    const blockPassword = el('.login-input-block');
+    const passwordVisibilityBlock = el('.password-visability-block', 'Show password');
+    const emailErrorBlock = el('.error-block.email-error-block');
+    const passwordErrorBlock = el('.error-block.password-error-block');
+    const emailInput = el('input.email-input.input', {
+      name: 'email',
+      type: 'text',
+      placeholder: 'email',
+    });
+    const passwordInput = el('input.password-input.input', {
+      name: 'password',
+      type: 'password',
+      placeholder: 'password',
+    });
+    if (!(passwordInput instanceof HTMLInputElement)) {
+      throw new Error('Input expected');
+    }
+    const passwordVisibility = el('input.password-checkbox', { type: 'checkbox' });
+    passwordVisibility.addEventListener('click', () => {
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+      } else {
+        passwordInput.type = 'password';
+      }
+    });
+
+    mount(inputsBlock, blockEmail);
+    mount(inputsBlock, blockPassword);
+    mount(blockEmail, emailInput);
+    mount(blockEmail, emailErrorBlock);
+    mount(blockPassword, passwordInput);
+    mount(passwordVisibilityBlock, passwordVisibility);
+    mount(blockPassword, passwordErrorBlock);
+    mount(blockPassword, passwordVisibilityBlock);
+    return inputsBlock;
+  }
+
+  private createButton(): HTMLElement {
+    const button = el('button.form-button', 'Continue', { type: 'submit' });
+    if (!(button instanceof HTMLButtonElement)) {
+      throw new Error('Button expected');
+    }
+    button.addEventListener('click', (event) => {
+      event.preventDefault();
+      this.validation.isFormValid();
+    });
+    return button;
+  }
+
   private createForm(): HTMLDivElement {
     const formWrapper = el('div');
     const formBlock = el('.form-block');
-    const form = el('.form');
+    const form = el('form.form', { name: 'login' });
+    form.addEventListener('input', (event) => this.validation.validateForm(event));
     const inputs = this.createInputs();
     const buttonBlock = this.createButton();
     const header = this.createHeader();
@@ -21,46 +87,10 @@ class LoginPage extends Page {
     return formWrapper;
   }
 
-  protected createHeader(): HTMLHeadingElement {
-    const headerBlock = el('h2', { class: 'form-header' });
-    headerBlock.textContent = 'Sign in';
-    return headerBlock;
-  }
-
-  private createInputs(): HTMLElement {
-    const inputsBlock = el('.inputs-block');
-    const blockEmail = el('.login-input-block');
-    const blockPassword = el('.login-input-block');
-    const emailInput = el('input', {
-      class: 'login-input',
-      type: 'text',
-      placeholder: 'email',
-    });
-    const passwordInput = el('input', {
-      class: 'login-input',
-      type: 'password',
-      placeholder: 'password',
-    });
-
-    mount(inputsBlock, blockEmail);
-    mount(inputsBlock, blockPassword);
-    mount(blockEmail, emailInput);
-    mount(blockPassword, passwordInput);
-    return inputsBlock;
-  }
-
-  private createButton(): HTMLElement {
-    const button = el('button', { class: 'form-button' });
-
-    button.textContent = 'Continue';
-    return button;
-  }
-
   protected build(): HTMLElement {
     const wrapper = el('.form-wrapper');
-    const form = this.createForm();
-
-    mount(wrapper, form);
+    const formBlock = this.createForm();
+    mount(wrapper, formBlock);
     return wrapper;
   }
 }
