@@ -1,0 +1,17 @@
+.input-error {
+    border-color: red;
+}
+
+.input-valid {
+    border-color: green;
+}
+
+.show-validation {
+  display: none;
+  align-items: center;
+  height: 30px;
+  font: 14px Gilroy, serif;
+  color: red;
+  border: 1px solid #ccc;
+  
+}

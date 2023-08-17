@@ -1,14 +1,17 @@
 import { Page } from '@templates/page';
 import { el, mount } from 'redom';
+import { ValidationForm } from '@validation/validation-registration-form';
 
 class RegistrationPage extends Page {
+  private validation = new ValidationForm();
+
   protected textObject = {
     title: 'Registration page',
   };
 
   private createForm(): HTMLElement {
-    const blockForm = el('.form-block');
-    const form = el('.form');
+    const blockForm = el('.registration-form-block');
+    const form = el('.registration-form');
     const blockInput = this.createInput();
     const title = this.title();
     const blockButton = this.createButton();
@@ -21,30 +24,57 @@ class RegistrationPage extends Page {
   }
 
   private createInput(): HTMLElement {
-    const blockInput = el('.inputs-block');
-    const emailInput = el('input', { class: 'email-input input', type: 'text', placeholder: 'email' });
-    const passwordInput = el('input', { class: 'password-input input', type: 'password', placeholder: 'password' });
+    const blockInputsRegistration = 
+    el('.registration-inputs-block', [
+      el('.input-block', [
+        el('input.email-input.input', { type: 'text', placeholder: 'email' }),
+        el('.show-validation-email-input show-validation')]),
+      el('.input-block', [
+        el('input.password-input.input', { type: 'password', placeholder: 'password' }),
+        el('.show-validation-password-input show-validation')]), 
+      el('.input-block', [
+        el('input.first-name-input.input', { type: 'text', placeholder: 'first name' }),
+        el('.show-validation-first-name-input show-validation')]), 
+      el('.input-block', [
+        el('input.last-name-input.input', { type: 'text', placeholder: 'last name' }),
+        el('.show-validation-last-name-input show-validation')]), 
+      el('.input-block', [
+        el('input.date-input.input', { type: 'date', placeholder: 'date' }),
+        el('.show-validation-date-input show-validation')]), 
+      el('.input-block', [
+        el('input.street-input.input', { type: 'text', placeholder: 'street' }),
+        el('.show-validation-street-input show-validation')]), 
+      el('.input-block', [
+        el('input.city-input.input', { type: 'text', placeholder: 'city' }),
+        el('.show-validation-city-input show-validation')]),  
+      el('.input-block', [
+        el('input.postal-code-input.input', { type: 'text', placeholder: 'postal code' }),
+        el('.show-validation-postal-code-input  show-validation')]),
+      el('.input-block', [
+        el('input.country-code-input.input', { type: 'text', placeholder: 'country code' }),
+        el('.show-validation-country-code-input show-validation')]), 
+    ]);
 
-    mount(blockInput, emailInput);
-    mount(blockInput, passwordInput);
-    return blockInput;
+    this.validation.eventInput(blockInputsRegistration);
+
+    return blockInputsRegistration;
   }
 
   protected title(): HTMLElement {
-    const blockTitle = el('h2', { class: 'form-title title' });
-
-    blockTitle.textContent = 'Sign up';
+    const blockTitle = el('h2.form-title.title', 'Sign up');
     return blockTitle;
   }
 
   private createButton(): HTMLElement {
-    const button = el('button', { class: 'form-button btn' });
-    button.textContent = 'Join us';
+    const button = el('button.form-btn.btn', 'Join us', { type: 'submit' });
+
+    this.validation.checkValidationAllForm(button)
+
     return button;
   }
 
   protected build(): HTMLElement {
-    const wrapper = el('.form-wrapper');
+    const wrapper = el('.registration-form-wrapper');
     const form = this.createForm();
 
     mount(wrapper, form);
