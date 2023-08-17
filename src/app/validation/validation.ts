@@ -1,5 +1,4 @@
-import { emailSchema } from '@app/validation/schemas/login-form-schema';
-import { passwordSchema } from '@app/validation/schemas/login-form-schema';
+import { emailSchema, passwordSchema } from '@app/validation/schemas/login-form-schema';
 import { safeQuerySelector } from '@app/helpers/safe-query-selector';
 
 export class formValidation {
