@@ -1,6 +1,6 @@
 import { emailSchema } from '@app/validation/schemas/login-form-schema';
 import { passwordSchema } from '@app/validation/schemas/login-form-schema';
-import { safeQuerySelector } from '@helpers/safe-query-selector';
+import { safeQuerySelector } from '@app/helpers/safe-query-selector';
 
 export class formValidation {
   public validateForm(event: Event): void {
@@ -66,6 +66,9 @@ export class formValidation {
     if (inputsWithText === emptyErrorBlocks) {
       return true;
     } else {
+      Array.from(errorBlocks).forEach((errorBlock) => {
+        errorBlock.textContent = 'This field is required.';
+      });
       return false;
     }
   }
