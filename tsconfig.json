@@ -13,6 +13,9 @@
       "@schemas/*": [
         "./src/app/validation/schemas/*"
       ],
+      "@helpers/*": [
+        "./src/app/helpers/*"
+      ],
       "@app/*": [
         "./src/app/*"
       ],
