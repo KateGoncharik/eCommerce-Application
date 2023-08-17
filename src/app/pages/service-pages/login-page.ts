@@ -1,4 +1,4 @@
-import { Page } from '@app/templates/page';
+import { Page } from '@templates/page';
 import { el, mount } from 'redom';
 import { formValidation } from '@validation/validation';
 
