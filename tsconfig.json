@@ -11,7 +11,7 @@
     "allowSyntheticDefaultImports": true,
     "paths": {
       "@schemas/*": [
-        "./src/schemas/*"
+        "./src/app/validation/schemas/*"
       ],
       "@helpers/*": [
         "./src/helpers/*"

@@ -10,7 +10,10 @@ class LoginPage extends Page {
   };
 
   protected createHeader(): HTMLHeadingElement {
-    const headerBlock = el('h2', { class: 'form-header' });
+    const headerBlock = el('h2.form-header');
+    if (!(headerBlock instanceof HTMLHeadingElement)) {
+      throw new Error('HTMLHeadingElement expected');
+    }
     headerBlock.textContent = 'Sign in';
     return headerBlock;
   }

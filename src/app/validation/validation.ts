@@ -1,5 +1,5 @@
-import { emailSchema } from '@schemas/login-form-schema';
-import { passwordSchema } from '@schemas/login-form-schema';
+import { emailSchema } from '@app/validation/schemas/login-form-schema';
+import { passwordSchema } from '@app/validation/schemas/login-form-schema';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
 
 export class formValidation {
@@ -7,9 +7,6 @@ export class formValidation {
     const form = document.forms[0];
     const emailErrorBlock = safeQuerySelector('.email-error-block', document);
     const passwordErrorBlock = safeQuerySelector('.password-error-block', document);
-    if (!emailErrorBlock || !passwordErrorBlock) {
-      throw new Error('error block not found');
-    }
 
     if (!(event.target instanceof HTMLInputElement)) {
       throw new Error('HTMLInputElement expected');
@@ -67,10 +64,6 @@ export class formValidation {
       }
     });
     if (inputsWithText === emptyErrorBlocks) {
-      const submitButton = safeQuerySelector('.form-button', document);
-      if (!(submitButton instanceof HTMLButtonElement)) {
-        throw new Error('Button expected');
-      }
       return true;
     } else {
       return false;
