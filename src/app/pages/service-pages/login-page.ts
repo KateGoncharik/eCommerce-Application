@@ -1,6 +1,8 @@
 import { Page } from '@templates/page';
 import { el, mount } from 'redom';
 import { formValidation } from '@validation/validation';
+import { authorize } from '@app/sdk/requests';
+import { safeQuerySelector } from '@helpers/safe-query-selector';
 
 class LoginPage extends Page {
   private validation = new formValidation();
@@ -65,7 +67,18 @@ class LoginPage extends Page {
     }
     button.addEventListener('click', (event) => {
       event.preventDefault();
-      this.validation.isFormValid();
+      this.validation.isFormValid().then(() => {
+        const emailInput = safeQuerySelector('.email-input', document);
+        if (!(emailInput instanceof HTMLInputElement)) {
+          throw new Error('Button expected');
+        }
+        const passwordInput = safeQuerySelector('.password-input', document);
+        if (!(passwordInput instanceof HTMLInputElement)) {
+          throw new Error('Button expected');
+        }
+
+        authorize(emailInput.value, passwordInput.value);
+      });
     });
     return button;
   }

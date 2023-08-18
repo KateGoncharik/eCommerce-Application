@@ -1,6 +1,7 @@
 import { emailSchema, passwordSchema } from '@schemas/login-form-schema';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
-import { isUserExist } from '@sdk/requests';
+// import { isUserExist } from '@sdk/requests';
+// import { getCustomers } from '@sdk/get-customers';
 
 export class formValidation {
   public validateForm(event: Event): void {
@@ -62,9 +63,11 @@ export class formValidation {
     });
     console.log(inputs.length);
     if (inputs.length === validInputs) {
-      const userEmail = inputs[0].innerHTML;
-      const userExist = await isUserExist(userEmail);
-      console.log(userExist);
+      // const userEmail = inputs[0].innerHTML;
+      // const userExist = await isUserExist(userEmail);
+      // const customers = await getCustomers();
+      // console.log('customers', customers);
+      // console.log(userExist);
       return true;
     } else {
       inputs.forEach((input) => {
