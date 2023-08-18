@@ -24,35 +24,77 @@ class RegistrationPage extends Page {
   }
 
   private createInput(): HTMLElement {
-    const blockInputsRegistration = 
-    el('.registration-inputs-block', [
+    const blockInputsRegistration = el('.registration-inputs-block', [
       el('.input-block', [
         el('input.email-input.input', { type: 'text', placeholder: 'email' }),
-        el('.show-validation-email-input show-validation')]),
+        el('.show-validation-email-input show-validation'),
+      ]),
       el('.input-block', [
         el('input.password-input.input', { type: 'password', placeholder: 'password' }),
-        el('.show-validation-password-input show-validation')]), 
+        el('.show-validation-password-input show-validation'),
+      ]),
       el('.input-block', [
         el('input.first-name-input.input', { type: 'text', placeholder: 'first name' }),
-        el('.show-validation-first-name-input show-validation')]), 
+        el('.show-validation-first-name-input show-validation'),
+      ]),
       el('.input-block', [
         el('input.last-name-input.input', { type: 'text', placeholder: 'last name' }),
-        el('.show-validation-last-name-input show-validation')]), 
+        el('.show-validation-last-name-input show-validation'),
+      ]),
       el('.input-block', [
         el('input.date-input.input', { type: 'date', placeholder: 'date' }),
-        el('.show-validation-date-input show-validation')]), 
-      el('.input-block', [
-        el('input.street-input.input', { type: 'text', placeholder: 'street' }),
-        el('.show-validation-street-input show-validation')]), 
-      el('.input-block', [
-        el('input.city-input.input', { type: 'text', placeholder: 'city' }),
-        el('.show-validation-city-input show-validation')]),  
-      el('.input-block', [
-        el('input.postal-code-input.input', { type: 'text', placeholder: 'postal code' }),
-        el('.show-validation-postal-code-input  show-validation')]),
-      el('.input-block', [
-        el('input.country-code-input.input', { type: 'text', placeholder: 'country code' }),
-        el('.show-validation-country-code-input show-validation')]), 
+        el('.show-validation-date-input show-validation'),
+      ]),
+      [
+        el('.block-address', [
+          el('.block-billing', [
+            el('span.billing', 'Address billing'),
+            el('.input-block', [
+              el('input.street-input.input', { type: 'text', placeholder: 'street' }),
+              el('.show-validation-street-input show-validation'),
+            ]),
+            el('.input-block', [
+              el('input.city-input.input', { type: 'text', placeholder: 'city' }),
+              el('.show-validation-city-input show-validation'),
+            ]),
+            el('.input-block', [
+              el('input.postal-code-input.input', { type: 'text', placeholder: 'postal code' }),
+              el('.show-validation-postal-code-input  show-validation'),
+            ]),
+            el('.input-block', [
+              el('input.country-code-input.input', { type: 'text', placeholder: 'country code' }),
+              el('.show-validation-country-code-input show-validation'),
+            ]),
+            el('.block-billing-checkbox', [
+              el('input#billing-checkbox.checkbox-reg', { type: 'checkbox' }),
+              el('label', 'Set as default address', { for: 'billing-checkbox' }),
+            ]),
+          ]),
+          el('.block-shipping', [
+            el('span.shipping', 'Address shipping'),
+            el('.input-block', [
+              el('input.street-input.input', { type: 'text', placeholder: 'street' }),
+              el('.show-validation-street-input show-validation'),
+            ]),
+            el('.input-block', [
+              el('input.city-input.input', { type: 'text', placeholder: 'city' }),
+              el('.show-validation-city-input show-validation'),
+            ]),
+            el('.input-block', [
+              el('input.postal-code-input.input', { type: 'text', placeholder: 'postal code' }),
+              el('.show-validation-postal-code-input  show-validation'),
+            ]),
+            el('.input-block', [
+              el('input.country-code-input.input', { type: 'text', placeholder: 'country code' }),
+              el('.show-validation-country-code-input show-validation'),
+            ]),
+            el('.block-shipping-checkbox', [
+              el('input#shipping-checkbox.checkbox-reg', { type: 'checkbox' }),
+              el('label', 'Set as default address', { for: 'shipping-checkbox' }),
+            ]),
+          ]),
+        ]),
+      ],
     ]);
 
     this.validation.eventInput(blockInputsRegistration);
@@ -68,7 +110,7 @@ class RegistrationPage extends Page {
   private createButton(): HTMLElement {
     const button = el('button.form-btn.btn', 'Join us', { type: 'submit' });
 
-    this.validation.checkValidationAllForm(button)
+    this.validation.checkValidationAllForm(button);
 
     return button;
   }

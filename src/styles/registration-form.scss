@@ -73,6 +73,28 @@
   text-transform: uppercase;
 }
 
+.block-address {
+  display: flex;
+  width: 100%;
+  gap: 30px;
+  padding-top: 20px;
+}
+
+.block-shipping, 
+.block-billing {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 5px;
+}
+
+
+.billing-reg, input {
+  color: black;
+  margin: 5px 5px 0 0;
+
+}
+
 @media (width <= 900px) {
   .registration-form-wrapper {
     max-width: 75%;
