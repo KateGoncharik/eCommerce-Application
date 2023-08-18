@@ -1,5 +1,4 @@
 import { getApiRoot } from '@sdk/build-client';
-
 const getProject = async (): Promise<unknown> => {
   try {
     const project = await getApiRoot().get().execute();

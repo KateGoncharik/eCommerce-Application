@@ -1,5 +1,6 @@
-import { emailSchema, passwordSchema } from '@app/validation/schemas/login-form-schema';
-import { safeQuerySelector } from '@app/helpers/safe-query-selector';
+import { emailSchema, passwordSchema } from '@schemas/login-form-schema';
+import { safeQuerySelector } from '@helpers/safe-query-selector';
+import { isUserExist } from '@sdk/requests';
 
 export class formValidation {
   public validateForm(event: Event): void {
@@ -16,10 +17,15 @@ export class formValidation {
       if (emailValidationResult.success) {
         emailErrorBlock.textContent = '';
         form.email.style = 'border-color: green';
+        form.email.classList.remove('invalid');
+        form.email.classList.add('valid');
+
         return;
       } else {
         const errors = emailValidationResult.error.format();
         form.email.style = 'border-color: red';
+        form.email.classList.remove('valid');
+        form.email.classList.add('invalid');
         emailErrorBlock.textContent = `${errors?.email?._errors.join(', ')}`;
         return;
       }
@@ -30,43 +36,42 @@ export class formValidation {
       if (passwordValidationResult.success) {
         passwordErrorBlock.textContent = '';
         form.password.style = 'border-color: green';
+        form.password.classList.remove('invalid');
+        form.password.classList.add('valid');
         return;
       } else {
         const errors = passwordValidationResult.error.format();
         passwordErrorBlock.textContent = `${errors?.password?._errors.join(', ')}`;
         form.password.style = 'border-color: red';
+        form.password.classList.remove('valid');
+        form.password.classList.add('invalid');
         return;
       }
     }
 
     return;
   }
-  public isFormValid(): boolean {
-    const inputs = document.getElementsByClassName('input');
-    const errorBlocks = document.getElementsByClassName('error-block');
-
-    let inputsWithText = 0;
-    let emptyErrorBlocks = 0;
-
-    Array.from(inputs).forEach((input) => {
-      if (!(input instanceof HTMLInputElement)) {
-        return;
-      }
-
-      if (input.value) {
-        inputsWithText++;
+  public async isFormValid(): Promise<boolean> {
+    const inputElements = document.getElementsByClassName('input');
+    const inputs = Array.from(inputElements);
+    let validInputs = 0;
+    inputs.forEach((input) => {
+      if (input.classList.contains('valid')) {
+        validInputs++;
       }
     });
-    Array.from(errorBlocks).forEach((errorBlock) => {
-      if (errorBlock.innerHTML === '') {
-        emptyErrorBlocks++;
-      }
-    });
-    if (inputsWithText === emptyErrorBlocks) {
+    console.log(inputs.length);
+    if (inputs.length === validInputs) {
+      const userEmail = inputs[0].innerHTML;
+      const userExist = await isUserExist(userEmail);
+      console.log(userExist);
       return true;
     } else {
-      Array.from(errorBlocks).forEach((errorBlock) => {
-        errorBlock.textContent = 'This field is required.';
+      inputs.forEach((input) => {
+        if (input.innerHTML === '') {
+          console.log(input);
+          input.classList.add('invalid');
+        }
       });
       return false;
     }

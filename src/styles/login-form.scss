@@ -1,5 +1,5 @@
 .form-wrapper {
-  max-width: 70%;
+  max-width: 75%;
   margin: 0 auto;
   border: 1px solid black;
   background-color: #fff;
@@ -38,9 +38,16 @@
 .email-input,
 .password-input {
   width: 100%;
-  height: 100%;
   font-family: Gilroy, serif;
   padding: 2%;
+}
+
+.valid {
+  border: 1px solid green;
+}
+
+.invalid {
+  border: 1px solid red;
 }
 
 .password-visability-block {
