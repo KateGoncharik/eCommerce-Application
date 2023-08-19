@@ -19,13 +19,11 @@ type PasswordAuthMiddlewareOptions = {
   oauthUri?: string;
   fetch?: unknown;
 };
-
 const projectKey = 'wonderland';
-
 export const withPasswordFlowClient = (email: string, password: string): ByProjectKeyRequestBuilder => {
   const options: PasswordAuthMiddlewareOptions = {
     host: 'https://auth.europe-west1.gcp.commercetools.com',
-    projectKey: 'wonderland',
+    projectKey: projectKey,
     credentials: {
       clientId: '2urgH4Xsd9iLmBZ8N4faM8fZ',
       clientSecret: 'gXkEffP_zxsBc-VmiabriuRmg6gX6Tzr',
@@ -42,7 +40,6 @@ export const withPasswordFlowClient = (email: string, password: string): ByProje
     fetch,
   };
   const client = new ClientBuilder().withPasswordFlow(options).build();
-
   const getApiRoot = createApiBuilderFromCtpClient(client).withProjectKey({ projectKey });
   return getApiRoot;
 };

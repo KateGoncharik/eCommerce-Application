@@ -10,8 +10,6 @@ export async function isUserExist(email: string): Promise<boolean> {
 }
 
 export async function authorize(email: string, password: string): Promise<boolean> {
-  console.log('look here', getApiRoot);
-
   /*
 
         далаем запрос на login передавая username + pass (см.видео)
