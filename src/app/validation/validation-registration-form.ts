@@ -1,6 +1,6 @@
 import { Schemas, dataValue } from '@schemas/schemas-registration-form';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
-import { createUser } from '@sdk/test-sdk';
+import { createUser } from '@sdk/requests';
 
 // type Data = {
 //   body?: {
