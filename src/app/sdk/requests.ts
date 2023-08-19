@@ -1,5 +1,4 @@
 import { getApiRoot } from '@sdk/build-client';
-// import { withPasswordFlowClient } from '@sdk/login-api';
 
 export async function isUserExist(email: string): Promise<boolean> {
   const result = await getApiRoot()
@@ -10,6 +9,8 @@ export async function isUserExist(email: string): Promise<boolean> {
 }
 
 export async function authorize(email: string, password: string): Promise<boolean> {
+  console.log('look here', getApiRoot);
+
   /*
 
         далаем запрос на login передавая username + pass (см.видео)
@@ -17,7 +18,7 @@ export async function authorize(email: string, password: string): Promise<boolea
     */
 
   try {
-    await getApiRoot() // здесь я вместо 20 строки писала это -> await withPasswordFlowClient(email, password)
+    await getApiRoot()
       .login()
       .post({ body: { email: email, password: password } })
       .execute();
