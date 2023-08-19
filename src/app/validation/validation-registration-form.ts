@@ -1,59 +1,7 @@
 import { Schemas, dataValue } from '@schemas/schemas-registration-form';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
 import { createUser } from '@sdk/requests';
-
-// type Data = {
-//   body?: {
-//     email?: string,
-//     password?: string,
-//     firstName?: string,
-//     lastName?: string,
-//     dateOfBirth?: string,
-//     addresses?: [
-//       {
-//         country?: string,
-//         city?: string,
-//         streetName?: string,
-//         postalCode: string
-//       },
-//       {
-//         country?: string,
-//         city?: string,
-//         streetName?: string,
-//         postalCode?: string
-//       },
-//     ],
-//     defaultBillingAddress?: number,
-//     defaultShippingAddress?: number,
-//   }
-
-// }
-
-type Data = {
-  body: {
-    email: string;
-    password: string;
-    firstName: string;
-    lastName: string;
-    dateOfBirth: string;
-    addresses: [
-      {
-        country: string;
-        city: string;
-        streetName: string;
-        postalCode: string;
-      },
-      {
-        country: string;
-        city: string;
-        streetName: string;
-        postalCode: string;
-      },
-    ];
-    defaultBillingAddress: number;
-    defaultShippingAddress: number;
-  };
-};
+import { DataUser } from '@sdk/type';
 
 export class ValidationForm {
   private checkValidation(userData: Schemas, element: Element, showElement: Element): void {
@@ -140,21 +88,15 @@ export class ValidationForm {
     const checkboxBilling = safeQuerySelector('#billing-checkbox');
     const checkboxShipping = safeQuerySelector('#shipping-checkbox');
     const inputs = document.getElementsByClassName('input');
-    const testData: { [key: string]: Record<string, string | number | Record<string, string>[]> } | Data = {
+    const testData: { [key: string]: Record<string, string | number | Record<string, string>[]> } = {
       body: {},
     };
     const objBilling: Record<string, string> = {};
     const objShipping: Record<string, string> = {};
 
-    if (!(checkboxBilling instanceof HTMLInputElement) || !(checkboxShipping instanceof HTMLInputElement)) {
-      return;
-    }
     Array.from(inputs).forEach((input) => {
       if (!(input instanceof HTMLInputElement) || input.classList.contains('checkbox-reg')) {
         return;
-      }
-      if (input.classList.contains('email-input')) {
-        console.log();
       }
 
       const dataAttribute = input.getAttribute('data')!;
@@ -170,6 +112,12 @@ export class ValidationForm {
       }
     });
 
+    testData.body['addresses'] = [objBilling, objShipping];
+
+    if (!(checkboxBilling instanceof HTMLInputElement) || !(checkboxShipping instanceof HTMLInputElement)) {
+      return;
+    }
+
     if (checkboxBilling.checked) {
       testData.body['defaultBillingAddress'] = 1;
       testData.body['defaultShippingAddress'] = 0;
@@ -181,15 +129,12 @@ export class ValidationForm {
       testData.body['defaultShippingAddress'] = 0;
     }
 
-    testData.body['addresses'] = [objBilling, objShipping];
-    console.log(testData);
-
     return testData;
   }
 
   public dispatchForm(statusForm: boolean): void {
     if (statusForm === true) {
-      const result = this.getAssembleArray() as Data;
+      const result = this.getAssembleArray() as DataUser;
       createUser(result!);
     }
   }
