@@ -26,23 +26,23 @@ class RegistrationPage extends Page {
   private createInput(): HTMLElement {
     const blockInputsRegistration = el('.registration-inputs-block', [
       el('.input-block', [
-        el('input.email-input.input', { type: 'text', placeholder: 'email' }),
+        el('input.email-input.input', { type: 'text', placeholder: 'email', data: 'email' }),
         el('.show-validation-email-input show-validation'),
       ]),
       el('.input-block', [
-        el('input.password-input.input', { type: 'password', placeholder: 'password' }),
+        el('input.password-input.input', { type: 'password', placeholder: 'password', data: 'password' }),
         el('.show-validation-password-input show-validation'),
       ]),
       el('.input-block', [
-        el('input.first-name-input.input', { type: 'text', placeholder: 'first name' }),
+        el('input.first-name-input.input', { type: 'text', placeholder: 'first name', data: 'firstName' }),
         el('.show-validation-first-name-input show-validation'),
       ]),
       el('.input-block', [
-        el('input.last-name-input.input', { type: 'text', placeholder: 'last name' }),
+        el('input.last-name-input.input', { type: 'text', placeholder: 'last name', data: 'lastName' }),
         el('.show-validation-last-name-input show-validation'),
       ]),
       el('.input-block', [
-        el('input.date-input.input', { type: 'date', placeholder: 'date' }),
+        el('input.date-input.input', { type: 'date', placeholder: 'date', data: 'dateOfBirth' }),
         el('.show-validation-date-input show-validation'),
       ]),
       [
@@ -50,19 +50,27 @@ class RegistrationPage extends Page {
           el('.block-billing', [
             el('span.billing', 'Address billing'),
             el('.input-block', [
-              el('input.street-input.input', { type: 'text', placeholder: 'street' }),
+              el('input.street-input.input.input-billing', { type: 'text', placeholder: 'street', data: 'streetName' }),
               el('.show-validation-street-input show-validation'),
             ]),
             el('.input-block', [
-              el('input.city-input.input', { type: 'text', placeholder: 'city' }),
+              el('input.city-input.input.input-billing', { type: 'text', placeholder: 'city', data: 'city' }),
               el('.show-validation-city-input show-validation'),
             ]),
             el('.input-block', [
-              el('input.postal-code-input.input', { type: 'text', placeholder: 'postal code' }),
+              el('input.postal-code-input.input.input-billing', {
+                type: 'text',
+                placeholder: 'postal code',
+                data: 'postalCode',
+              }),
               el('.show-validation-postal-code-input  show-validation'),
             ]),
             el('.input-block', [
-              el('input.country-code-input.input', { type: 'text', placeholder: 'country code' }),
+              el('input.country-code-input.input.input-billing', {
+                type: 'text',
+                placeholder: 'country code',
+                data: 'country',
+              }),
               el('.show-validation-country-code-input show-validation'),
             ]),
             el('.block-billing-checkbox', [
@@ -73,19 +81,31 @@ class RegistrationPage extends Page {
           el('.block-shipping', [
             el('span.shipping', 'Address shipping'),
             el('.input-block', [
-              el('input.street-input.input', { type: 'text', placeholder: 'street' }),
+              el('input.street-input.input.input-shipping', {
+                type: 'text',
+                placeholder: 'street',
+                data: 'streetName',
+              }),
               el('.show-validation-street-input show-validation'),
             ]),
             el('.input-block', [
-              el('input.city-input.input', { type: 'text', placeholder: 'city' }),
+              el('input.city-input.input.input-shipping', { type: 'text', placeholder: 'city', data: 'city' }),
               el('.show-validation-city-input show-validation'),
             ]),
             el('.input-block', [
-              el('input.postal-code-input.input', { type: 'text', placeholder: 'postal code' }),
+              el('input.postal-code-input.input.input-shipping', {
+                type: 'text',
+                placeholder: 'postal code',
+                data: 'postalCode',
+              }),
               el('.show-validation-postal-code-input  show-validation'),
             ]),
             el('.input-block', [
-              el('input.country-code-input.input', { type: 'text', placeholder: 'country code' }),
+              el('input.country-code-input.input.input-shipping', {
+                type: 'text',
+                placeholder: 'country code',
+                data: 'country',
+              }),
               el('.show-validation-country-code-input show-validation'),
             ]),
             el('.block-shipping-checkbox', [
