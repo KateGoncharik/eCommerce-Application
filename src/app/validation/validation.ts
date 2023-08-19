@@ -1,8 +1,5 @@
 import { emailSchema, passwordSchema } from '@schemas/login-form-schema';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
-// import { isUserExist } from '@sdk/requests';
-// import { getCustomers } from '@sdk/get-customers';
-
 export class formValidation {
   public validateForm(event: Event): void {
     const form = document.forms[0];
@@ -49,7 +46,6 @@ export class formValidation {
         return;
       }
     }
-
     return;
   }
   public async isFormValid(): Promise<boolean> {
@@ -61,18 +57,11 @@ export class formValidation {
         validInputs++;
       }
     });
-    console.log(inputs.length);
     if (inputs.length === validInputs) {
-      // const userEmail = inputs[0].innerHTML;
-      // const userExist = await isUserExist(userEmail);
-      // const customers = await getCustomers();
-      // console.log('customers', customers);
-      // console.log(userExist);
       return true;
     } else {
       inputs.forEach((input) => {
         if (input.innerHTML === '') {
-          console.log(input);
           input.classList.add('invalid');
         }
       });

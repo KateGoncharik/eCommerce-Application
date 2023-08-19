@@ -1,7 +1,7 @@
 import { Page } from '@templates/page';
 import { el, mount } from 'redom';
 import { formValidation } from '@validation/validation';
-import { authorize } from '@app/sdk/requests';
+import { authorizeUser } from '@app/sdk/requests';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
 
 class LoginPage extends Page {
@@ -77,7 +77,7 @@ class LoginPage extends Page {
           throw new Error('Button expected');
         }
 
-        authorize(emailInput.value, passwordInput.value);
+        authorizeUser(emailInput.value, passwordInput.value);
       });
     });
     return button;
