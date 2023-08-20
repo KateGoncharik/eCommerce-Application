@@ -82,11 +82,7 @@ class LoginPage extends Page {
       const emailErrorBlock = safeQuerySelector<HTMLInputElement>('.email-error-block', document);
 
       const authError = await authorizeUser(emailInput.value, passwordInput.value);
-      if (authError) {
-        emailErrorBlock.textContent = authError;
-      } else {
-        emailErrorBlock.textContent = '';
-      }
+      emailErrorBlock.textContent = authError ?? '';
     });
     return button;
   }
