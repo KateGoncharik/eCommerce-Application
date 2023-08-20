@@ -1,7 +1,7 @@
 import { Schemas, dataValue } from '@schemas/schemas-registration-form';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
 import { createUser } from '@sdk/requests';
-import { DataUser } from '@sdk/type';
+import { DataUser } from '@app/types/datauser';
 
 export class ValidationForm {
   private checkValidation(userData: Schemas, element: Element, showElement: Element): void {
@@ -56,22 +56,22 @@ export class ValidationForm {
 
       if (target.id === 'use-billing-for-shipping') {
         target.checked ? (shipping.disabled = true) : (shipping.disabled = false);
-        this.disabledInputAddress(inputsShipping, target.checked);
+        this.disabledInputAddress(inputsShipping);
       }
 
       if (target.id === 'use-shipping-for-billing') {
         target.checked ? (billing.disabled = true) : (billing.disabled = false);
-        this.disabledInputAddress(inputsBilling, target.checked);
+        this.disabledInputAddress(inputsBilling);
       }
     });
   }
 
-  private disabledInputAddress(blockInput: HTMLCollectionOf<Element>, status: boolean): void {
+  private disabledInputAddress(blockInput: HTMLCollectionOf<Element>): void {
     Array.from(blockInput).forEach((input) => {
       if (!(input instanceof HTMLInputElement)) {
         return;
       }
-      status ? (input.disabled = true) : (input.disabled = false);
+      !input.disabled ? (input.disabled = true) : (input.disabled = false);
       input.classList.toggle('disabled-input');
     });
   }
@@ -105,7 +105,7 @@ export class ValidationForm {
         this.checkChangeInput(input);
       });
 
-      this.dispatchForm(countTrue === inputs.length);
+      countTrue === inputs.length && this.dispatchForm();
     };
 
     elementBtn.addEventListener('click', checkInputsValid);
@@ -149,14 +149,18 @@ export class ValidationForm {
           objBilling[dataAttribute] = input.value;
           objShipping[dataAttribute] = input.value;
         } else {
-          objBilling[dataAttribute] = input.value;
+          if (!checkboxShippingUseAll.checked) {
+            objBilling[dataAttribute] = input.value;
+          }
         }
       } else if (input.classList.contains('input-shipping')) {
         if (checkboxShippingUseAll.checked) {
           objBilling[dataAttribute] = input.value;
           objShipping[dataAttribute] = input.value;
         } else {
-          objShipping[dataAttribute] = input.value;
+          if (!checkboxBillingUseAll.checked) {
+            objShipping[dataAttribute] = input.value;
+          }
         }
       } else {
         userData.body[dataAttribute] = input.value;
@@ -165,12 +169,8 @@ export class ValidationForm {
 
     userData.body['addresses'] = [objBilling, objShipping];
 
-    checkboxDefaultBilling.checked
-      ? (userData.body['defaultBillingAddress'] = 1)
-      : (userData.body['defaultBillingAddress'] = 0);
-    checkboxDefaultShipping.checked
-      ? (userData.body['defaultShippingAddress'] = 1)
-      : (userData.body['defaultShippingAddress'] = 0);
+    checkboxDefaultBilling.checked && (userData.body['defaultBillingAddress'] = 0);
+    checkboxDefaultShipping.checked && (userData.body['defaultShippingAddress'] = 1);
 
     return userData;
   }
@@ -183,14 +183,13 @@ export class ValidationForm {
     successfulBlock.style.display = 'flex';
   }
 
-  public dispatchForm(statusForm: boolean): void {
-    if (statusForm === true) {
-      const getArray = this.getAssembleArray() as DataUser;
-      createUser(getArray!).then((statusCode) => {
-        if (statusCode === 201) {
-          this.showSuccessfulRegistrartion();
-        }
-      });
-    }
+  public dispatchForm(): void {
+    const getArray = this.getAssembleArray() as DataUser;
+
+    createUser(getArray!).then((statusCode) => {
+      if (statusCode === 201) {
+        this.showSuccessfulRegistrartion();
+      }
+    });
   }
 }
