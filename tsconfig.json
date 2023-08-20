@@ -49,6 +49,9 @@
       "@images/*": [
         "./src/assets/images/*"
       ],
+      "@animation/*": [
+        "./src/assets/animation/*"
+      ],
       "@styles/*": [
         "./src/styles/*"
       ],
