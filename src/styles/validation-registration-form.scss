@@ -13,3 +13,32 @@
   font: 14px Gilroy, serif;
   color: red;  
 }
+
+.successful {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  gap: 20px;
+}
+
+.icon-ssuccessful {
+  width: 100px;
+  height: auto;
+}
+
+.message {
+  font: 26px Gilroy, serif;
+}
+
+@media (width <= 650px) {
+  .message {
+    font-size: 16px;
+  }
+
+  .icon-ssuccessful {
+    width: 60px;
+  }
+}

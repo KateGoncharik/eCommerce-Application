@@ -132,16 +132,22 @@ export class ValidationForm {
     return testData;
   }
 
-  public dispatchForm(statusForm: boolean): string {
+  public dispatchForm(statusForm: boolean): void {
     if (statusForm === true) {
       const getArray = this.getAssembleArray() as DataUser;
-      const statusCode = createUser(getArray!).then((e) => {
-        return e;
+      createUser(getArray!).then((e) => {
+        if (e === 201) {
+          this.showSuccessfulRegistrartion();
+        }
       });
-      if (typeof statusCode === 'string') {
-        return statusCode!;
-      }
     }
-    return '';
+  }
+
+  public showSuccessfulRegistrartion(): void {
+    const successfulBlock = safeQuerySelector('.successful');
+    const formBlock = safeQuerySelector('.registration-form');
+
+    formBlock.style.display = 'none';
+    successfulBlock.style.display = 'flex';
   }
 }

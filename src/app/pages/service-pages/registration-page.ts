@@ -1,6 +1,7 @@
 import { Page } from '@templates/page';
 import { el, mount } from 'redom';
 import { ValidationForm } from '@validation/validation-registration-form';
+import successful from '@icons/successful-ок.png';
 
 class RegistrationPage extends Page {
   private validation = new ValidationForm();
@@ -15,7 +16,9 @@ class RegistrationPage extends Page {
     const blockInput = this.createInput();
     const title = this.title();
     const blockButton = this.createButton();
+    const SuccessfulBlock = this.createSuccessfulBlock();
 
+    mount(blockForm, SuccessfulBlock);
     mount(blockForm, form);
     mount(form, title);
     mount(form, blockInput);
@@ -120,6 +123,22 @@ class RegistrationPage extends Page {
     this.validation.eventInput(blockInputsRegistration);
 
     return blockInputsRegistration;
+  }
+
+  private createSuccessfulBlock(): HTMLElement {
+    const SuccessfulBlock = el('.successful-block', [
+      el('.successful', [
+        el('.img-massege', [
+          el('img.icon-ssuccessful', {
+            src: successful,
+            alt: 'icon successful',
+          }),
+        ]),
+        el('p.message', 'You have successfully registered!'),
+      ]),
+    ]);
+
+    return SuccessfulBlock;
   }
 
   protected title(): HTMLElement {
