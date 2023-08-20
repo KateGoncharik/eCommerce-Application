@@ -62,23 +62,24 @@ class LoginPage extends Page {
 
   private createButton(): HTMLElement {
     const button = el('button.form-button', 'Continue', { type: 'submit' });
-    if (!(button instanceof HTMLButtonElement)) {
-      throw new Error('Button expected');
-    }
-    button.addEventListener('click', (event) => {
+    button.addEventListener('click', async (event) => {
       event.preventDefault();
-      this.validation.isFormValid().then(() => {
-        const emailInput = safeQuerySelector('.email-input', document);
-        if (!(emailInput instanceof HTMLInputElement)) {
-          throw new Error('Button expected');
-        }
-        const passwordInput = safeQuerySelector('.password-input', document);
-        if (!(passwordInput instanceof HTMLInputElement)) {
-          throw new Error('Button expected');
-        }
-
-        authorizeUser(emailInput.value, passwordInput.value);
-      });
+      const isFormValidResult = await this.validation.isFormValid();
+      if (isFormValidResult === false) {
+        const inputElements = document.getElementsByClassName('input');
+        const inputs = Array.from(inputElements);
+        inputs.forEach((input) => {
+          if (input.innerHTML === '') {
+            input.classList.add('invalid');
+          }
+        });
+      }
+      if (!isFormValidResult) {
+        return;
+      }
+      const emailInput = safeQuerySelector<HTMLInputElement>('.email-input', document);
+      const passwordInput = safeQuerySelector<HTMLInputElement>('.password-input', document);
+      await authorizeUser(emailInput.value, passwordInput.value);
     });
     return button;
   }

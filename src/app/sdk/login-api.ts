@@ -1,17 +1,15 @@
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
-import type { PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
-import { scopes, httpMiddlewareOptions } from '@sdk/build-client';
-import { ClientBuilder } from '@commercetools/sdk-client-v2';
-const projectKey = 'wonderland';
+import { projectKey, scopes, oauthUri, clientId, clientSecret, httpMiddlewareOptions } from '@sdk/params';
+import { PasswordAuthMiddlewareOptions, ClientBuilder } from '@commercetools/sdk-client-v2';
 
 export const withPasswordFlowClient = (email: string, password: string): ByProjectKeyRequestBuilder => {
   const options: PasswordAuthMiddlewareOptions = {
-    host: 'https://auth.us-central1.gcp.commercetools.com',
+    host: oauthUri,
     projectKey: projectKey,
     credentials: {
-      clientId: '2urgH4Xsd9iLmBZ8N4faM8fZ',
-      clientSecret: 'gXkEffP_zxsBc-VmiabriuRmg6gX6Tzr',
+      clientId: clientId,
+      clientSecret: clientSecret,
       user: {
         username: email,
         password: password,
@@ -21,7 +19,6 @@ export const withPasswordFlowClient = (email: string, password: string): ByProje
     fetch,
   };
 
-  console.log(options);
   const newClient = new ClientBuilder()
     .withPasswordFlow(options)
     .withHttpMiddleware(httpMiddlewareOptions)
