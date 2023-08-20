@@ -132,6 +132,14 @@ export class ValidationForm {
     return testData;
   }
 
+  public showSuccessfulRegistrartion(): void {
+    const successfulBlock = safeQuerySelector('.successful');
+    const formBlock = safeQuerySelector('.registration-form');
+
+    formBlock.style.display = 'none';
+    successfulBlock.style.display = 'flex';
+  }
+
   public dispatchForm(statusForm: boolean): void {
     if (statusForm === true) {
       const getArray = this.getAssembleArray() as DataUser;
@@ -141,13 +149,5 @@ export class ValidationForm {
         }
       });
     }
-  }
-
-  public showSuccessfulRegistrartion(): void {
-    const successfulBlock = safeQuerySelector('.successful');
-    const formBlock = safeQuerySelector('.registration-form');
-
-    formBlock.style.display = 'none';
-    successfulBlock.style.display = 'flex';
   }
 }
