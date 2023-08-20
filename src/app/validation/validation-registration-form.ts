@@ -143,8 +143,8 @@ export class ValidationForm {
   public dispatchForm(statusForm: boolean): void {
     if (statusForm === true) {
       const getArray = this.getAssembleArray() as DataUser;
-      createUser(getArray!).then((e) => {
-        if (e === 201) {
+      createUser(getArray!).then((statusCode) => {
+        if (statusCode === 201) {
           this.showSuccessfulRegistrartion();
         }
       });
