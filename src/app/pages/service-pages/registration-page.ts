@@ -27,6 +27,8 @@ class RegistrationPage extends Page {
   }
 
   private createInput(): HTMLElement {
+    const useShipping = el('input#use-shipping-for-billing.checkbox-reg', { type: 'checkbox' });
+    const useBilling = el('input#use-billing-for-shipping.checkbox-reg', { type: 'checkbox' });
     const blockInputsRegistration = el('.registration-inputs-block', [
       el('.input-block', [
         el('input.email-input.input', { type: 'text', placeholder: 'email', data: 'email' }),
@@ -77,8 +79,12 @@ class RegistrationPage extends Page {
               el('.show-validation-country-code-input show-validation'),
             ]),
             el('.block-billing-checkbox', [
-              el('input#billing-checkbox.checkbox-reg', { type: 'checkbox' }),
-              el('label', 'Set billing as default address', { for: 'billing-checkbox' }),
+              el('input#billing-default-checkbox.checkbox-reg', { type: 'checkbox' }),
+              el('label', 'Set billing as default address', { for: 'billing-default-checkbox' }),
+            ]),
+            el('.block-billing-checkbox', [
+              useBilling,
+              el('label', 'Use this address for the shipping field', { for: 'use-billing-for-shipping' }),
             ]),
           ]),
           el('.block-shipping', [
@@ -112,8 +118,12 @@ class RegistrationPage extends Page {
               el('.show-validation-country-code-input show-validation'),
             ]),
             el('.block-shipping-checkbox', [
-              el('input#shipping-checkbox.checkbox-reg', { type: 'checkbox' }),
-              el('label', 'Set shipping as default address', { for: 'shipping-checkbox' }),
+              el('input#shipping-default-checkbox.checkbox-reg', { type: 'checkbox' }),
+              el('label', 'Set shipping as default address', { for: 'shipping-default-checkbox' }),
+            ]),
+            el('.block-shipping-checkbox', [
+              useShipping,
+              el('label', 'Use this address for the billing field', { for: 'use-shipping-for-billing' }),
             ]),
           ]),
         ]),
@@ -121,6 +131,7 @@ class RegistrationPage extends Page {
     ]);
 
     this.validation.eventInput(blockInputsRegistration);
+    this.validation.eventCheckBox(blockInputsRegistration, useBilling, useShipping);
 
     return blockInputsRegistration;
   }
@@ -159,6 +170,7 @@ class RegistrationPage extends Page {
     const form = this.createForm();
 
     mount(wrapper, form);
+
     return wrapper;
   }
 }

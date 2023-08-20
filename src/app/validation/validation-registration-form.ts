@@ -8,7 +8,7 @@ export class ValidationForm {
     const validationResult = Schemas.safeParse(userData);
     const showBlock = showElement as HTMLElement;
 
-    if (!validationResult.success) {
+    if (!validationResult.success && !element.classList.contains('disabled-input')) {
       const fieldErrors = validationResult.error.formErrors.fieldErrors;
 
       for (const key in fieldErrors) {
@@ -44,6 +44,38 @@ export class ValidationForm {
     });
   }
 
+  public eventCheckBox(element: HTMLElement, billing: HTMLElement, shipping: HTMLElement): void {
+    const inputsBilling = document.getElementsByClassName('input-billing');
+    const inputsShipping = document.getElementsByClassName('input-shipping');
+
+    element.addEventListener('click', (event) => {
+      if (!(shipping instanceof HTMLInputElement) || !(billing instanceof HTMLInputElement)) {
+        return;
+      }
+      const target = event.target as HTMLInputElement;
+
+      if (target.id === 'use-billing-for-shipping') {
+        target.checked ? (shipping.disabled = true) : (shipping.disabled = false);
+        this.disabledInputAddress(inputsShipping, target.checked);
+      }
+
+      if (target.id === 'use-shipping-for-billing') {
+        target.checked ? (billing.disabled = true) : (billing.disabled = false);
+        this.disabledInputAddress(inputsBilling, target.checked);
+      }
+    });
+  }
+
+  private disabledInputAddress(blockInput: HTMLCollectionOf<Element>, status: boolean): void {
+    Array.from(blockInput).forEach((input) => {
+      if (!(input instanceof HTMLInputElement)) {
+        return;
+      }
+      status ? (input.disabled = true) : (input.disabled = false);
+      input.classList.toggle('disabled-input');
+    });
+  }
+
   public checkChangeInput(input: HTMLInputElement): void {
     const placeholder = input.placeholder;
     const showErrorBlock = input.nextElementSibling!;
@@ -65,7 +97,7 @@ export class ValidationForm {
         if (!(input instanceof HTMLInputElement)) {
           return;
         }
-
+        this.checkChangeInput(input);
         if (input.classList.contains('input-valid')) {
           return countTrue++;
         }
@@ -85,14 +117,25 @@ export class ValidationForm {
   }
 
   private getAssembleArray(): object | undefined {
-    const checkboxBilling = safeQuerySelector('#billing-checkbox');
-    const checkboxShipping = safeQuerySelector('#shipping-checkbox');
+    const checkboxDefaultBilling = safeQuerySelector('#billing-default-checkbox');
+    const checkboxDefaultShipping = safeQuerySelector('#shipping-default-checkbox');
+    const checkboxBillingUseAll = safeQuerySelector('#use-billing-for-shipping');
+    const checkboxShippingUseAll = safeQuerySelector('#use-shipping-for-billing');
     const inputs = document.getElementsByClassName('input');
-    const testData: { [key: string]: Record<string, string | number | Record<string, string>[]> } = {
+    const userData: { [key: string]: Record<string, string | number | Record<string, string>[]> } = {
       body: {},
     };
     const objBilling: Record<string, string> = {};
     const objShipping: Record<string, string> = {};
+
+    if (
+      !(checkboxDefaultBilling instanceof HTMLInputElement) ||
+      !(checkboxDefaultShipping instanceof HTMLInputElement) ||
+      !(checkboxBillingUseAll instanceof HTMLInputElement) ||
+      !(checkboxShippingUseAll instanceof HTMLInputElement)
+    ) {
+      return;
+    }
 
     Array.from(inputs).forEach((input) => {
       if (!(input instanceof HTMLInputElement) || input.classList.contains('checkbox-reg')) {
@@ -102,34 +145,34 @@ export class ValidationForm {
       const dataAttribute = input.getAttribute('data')!;
 
       if (input.classList.contains('input-billing')) {
-        console.log('.input-billing');
-        objBilling[dataAttribute] = input.value;
+        if (checkboxBillingUseAll.checked) {
+          objBilling[dataAttribute] = input.value;
+          objShipping[dataAttribute] = input.value;
+        } else {
+          objBilling[dataAttribute] = input.value;
+        }
       } else if (input.classList.contains('input-shipping')) {
-        console.log('.input-shipping');
-        objShipping[dataAttribute] = input.value;
+        if (checkboxShippingUseAll.checked) {
+          objBilling[dataAttribute] = input.value;
+          objShipping[dataAttribute] = input.value;
+        } else {
+          objShipping[dataAttribute] = input.value;
+        }
       } else {
-        testData.body[dataAttribute] = input.value;
+        userData.body[dataAttribute] = input.value;
       }
     });
 
-    testData.body['addresses'] = [objBilling, objShipping];
+    userData.body['addresses'] = [objBilling, objShipping];
 
-    if (!(checkboxBilling instanceof HTMLInputElement) || !(checkboxShipping instanceof HTMLInputElement)) {
-      return;
-    }
+    checkboxDefaultBilling.checked
+      ? (userData.body['defaultBillingAddress'] = 1)
+      : (userData.body['defaultBillingAddress'] = 0);
+    checkboxDefaultShipping.checked
+      ? (userData.body['defaultShippingAddress'] = 1)
+      : (userData.body['defaultShippingAddress'] = 0);
 
-    if (checkboxBilling.checked) {
-      testData.body['defaultBillingAddress'] = 1;
-      testData.body['defaultShippingAddress'] = 0;
-    } else if (checkboxShipping.checked) {
-      testData.body['defaultBillingAddress'] = 0;
-      testData.body['defaultShippingAddress'] = 1;
-    } else {
-      testData.body['defaultBillingAddress'] = 1;
-      testData.body['defaultShippingAddress'] = 0;
-    }
-
-    return testData;
+    return userData;
   }
 
   public showSuccessfulRegistrartion(): void {
