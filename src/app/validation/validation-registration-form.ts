@@ -132,10 +132,16 @@ export class ValidationForm {
     return testData;
   }
 
-  public dispatchForm(statusForm: boolean): void {
+  public dispatchForm(statusForm: boolean): string {
     if (statusForm === true) {
-      const result = this.getAssembleArray() as DataUser;
-      createUser(result!);
+      const getArray = this.getAssembleArray() as DataUser;
+      const statusCode = createUser(getArray!).then((e) => {
+        return e;
+      });
+      if (typeof statusCode === 'string') {
+        return statusCode!;
+      }
     }
+    return '';
   }
 }

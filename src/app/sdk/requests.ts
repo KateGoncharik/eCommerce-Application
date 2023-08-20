@@ -13,7 +13,7 @@ const getProject = async (): Promise<unknown> => {
 const createUser = async (form: DataUser): Promise<unknown> => {
   try {
     const project = await getApiRoot().customers().post(form).execute();
-    return project;
+    return project.statusCode;
   } catch (err) {
     console.log(err);
   }
