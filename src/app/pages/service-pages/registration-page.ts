@@ -63,21 +63,22 @@ class RegistrationPage extends Page {
               el('.show-validation-city-input show-validation'),
             ]),
             el('.input-block', [
-              el('input.postal-code-input.input.input-billing', {
+              el('input.country-code-input-billing.input.input-billing', {
+                type: 'text',
+                placeholder: 'country',
+                data: 'country',
+              }),
+              el('.show-validation-country-code-input show-validation'),
+            ]),
+            el('.input-block', [
+              el('input.postal-code-input-billing.input.input-billing', {
                 type: 'text',
                 placeholder: 'postal code',
                 data: 'postalCode',
               }),
               el('.show-validation-postal-code-input  show-validation'),
             ]),
-            el('.input-block', [
-              el('input.country-code-input.input.input-billing', {
-                type: 'text',
-                placeholder: 'country code',
-                data: 'country',
-              }),
-              el('.show-validation-country-code-input show-validation'),
-            ]),
+
             el('.block-billing-checkbox', [
               el('input#billing-default-checkbox.checkbox-reg', { type: 'checkbox' }),
               el('label', 'Set billing as default address', { for: 'billing-default-checkbox' }),
@@ -102,20 +103,20 @@ class RegistrationPage extends Page {
               el('.show-validation-city-input show-validation'),
             ]),
             el('.input-block', [
-              el('input.postal-code-input.input.input-shipping', {
+              el('input.country-code-input-shipping.input.input-shipping', {
+                type: 'text',
+                placeholder: 'country',
+                data: 'country',
+              }),
+              el('.show-validation-country-code-input show-validation'),
+            ]),
+            el('.input-block', [
+              el('input.postal-code-input-shipping.input.input-shipping', {
                 type: 'text',
                 placeholder: 'postal code',
                 data: 'postalCode',
               }),
               el('.show-validation-postal-code-input  show-validation'),
-            ]),
-            el('.input-block', [
-              el('input.country-code-input.input.input-shipping', {
-                type: 'text',
-                placeholder: 'country code',
-                data: 'country',
-              }),
-              el('.show-validation-country-code-input show-validation'),
             ]),
             el('.block-shipping-checkbox', [
               el('input#shipping-default-checkbox.checkbox-reg', { type: 'checkbox' }),

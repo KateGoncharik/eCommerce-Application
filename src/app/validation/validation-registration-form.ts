@@ -1,14 +1,26 @@
 import { Schemas, dataValue } from '@schemas/schemas-registration-form';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
-import { createUser } from '@sdk/requests';
+import { createUser, isUserExist } from '@sdk/requests';
 import { DataUser } from '@app/types/datauser';
 
 export class ValidationForm {
-  private checkValidation(userData: Schemas, element: Element, showElement: Element): void {
+  private checkValidation(userData: Schemas, input: Element, showElement: Element): void {
     const validationResult = Schemas.safeParse(userData);
     const showBlock = showElement as HTMLElement;
+    const inputCountryShipping = safeQuerySelector('.country-code-input-shipping');
+    const inputCountryCodeBilling = safeQuerySelector('.country-code-input-billing');
 
-    if (!validationResult.success && !element.classList.contains('disabled-input')) {
+    if (!(input instanceof HTMLInputElement)) {
+      return;
+    }
+    if (
+      input.classList.contains('postal-code-input-billing') ||
+      input.classList.contains('postal-code-input-shipping')
+    ) {
+      input.classList.add('active');
+    }
+
+    if (!validationResult.success && !input.classList.contains('disabled-input')) {
       const fieldErrors = validationResult.error.formErrors.fieldErrors;
 
       for (const key in fieldErrors) {
@@ -18,16 +30,38 @@ export class ValidationForm {
           showBlock.style.display = 'flex';
           showBlock.textContent = this.showErrors(arrayErrors);
 
-          element.classList.remove('input-valid');
-          element.classList.add('input-error');
+          input.classList.remove('input-valid');
+          input.classList.add('input-error');
         }
       }
     } else {
+      //registered Email check
+      if (input.classList.contains('email-input')) {
+        isUserExist(input.value).then((result) => {
+          if (result) {
+            showBlock.style.display = 'flex';
+            showBlock.textContent = 'An account with Email already exists.';
+
+            input.classList.remove('input-valid');
+            input.classList.add('input-error');
+          }
+        });
+      }
+
+      if (input.classList.contains('country-code-input-billing')) {
+        inputCountryCodeBilling.classList.add('active');
+        inputCountryShipping.classList.remove('active');
+      }
+      if (input.classList.contains('country-code-input-shipping')) {
+        inputCountryShipping.classList.add('active');
+        inputCountryCodeBilling.classList.remove('active');
+      }
+
       showBlock.textContent = '';
       showBlock.style.display = 'none';
 
-      element.classList.add('input-valid');
-      element.classList.remove('input-error');
+      input.classList.add('input-valid');
+      input.classList.remove('input-error');
     }
   }
 
@@ -122,6 +156,7 @@ export class ValidationForm {
     const checkboxBillingUseAll = safeQuerySelector('#use-billing-for-shipping');
     const checkboxShippingUseAll = safeQuerySelector('#use-shipping-for-billing');
     const inputs = document.getElementsByClassName('input');
+    let value: string | undefined;
     const userData: { [key: string]: Record<string, string | number | Record<string, string>[]> } = {
       body: {},
     };
@@ -144,26 +179,28 @@ export class ValidationForm {
 
       const dataAttribute = input.getAttribute('data')!;
 
+      input.getAttribute('data')! === 'country' ? (value = this.getCodeCountry(input)) : (value = input.value);
+
       if (input.classList.contains('input-billing')) {
         if (checkboxBillingUseAll.checked) {
-          objBilling[dataAttribute] = input.value;
-          objShipping[dataAttribute] = input.value;
+          objBilling[dataAttribute] = value;
+          objShipping[dataAttribute] = value;
         } else {
           if (!checkboxShippingUseAll.checked) {
-            objBilling[dataAttribute] = input.value;
+            objBilling[dataAttribute] = value;
           }
         }
       } else if (input.classList.contains('input-shipping')) {
         if (checkboxShippingUseAll.checked) {
-          objBilling[dataAttribute] = input.value;
-          objShipping[dataAttribute] = input.value;
+          objBilling[dataAttribute] = value;
+          objShipping[dataAttribute] = value;
         } else {
           if (!checkboxBillingUseAll.checked) {
-            objShipping[dataAttribute] = input.value;
+            objShipping[dataAttribute] = value;
           }
         }
       } else {
-        userData.body[dataAttribute] = input.value;
+        userData.body[dataAttribute] = value;
       }
     });
 
@@ -173,6 +210,25 @@ export class ValidationForm {
     checkboxDefaultShipping.checked && (userData.body['defaultShippingAddress'] = 1);
 
     return userData;
+  }
+
+  public getCodeCountry(input: HTMLInputElement): string {
+    let codeCountry: string | undefined;
+    switch (input.value) {
+      case 'United States':
+        codeCountry = 'US';
+        break;
+      case 'Germany':
+        codeCountry = 'DE';
+        break;
+      case 'Spain':
+        codeCountry = 'ES';
+        break;
+      case 'Australia':
+        codeCountry = 'AU';
+        break;
+    }
+    return codeCountry!;
   }
 
   public showSuccessfulRegistrartion(): void {
@@ -189,6 +245,10 @@ export class ValidationForm {
     createUser(getArray!).then((statusCode) => {
       if (statusCode === 201) {
         this.showSuccessfulRegistrartion();
+      } else {
+        console.log('statusCode GMSIL ERROS');
+
+        console.log(statusCode);
       }
     });
   }
