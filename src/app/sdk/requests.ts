@@ -1,5 +1,17 @@
-import { ClientResponse, ErrorResponse } from '@commercetools/platform-sdk';
+import { getApiRoot } from '@sdk/build-client';
 import { withPasswordFlowClient } from '@sdk/login-api';
+import { ClientResponse, ErrorResponse } from '@commercetools/platform-sdk';
+import { DataUser } from '@app/types/datauser';
+
+const createUser = async (form: DataUser): Promise<number | undefined> => {
+  try {
+    const request = await getApiRoot().customers().post(form).execute();
+    return request.statusCode;
+  } catch (err) {
+    console.log(err);
+  }
+};
+export { createUser };
 
 export async function authorizeUser(email: string, password: string): Promise<void | string> {
   return await withPasswordFlowClient(email, password)
@@ -16,3 +28,4 @@ export async function authorizeUser(email: string, password: string): Promise<vo
       }
     );
 } //TODO make catch instead of then
+
