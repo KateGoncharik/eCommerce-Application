@@ -9,6 +9,9 @@ export async function authorizeUser(email: string, password: string): Promise<vo
     .then(
       () => {},
       (errorResponse: ClientResponse<ErrorResponse>) => {
+        if (errorResponse.body.message === 'Customer account with the given credentials not found.') {
+          return 'Wrong email or password. Try again or register';
+        }
         return errorResponse.body.message;
       }
     );
