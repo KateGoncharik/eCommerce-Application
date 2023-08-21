@@ -1,9 +1,10 @@
-export function toggleValidationState(element: HTMLElement, validationState: string): void {
-  if (validationState === 'valid') {
-    element.classList.remove('invalid');
-    element.classList.add('valid');
-  } else {
-    element.classList.remove('valid');
-    element.classList.add('invalid');
-  }
+function markInputAsValid(element: HTMLElement): void {
+  element.classList.remove('invalid');
+  element.classList.add('valid');
 }
+
+function markInputAsInvalid(element: HTMLElement): void {
+  element.classList.remove('valid');
+  element.classList.add('invalid');
+}
+export { markInputAsValid, markInputAsInvalid };

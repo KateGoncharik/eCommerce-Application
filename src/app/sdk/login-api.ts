@@ -1,23 +1,11 @@
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
-import { projectKey, scopes, oauthUri, clientId, clientSecret, httpMiddlewareOptions } from '@sdk/params';
-import { PasswordAuthMiddlewareOptions, ClientBuilder } from '@commercetools/sdk-client-v2';
+import { projectKey } from '@sdk/params';
+import { ClientBuilder } from '@commercetools/sdk-client-v2';
+import { passwordAuthMiddlewareOptions, httpMiddlewareOptions } from '@sdk/middlewares';
 
 export const withPasswordFlowClient = (email: string, password: string): ByProjectKeyRequestBuilder => {
-  const options: PasswordAuthMiddlewareOptions = {
-    host: oauthUri,
-    projectKey: projectKey,
-    credentials: {
-      clientId: clientId,
-      clientSecret: clientSecret,
-      user: {
-        username: email,
-        password: password,
-      },
-    },
-    scopes: scopes,
-    fetch,
-  };
+  const options = passwordAuthMiddlewareOptions(email, password);
 
   const newClient = new ClientBuilder()
     .withPasswordFlow(options)

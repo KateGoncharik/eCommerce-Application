@@ -10,11 +10,6 @@ export async function authorizeUser(email: string, password: string): Promise<Cl
     return request;
   } catch (e) {
     console.log(e);
-
-    //TODO use BadRequest obj instead. Now we have import issue
-    // if (typeof e === 'object' && e && 'statusCode' in e && e.statusCode === 400) {
-    //   return false;
-    // }
     throw e;
   }
 }

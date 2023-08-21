@@ -1,24 +1,8 @@
-import {
-  ClientBuilder,
-  // Import middlewares
-  type AuthMiddlewareOptions, // Required for auth
-} from '@commercetools/sdk-client-v2';
-
+import { ClientBuilder } from '@commercetools/sdk-client-v2';
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
-import { projectKey, oauthUri, scopes, clientId, clientSecret, httpMiddlewareOptions } from '@sdk/params';
-
-// Configure authMiddlewareOptions
-const authMiddlewareOptions: AuthMiddlewareOptions = {
-  host: oauthUri,
-  projectKey: projectKey,
-  credentials: {
-    clientId: clientId,
-    clientSecret: clientSecret,
-  },
-  scopes,
-  fetch,
-};
+import { projectKey, httpMiddlewareOptions } from '@sdk/params';
+import { authMiddlewareOptions } from '@sdk/middlewares';
 
 // Export the ClientBuilder
 const ctpClient = new ClientBuilder()
