@@ -80,7 +80,7 @@ class RegistrationPage extends Page {
             ]),
             el('.block-billing-checkbox', [
               el('input#billing-default-checkbox.checkbox-reg', { type: 'checkbox' }),
-              el('label', 'Set billing as default address', { for: 'billing-default-checkbox' }),
+              el('label', 'Set as default billing address', { for: 'billing-default-checkbox' }),
             ]),
             el('.block-billing-checkbox', [
               useBilling,
@@ -119,7 +119,7 @@ class RegistrationPage extends Page {
             ]),
             el('.block-shipping-checkbox', [
               el('input#shipping-default-checkbox.checkbox-reg', { type: 'checkbox' }),
-              el('label', 'Set shipping as default address', { for: 'shipping-default-checkbox' }),
+              el('label', 'Set as default shipping address', { for: 'shipping-default-checkbox' }),
             ]),
             el('.block-shipping-checkbox', [
               useShipping,
