@@ -79,7 +79,10 @@ class LoginPage extends Page {
 
       const emailInput = safeQuerySelector<HTMLInputElement>('.email-input', document);
       const passwordInput = safeQuerySelector<HTMLInputElement>('.password-input', document);
-      await authorizeUser(emailInput.value, passwordInput.value);
+      const emailErrorBlock = safeQuerySelector<HTMLInputElement>('.email-error-block', document);
+
+      const authError = await authorizeUser(emailInput.value, passwordInput.value);
+      emailErrorBlock.textContent = authError ?? '';
     });
     return button;
   }
