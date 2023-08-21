@@ -1,5 +1,3 @@
-import { type HttpMiddlewareOptions } from '@commercetools/sdk-client-v2';
-
 const projectKey = 'wonderland';
 
 const scopes = [
@@ -12,9 +10,4 @@ const clientSecret = 'gXkEffP_zxsBc-VmiabriuRmg6gX6Tzr';
 const apiHost = 'https://api.us-central1.gcp.commercetools.com';
 const oauthUri = 'https://auth.us-central1.gcp.commercetools.com';
 
-const httpMiddlewareOptions: HttpMiddlewareOptions = {
-  host: apiHost,
-  fetch,
-};
-
-export { projectKey, oauthUri, scopes, clientId, clientSecret, apiHost, httpMiddlewareOptions };
+export { projectKey, oauthUri, scopes, clientId, clientSecret, apiHost };

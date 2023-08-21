@@ -10,21 +10,54 @@
     "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
     "paths": {
-      "@schemas/*": ["./src/app/validation/schemas/*"],
-      "@helpers/*": ["./src/app/helpers/*"],
-      "@app/*": ["./src/app/*"],
-      "@components/*": ["./src/app/components/*"],
-      "@templates/*": ["./src/app/templates/*"],
-      "@customTypes/*": ["./src/app/types/*"],
-      "@validation/*": ["./src/app/validation/*"],
-      "@pages/*": ["./src/app/pages/*"],
-      "@catalog/*": ["./src/app/pages/catalog/*"],
-      "@servicePages/*": ["./src/app/pages/service-pages/*"],
-      "@fonts/*": ["./src/assets/fonts/*"],
-      "@icons/*": ["./src/assets/icons/*"],
-      "@images/*": ["./src/assets/images/*"],
-      "@styles/*": ["./src/styles/*"],
-      "@sdk/*": ["./src/app/sdk/*"]
+      "@schemas/*": [
+        "./src/app/validation/schemas/*"
+      ],
+      "@helpers/*": [
+        "./src/app/helpers/*"
+      ],
+      "@app/*": [
+        "./src/app/*"
+      ],
+      "@components/*": [
+        "./src/app/components/*"
+      ],
+      "@templates/*": [
+        "./src/app/templates/*"
+      ],
+      "@customTypes/*": [
+        "./src/app/types/*"
+      ],
+      "@validation/*": [
+        "./src/app/validation/*"
+      ],
+      "@pages/*": [
+        "./src/app/pages/*"
+      ],
+      "@catalog/*": [
+        "./src/app/pages/catalog/*"
+      ],
+      "@servicePages/*": [
+        "./src/app/pages/service-pages/*"
+      ],
+      "@fonts/*": [
+        "./src/assets/fonts/*"
+      ],
+      "@icons/*": [
+        "./src/assets/icons/*"
+      ],
+      "@images/*": [
+        "./src/assets/images/*"
+      ],
+      "@animation/*": [
+        "./src/assets/animation/*"
+      ],
+      "@styles/*": [
+        "./src/styles/*"
+      ],
+      "@sdk/*": [
+        "./src/app/sdk/*"
+      ]
     }
   },
   "files": ["src/index.ts", "src/index.d.ts"]
