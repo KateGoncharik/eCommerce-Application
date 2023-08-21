@@ -1,9 +1,11 @@
 import { Page } from '@templates/page';
 import { el, mount } from 'redom';
-import { formValidation } from '@validation/validation';
+import { LoginFormValidator } from '@validation/login-form-validator';
+import { authorizeUser } from '@app/sdk/requests';
+import { safeQuerySelector } from '@helpers/safe-query-selector';
 
 class LoginPage extends Page {
-  private validation = new formValidation();
+  private loginFormValidator = new LoginFormValidator();
 
   protected textObject = {
     title: 'Login page',
@@ -60,12 +62,24 @@ class LoginPage extends Page {
 
   private createButton(): HTMLElement {
     const button = el('button.form-button', 'Continue', { type: 'submit' });
-    if (!(button instanceof HTMLButtonElement)) {
-      throw new Error('Button expected');
-    }
-    button.addEventListener('click', (event) => {
+    button.addEventListener('click', async (event) => {
       event.preventDefault();
-      this.validation.isFormValid();
+      const inputElements = document.getElementsByClassName('input');
+      const inputs = Array.from(inputElements);
+      inputs.forEach((input) => {
+        if (!(input instanceof HTMLInputElement)) {
+          throw new Error('HTMLInputElement expected');
+        }
+        this.loginFormValidator.validateInput(input);
+      });
+
+      if (!this.loginFormValidator.isFormValid()) {
+        return;
+      }
+
+      const emailInput = safeQuerySelector<HTMLInputElement>('.email-input', document);
+      const passwordInput = safeQuerySelector<HTMLInputElement>('.password-input', document);
+      await authorizeUser(emailInput.value, passwordInput.value);
     });
     return button;
   }
@@ -74,7 +88,12 @@ class LoginPage extends Page {
     const formWrapper = el('div');
     const formBlock = el('.form-block');
     const form = el('form.form', { name: 'login' });
-    form.addEventListener('input', (event) => this.validation.validateForm(event));
+    form.addEventListener('input', (event) => {
+      if (!(event.target instanceof HTMLInputElement)) {
+        throw new Error('HTMLInputElement expected');
+      }
+      this.loginFormValidator.validateInput(event.target);
+    });
     const inputs = this.createInputs();
     const buttonBlock = this.createButton();
     const header = this.createHeader();
