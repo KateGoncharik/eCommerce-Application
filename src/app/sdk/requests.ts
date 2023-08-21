@@ -4,6 +4,7 @@ import { safeQuerySelector } from '@helpers/safe-query-selector';
 import { markInputAsInvalid } from '@helpers/toggle-validation-state';
 import { ClientResponse, ErrorResponse } from '@commercetools/platform-sdk';
 import { DataUser } from '@app/types/datauser';
+import { rememberAuthorizedUser } from '@app/state';
 
 const createUser = async (form: DataUser): Promise<number | undefined> => {
   try {
@@ -22,7 +23,7 @@ export async function authorizeUser(email: string, password: string): Promise<vo
     .execute()
     .then(
       (result) => {
-        localStorage.setItem('user', JSON.stringify(result.body.customer));
+        rememberAuthorizedUser(result.body.customer);
       },
       (errorResponse: ClientResponse<ErrorResponse>) => {
         const emailInput = safeQuerySelector<HTMLInputElement>('.email-input', document);

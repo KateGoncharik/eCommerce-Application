@@ -7,6 +7,7 @@ class Burger {
     toCatalog: 'Catalog',
     toAboutUs: 'About us',
     toLogIn: 'Log in',
+    toLogOut: 'Log out',
     toJoin: 'Join',
   };
   public mask = el('.header-mask');
