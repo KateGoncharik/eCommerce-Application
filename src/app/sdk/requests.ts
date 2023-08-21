@@ -15,4 +15,4 @@ export async function authorizeUser(email: string, password: string): Promise<vo
         return errorResponse.body.message;
       }
     );
-}
+} //TODO make catch instead of then
