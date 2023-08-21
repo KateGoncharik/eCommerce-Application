@@ -1,6 +1,5 @@
 import { getApiRoot } from '@sdk/build-client';
 import { withPasswordFlowClient } from '@sdk/login-api';
-import { State } from '@app/state';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
 import { markInputAsInvalid } from '@helpers/toggle-validation-state';
 import { ClientResponse, ErrorResponse } from '@commercetools/platform-sdk';
@@ -23,7 +22,7 @@ export async function authorizeUser(email: string, password: string): Promise<vo
     .execute()
     .then(
       (result) => {
-        State.user = result.body.customer;
+        localStorage.setItem('user', JSON.stringify(result.body.customer));
       },
       (errorResponse: ClientResponse<ErrorResponse>) => {
         const emailInput = safeQuerySelector<HTMLInputElement>('.email-input', document);
