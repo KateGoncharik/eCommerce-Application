@@ -1,8 +1,8 @@
 import { ClientBuilder } from '@commercetools/sdk-client-v2';
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
-import { projectKey, httpMiddlewareOptions } from '@sdk/params';
-import { authMiddlewareOptions } from '@sdk/middlewares';
+import { projectKey } from '@sdk/params';
+import { authMiddlewareOptions, httpMiddlewareOptions } from '@sdk/middlewares';
 
 // Export the ClientBuilder
 const ctpClient = new ClientBuilder()
