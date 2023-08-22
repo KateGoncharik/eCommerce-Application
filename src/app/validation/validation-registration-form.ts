@@ -4,21 +4,16 @@ import { createUser, isUserExist } from '@sdk/requests';
 import { DataUser } from '@app/types/datauser';
 
 export class ValidationForm {
+  
   private checkValidation(userData: Schemas, input: Element, showElement: Element): void {
-    const validationResult = Schemas.safeParse(userData);
     const showBlock = showElement as HTMLElement;
-    const inputCountryShipping = safeQuerySelector('.country-code-input-shipping');
-    const inputCountryCodeBilling = safeQuerySelector('.country-code-input-billing');
-
     if (!(input instanceof HTMLInputElement)) {
       return;
     }
-    if (
-      input.classList.contains('postal-code-input-billing') ||
-      input.classList.contains('postal-code-input-shipping')
-    ) {
-      input.classList.add('active');
-    }
+    input.getAttribute('data') === 'country' && input.classList.remove('active');
+    input.getAttribute('data') === 'postalCode' && input.classList.add('active');
+
+    const validationResult = Schemas.safeParse(userData);
 
     if (!validationResult.success && !input.classList.contains('disabled-input')) {
       const fieldErrors = validationResult.error.formErrors.fieldErrors;
@@ -36,26 +31,7 @@ export class ValidationForm {
       }
     } else {
       //registered Email check
-      if (input.classList.contains('email-input')) {
-        isUserExist(input.value).then((result) => {
-          if (result) {
-            showBlock.style.display = 'flex';
-            showBlock.textContent = 'An account with Email already exists.';
-
-            input.classList.remove('input-valid');
-            input.classList.add('input-error');
-          }
-        });
-      }
-
-      if (input.classList.contains('country-code-input-billing')) {
-        inputCountryCodeBilling.classList.add('active');
-        inputCountryShipping.classList.remove('active');
-      }
-      if (input.classList.contains('country-code-input-shipping')) {
-        inputCountryShipping.classList.add('active');
-        inputCountryCodeBilling.classList.remove('active');
-      }
+      input.getAttribute('data') === 'country' && input.classList.add('active');
 
       showBlock.textContent = '';
       showBlock.style.display = 'none';
@@ -97,8 +73,14 @@ export class ValidationForm {
       if (!(input instanceof HTMLInputElement)) {
         return;
       }
+
+      const showErrorBlock = input.nextElementSibling! as HTMLElement;
+
       !input.disabled ? (input.disabled = true) : (input.disabled = false);
       input.classList.toggle('disabled-input');
+      input.classList.remove('input-error');
+      input.value = '';
+      showErrorBlock.style.display = 'none';
     });
   }
 
@@ -119,10 +101,14 @@ export class ValidationForm {
     const checkInputsValid = (): void => {
       countTrue = 0;
 
+      this.checkNewUSer()
+
       Array.from(inputs).forEach((input) => {
+        
         if (!(input instanceof HTMLInputElement)) {
           return;
         }
+
         this.checkChangeInput(input);
         if (input.classList.contains('input-valid')) {
           return countTrue++;
@@ -137,11 +123,21 @@ export class ValidationForm {
     elementBtn.addEventListener('click', checkInputsValid);
   }
 
-  private showErrors(arr: string[]): string {
-    const createError = arr[0];
-    return createError;
-  }
+  private checkNewUSer():void {
+    const emailInput = safeQuerySelector<HTMLInputElement>('.email-input ');
+    const showErrorBlock = emailInput.nextElementSibling! as HTMLElement;
 
+    isUserExist(emailInput.value).then((result) => {
+      if (result) {
+        showErrorBlock.style.display = 'flex';
+        showErrorBlock.textContent = 'An account with Email already exists.';
+
+        emailInput.classList.remove('input-valid');
+        emailInput.classList.add('input-error');
+      }
+    });
+  }
+  
   private getAssembleArray(): object | undefined {
     const checkboxDefaultBilling = safeQuerySelector('#billing-default-checkbox');
     const checkboxDefaultShipping = safeQuerySelector('#shipping-default-checkbox');
@@ -195,6 +191,7 @@ export class ValidationForm {
     return userData;
   }
 
+
   public getCodeCountry(input: HTMLInputElement): string {
     let codeCountry: string | undefined;
     switch (input.value) {
@@ -220,6 +217,10 @@ export class ValidationForm {
 
     formBlock.style.display = 'none';
     successfulBlock.style.display = 'flex';
+  }
+  private showErrors(arr: string[]): string {
+    const createError = arr[0];
+    return createError;
   }
 
   public dispatchForm(): void {

@@ -6,15 +6,15 @@ function checkValidationPostCode(element: HTMLInputElement, val: string, ctx: z.
     if (!/^[0-9]{5}([- /]?[0-9]{4})?$/.test(val)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: 'United States Postcode required',
+        message: 'Invalid postal code format for United States',
       });
     }
   }
   if (element.value === 'Germany') {
-    if (!/(?!01000|99999)(0[1-9]\d{3}|[1-9]\d{4})/.test(val)) {
+    if (!/^([0]{1}[1-9]{1}|[1-9]{1}[0-9]{1})[0-9]{3}$/.test(val)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: 'Germany Postcode required',
+        message: 'Invalid postal code format for Germany',
       });
     }
   }
@@ -23,7 +23,7 @@ function checkValidationPostCode(element: HTMLInputElement, val: string, ctx: z.
     if (!/^(?:(?:[2-8]\d|9[0-7]|0?[28]|0?9(?=09))(?:\d{2}))$/.test(val)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: 'Australia Postcode required',
+        message: 'Invalid postal code format for Australia',
       });
     }
   }
@@ -32,7 +32,7 @@ function checkValidationPostCode(element: HTMLInputElement, val: string, ctx: z.
     if (!/^(?:0[1-9]|[1-4]\d|5[0-2])\d{3}$/.test(val)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: 'Spain Postcode required',
+        message: 'Invalid postal code format for Spain',
       });
     }
   }
@@ -76,17 +76,12 @@ export const Schemas = z.object({
   'postal code': z
     .string()
     .superRefine((val:string, ctx: z.RefinementCtx) => {
-      const inputCountryCodeShipping = safeQuerySelector('.country-code-input-shipping');
-      const inputCountryCodeBilling = safeQuerySelector('.country-code-input-billing');
+      const inputCountryCodeShipping = safeQuerySelector<HTMLInputElement>('.country-code-input-shipping');
+      const inputCountryCodeBilling = safeQuerySelector<HTMLInputElement>('.country-code-input-billing');
       const inputPCBilling = safeQuerySelector('.postal-code-input-billing');
       const inputPCShipping = safeQuerySelector('.postal-code-input-shipping');
 
-      if (
-        !(inputCountryCodeShipping instanceof HTMLInputElement) ||
-        !(inputCountryCodeBilling instanceof HTMLInputElement)
-      ) {
-        return;
-      }
+      
       if (inputCountryCodeShipping.classList.contains('active') && inputPCShipping.classList.contains('active')) {
         inputPCShipping.classList.remove('active');
         checkValidationPostCode(inputCountryCodeShipping, val, ctx);
@@ -100,13 +95,12 @@ export const Schemas = z.object({
         });
       }
     })
-    // .regex(/^(\d{5}|[A-Z]\d[A-Z] ?\d[A-Z]\d)$/, 'Postal code must follow the format for the country')
     .optional(),
 
   country: z
     .enum(['Germany', 'United States', 'Australia', 'Spain'], {
       errorMap: () => ({
-        message: 'Enter the correct country code from this list: Germany | United States | Australia | Spain',
+        message: 'Enter the correct country from this list: Germany | United States | Australia | Spain',
       }),
     })
     .optional(),

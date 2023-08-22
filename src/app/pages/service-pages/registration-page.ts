@@ -122,10 +122,6 @@ class RegistrationPage extends Page {
               el('input#billing-default-checkbox.checkbox-reg', { type: 'checkbox' }),
               el('label', 'Set billing as default address', { for: 'billing-default-checkbox' }),
             ]),
-            // el('.block-billing-checkbox', [
-            //   useBilling,
-            //   el('label', 'Use this address for the shipping field', { for: 'use-billing-for-shipping' }),
-            // ]),
           ]),
         ]),
       ],
