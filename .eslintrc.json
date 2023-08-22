@@ -1,43 +1,47 @@
 {
-    "parser": "@typescript-eslint/parser",
-    "plugins": [
-        "import",
-        "@typescript-eslint"
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "import",
+    "@typescript-eslint"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/recommended",
+    "prettier"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module"
+  },
+  "env": {
+    "es6": true,
+    "browser": true,
+    "node": true
+  },
+  "rules": {
+    "curly": [
+      "error",
+      "all"
     ],
-    "extends": [
-        "eslint:recommended",
-        "plugin:@typescript-eslint/recommended",
-        "prettier"
+    "@typescript-eslint/no-explicit-any": "error",
+    "@typescript-eslint/no-var-requires": "off",
+    "@typescript-eslint/explicit-function-return-type": "error",
+    "no-debugger": "off",
+    "no-console": "off",
+    "class-methods-use-this": "off"
+  },
+  "settings": {
+    "import/extensions": [
+      ".ts"
     ],
-    "parserOptions": {
-        "ecmaVersion": 2020,
-        "sourceType": "module"
+    "import/resolver": {
+      "typescript": true
     },
-    "env": {
-        "es6": true,
-        "browser": true,
-        "node": true
-    },
-    "rules": {
-        "curly": [
-            "error",
-            "all"
-        ],
-        "@typescript-eslint/no-explicit-any": "error",
-        "@typescript-eslint/no-var-requires": "off",
-        "@typescript-eslint/explicit-function-return-type": "error",
-        "no-debugger": "off",
-        "no-console": "off",
-        "class-methods-use-this": "off"
-    },
-    "settings": {
-        "import/resolver": {
-            "typescript": true
-        },
-        "import/parsers": {
-            "@typescript-eslint/parser": [
-                ".ts"
-            ]
-        }
+    "import/parsers": {
+      "@typescript-eslint/parser": [
+        ".ts"
+      ]
     }
+  }
 }
