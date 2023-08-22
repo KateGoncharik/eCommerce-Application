@@ -78,23 +78,15 @@ export class ValidationForm {
     });
   }
 
-  public eventCheckBox(element: HTMLElement, billing: HTMLElement, shipping: HTMLElement): void {
+  public eventCheckBox(element: HTMLElement, shipping: HTMLElement): void {
     const inputsBilling = document.getElementsByClassName('input-billing');
-    const inputsShipping = document.getElementsByClassName('input-shipping');
-
+  
     element.addEventListener('click', (event) => {
-      if (!(shipping instanceof HTMLInputElement) || !(billing instanceof HTMLInputElement)) {
+      if (!(shipping instanceof HTMLInputElement)) {
         return;
       }
       const target = event.target as HTMLInputElement;
-
-      if (target.id === 'use-billing-for-shipping') {
-        target.checked ? (shipping.disabled = true) : (shipping.disabled = false);
-        this.disabledInputAddress(inputsShipping);
-      }
-
       if (target.id === 'use-shipping-for-billing') {
-        target.checked ? (billing.disabled = true) : (billing.disabled = false);
         this.disabledInputAddress(inputsBilling);
       }
     });
@@ -153,7 +145,6 @@ export class ValidationForm {
   private getAssembleArray(): object | undefined {
     const checkboxDefaultBilling = safeQuerySelector('#billing-default-checkbox');
     const checkboxDefaultShipping = safeQuerySelector('#shipping-default-checkbox');
-    const checkboxBillingUseAll = safeQuerySelector('#use-billing-for-shipping');
     const checkboxShippingUseAll = safeQuerySelector('#use-shipping-for-billing');
     const inputs = document.getElementsByClassName('input');
     let value: string | undefined;
@@ -166,7 +157,6 @@ export class ValidationForm {
     if (
       !(checkboxDefaultBilling instanceof HTMLInputElement) ||
       !(checkboxDefaultShipping instanceof HTMLInputElement) ||
-      !(checkboxBillingUseAll instanceof HTMLInputElement) ||
       !(checkboxShippingUseAll instanceof HTMLInputElement)
     ) {
       return;
@@ -182,32 +172,25 @@ export class ValidationForm {
       input.getAttribute('data')! === 'country' ? (value = this.getCodeCountry(input)) : (value = input.value);
 
       if (input.classList.contains('input-billing')) {
-        if (checkboxBillingUseAll.checked) {
+         if (!checkboxShippingUseAll.checked) {
           objBilling[dataAttribute] = value;
-          objShipping[dataAttribute] = value;
-        } else {
-          if (!checkboxShippingUseAll.checked) {
-            objBilling[dataAttribute] = value;
-          }
         }
       } else if (input.classList.contains('input-shipping')) {
         if (checkboxShippingUseAll.checked) {
           objBilling[dataAttribute] = value;
           objShipping[dataAttribute] = value;
         } else {
-          if (!checkboxBillingUseAll.checked) {
-            objShipping[dataAttribute] = value;
-          }
+          objShipping[dataAttribute] = value;
         }
       } else {
         userData.body[dataAttribute] = value;
       }
     });
 
-    userData.body['addresses'] = [objBilling, objShipping];
+    userData.body['addresses'] = [objShipping, objBilling];
 
-    checkboxDefaultBilling.checked && (userData.body['defaultBillingAddress'] = 0);
-    checkboxDefaultShipping.checked && (userData.body['defaultShippingAddress'] = 1);
+    checkboxDefaultBilling.checked && (userData.body['defaultBillingAddress'] = 1);
+    checkboxDefaultShipping.checked && (userData.body['defaultShippingAddress'] = 0);
 
     return userData;
   }
@@ -245,10 +228,6 @@ export class ValidationForm {
     createUser(getArray!).then((statusCode) => {
       if (statusCode === 201) {
         this.showSuccessfulRegistrartion();
-      } else {
-        console.log('statusCode GMSIL ERROS');
-
-        console.log(statusCode);
       }
     });
   }

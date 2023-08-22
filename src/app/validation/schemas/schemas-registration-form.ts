@@ -75,7 +75,7 @@ export const Schemas = z.object({
 
   'postal code': z
     .string()
-    .superRefine((val, ctx) => {
+    .superRefine((val:string, ctx: z.RefinementCtx) => {
       const inputCountryCodeShipping = safeQuerySelector('.country-code-input-shipping');
       const inputCountryCodeBilling = safeQuerySelector('.country-code-input-billing');
       const inputPCBilling = safeQuerySelector('.postal-code-input-billing');
