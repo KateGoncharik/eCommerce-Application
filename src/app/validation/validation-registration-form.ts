@@ -32,7 +32,7 @@ export class ValidationForm {
     } else {
       //registered Email check
       input.getAttribute('data') === 'country' && input.classList.add('active');
-
+      
       showBlock.textContent = '';
       showBlock.style.display = 'none';
 

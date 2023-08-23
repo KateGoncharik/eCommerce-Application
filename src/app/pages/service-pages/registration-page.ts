@@ -28,6 +28,8 @@ class RegistrationPage extends Page {
 
   private createInput(): HTMLElement {
     const useShipping = el('input#use-shipping-for-billing.checkbox-reg', { type: 'checkbox' });
+    const passwordVisibility = el('input.password-checkbox', { type: 'checkbox' });
+    const passwordInput =  el('input.password-input.input', { type: 'password', placeholder: 'password', data: 'password' });
     
     const blockInputsRegistration = el('.registration-inputs-block', [
       el('.input-block', [
@@ -35,8 +37,12 @@ class RegistrationPage extends Page {
         el('.show-validation-email-input show-validation'),
       ]),
       el('.input-block', [
-        el('input.password-input.input', { type: 'password', placeholder: 'password', data: 'password' }),
+        passwordInput,
         el('.show-validation-password-input show-validation'),
+        el('.password-visability-block', 'Show password', [
+          passwordVisibility,
+          el('.show-validation-password-input show-validation')
+        ]),
       ]),
       el('.input-block', [
         el('input.first-name-input.input', { type: 'text', placeholder: 'first name', data: 'firstName' }),
@@ -127,8 +133,20 @@ class RegistrationPage extends Page {
       ],
     ]);
 
+    if (!(passwordInput instanceof HTMLInputElement)) {
+      throw new Error('Input expected');
+    }
+
     this.validation.eventInput(blockInputsRegistration);
     this.validation.eventCheckBox(blockInputsRegistration, useShipping);
+
+    passwordVisibility.addEventListener('click', () => {
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+      } else {
+        passwordInput.type = 'password';
+      }
+    });
 
     return blockInputsRegistration;
   }
