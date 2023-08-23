@@ -16,6 +16,11 @@
   color: red;
 }
 
+.disabled-input {
+  background: rgba(151, 150, 150, 0.2);
+  border: 1px solid gray;
+}
+
 .successful {
   display: none;
   flex-direction: column;

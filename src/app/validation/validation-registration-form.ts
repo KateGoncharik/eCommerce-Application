@@ -1,15 +1,24 @@
 import { Schemas, dataValue } from '@schemas/schemas-registration-form';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
-import { createUser, authorizeUser } from '@sdk/requests';
+import { createUser, isUserExist, authorizeUser } from '@sdk/requests';
 import { DataUser } from '@app/types/datauser';
+import { Country } from '@app/types/enums';
 import { redirectOnMain } from '@app/router';
 
-export class ValidationForm {
-  private checkValidation(userData: Schemas, element: Element, showElement: Element): void {
-    const validationResult = Schemas.safeParse(userData);
-    const showBlock = showElement as HTMLElement;
 
-    if (!validationResult.success && !element.classList.contains('disabled-input')) {
+export class ValidationForm {
+  
+  private checkValidation(userData: Schemas, input: Element, showElement: Element): void {
+    const showBlock = showElement as HTMLElement;
+    if (!(input instanceof HTMLInputElement)) {
+      return;
+    }
+    input.getAttribute('data') === 'country' && input.classList.remove('active');
+    input.getAttribute('data') === 'postalCode' && input.classList.add('active');
+
+    const validationResult = Schemas.safeParse(userData);
+
+    if (!validationResult.success && !input.classList.contains('disabled-input')) {
       const fieldErrors = validationResult.error.formErrors.fieldErrors;
 
       for (const key in fieldErrors) {
@@ -19,16 +28,18 @@ export class ValidationForm {
           showBlock.style.display = 'flex';
           showBlock.textContent = this.showErrors(arrayErrors);
 
-          element.classList.remove('input-valid');
-          element.classList.add('input-error');
+          input.classList.remove('input-valid');
+          input.classList.add('input-error');
         }
       }
     } else {
+      input.getAttribute('data') === 'country' && input.classList.add('active');
+
       showBlock.textContent = '';
       showBlock.style.display = 'none';
 
-      element.classList.add('input-valid');
-      element.classList.remove('input-error');
+      input.classList.add('input-valid');
+      input.classList.remove('input-error');
     }
   }
 
@@ -45,23 +56,15 @@ export class ValidationForm {
     });
   }
 
-  public eventCheckBox(element: HTMLElement, billing: HTMLElement, shipping: HTMLElement): void {
+  public eventCheckBox(element: HTMLElement, shipping: HTMLElement): void {
     const inputsBilling = document.getElementsByClassName('input-billing');
-    const inputsShipping = document.getElementsByClassName('input-shipping');
-
+  
     element.addEventListener('click', (event) => {
-      if (!(shipping instanceof HTMLInputElement) || !(billing instanceof HTMLInputElement)) {
+      if (!(shipping instanceof HTMLInputElement)) {
         return;
       }
       const target = event.target as HTMLInputElement;
-
-      if (target.id === 'use-billing-for-shipping') {
-        target.checked ? (shipping.disabled = true) : (shipping.disabled = false);
-        this.disabledInputAddress(inputsShipping);
-      }
-
       if (target.id === 'use-shipping-for-billing') {
-        target.checked ? (billing.disabled = true) : (billing.disabled = false);
         this.disabledInputAddress(inputsBilling);
       }
     });
@@ -72,8 +75,14 @@ export class ValidationForm {
       if (!(input instanceof HTMLInputElement)) {
         return;
       }
+
+      const showErrorBlock = input.nextElementSibling! as HTMLElement;
+
       !input.disabled ? (input.disabled = true) : (input.disabled = false);
       input.classList.toggle('disabled-input');
+      input.classList.remove('input-error');
+      input.value = '';
+      showErrorBlock.style.display = 'none';
     });
   }
 
@@ -94,10 +103,14 @@ export class ValidationForm {
     const checkInputsValid = async (): Promise<void> => {
       countTrue = 0;
 
+      this.checkNewUSer()
+
       Array.from(inputs).forEach((input) => {
+        
         if (!(input instanceof HTMLInputElement)) {
           return;
         }
+
         this.checkChangeInput(input);
         if (input.classList.contains('input-valid')) {
           return countTrue++;
@@ -120,31 +133,32 @@ export class ValidationForm {
     elementBtn.addEventListener('click', checkInputsValid);
   }
 
-  private showErrors(arr: string[]): string {
-    const createError = arr[0];
-    return createError;
-  }
+  private checkNewUSer():void {
+    const emailInput = safeQuerySelector<HTMLInputElement>('.email-input ');
+    const showErrorBlock = emailInput.nextElementSibling! as HTMLElement;
 
+    isUserExist(emailInput.value).then((result) => {
+      if (result) {
+        showErrorBlock.style.display = 'flex';
+        showErrorBlock.textContent = 'An account with this email already exists.';
+
+        emailInput.classList.remove('input-valid');
+        emailInput.classList.add('input-error');
+      }
+    });
+  }
+  
   private getAssembleArray(): object | undefined {
-    const checkboxDefaultBilling = safeQuerySelector('#billing-default-checkbox');
-    const checkboxDefaultShipping = safeQuerySelector('#shipping-default-checkbox');
-    const checkboxBillingUseAll = safeQuerySelector('#use-billing-for-shipping');
-    const checkboxShippingUseAll = safeQuerySelector('#use-shipping-for-billing');
+    const checkboxDefaultBilling = safeQuerySelector<HTMLInputElement>('#billing-default-checkbox');
+    const checkboxDefaultShipping = safeQuerySelector<HTMLInputElement>('#shipping-default-checkbox');
+    const checkboxShippingUseAll = safeQuerySelector<HTMLInputElement>('#use-shipping-for-billing');
     const inputs = document.getElementsByClassName('input');
+    let value: string | undefined;
     const userData: { [key: string]: Record<string, string | number | Record<string, string>[]> } = {
       body: {},
     };
     const objBilling: Record<string, string> = {};
     const objShipping: Record<string, string> = {};
-
-    if (
-      !(checkboxDefaultBilling instanceof HTMLInputElement) ||
-      !(checkboxDefaultShipping instanceof HTMLInputElement) ||
-      !(checkboxBillingUseAll instanceof HTMLInputElement) ||
-      !(checkboxShippingUseAll instanceof HTMLInputElement)
-    ) {
-      return;
-    }
 
     Array.from(inputs).forEach((input) => {
       if (!(input instanceof HTMLInputElement) || input.classList.contains('checkbox-reg')) {
@@ -153,35 +167,49 @@ export class ValidationForm {
 
       const dataAttribute = input.getAttribute('data')!;
 
+      dataAttribute === 'country' ? (value = this.getCodeCountry(input)) : (value = input.value);
+
       if (input.classList.contains('input-billing')) {
-        if (checkboxBillingUseAll.checked) {
-          objBilling[dataAttribute] = input.value;
-          objShipping[dataAttribute] = input.value;
-        } else {
-          if (!checkboxShippingUseAll.checked) {
-            objBilling[dataAttribute] = input.value;
-          }
+         if (!checkboxShippingUseAll.checked) {
+          objBilling[dataAttribute] = value;
         }
       } else if (input.classList.contains('input-shipping')) {
         if (checkboxShippingUseAll.checked) {
-          objBilling[dataAttribute] = input.value;
-          objShipping[dataAttribute] = input.value;
+          objBilling[dataAttribute] = value;
+          objShipping[dataAttribute] = value;
         } else {
-          if (!checkboxBillingUseAll.checked) {
-            objShipping[dataAttribute] = input.value;
-          }
+          objShipping[dataAttribute] = value;
         }
       } else {
-        userData.body[dataAttribute] = input.value;
+        userData.body[dataAttribute] = value;
       }
     });
 
-    userData.body['addresses'] = [objBilling, objShipping];
+    userData.body['addresses'] = [objShipping, objBilling];
 
-    checkboxDefaultBilling.checked && (userData.body['defaultBillingAddress'] = 0);
-    checkboxDefaultShipping.checked && (userData.body['defaultShippingAddress'] = 1);
+    checkboxDefaultBilling.checked && (userData.body['defaultBillingAddress'] = 1);
+    checkboxDefaultShipping.checked && (userData.body['defaultShippingAddress'] = 0);
 
     return userData;
+  }
+
+  public getCodeCountry(input: HTMLInputElement): string {
+    let codeCountry: string | undefined;
+    switch (input.value) {
+      case Country.UnitedStates:
+        codeCountry = 'US';
+        break;
+      case Country.Germany:
+        codeCountry = 'DE';
+        break;
+      case Country.Spain:
+        codeCountry = 'ES';
+        break;
+      case Country.Australia:
+        codeCountry = 'AU';
+        break;
+    }
+    return codeCountry!;
   }
 
   public showSuccessfulRegistrartion(): void {
@@ -190,6 +218,10 @@ export class ValidationForm {
 
     formBlock.style.display = 'none';
     successfulBlock.style.display = 'flex';
+  }
+  private showErrors(arr: string[]): string {
+    const createError = arr[0];
+    return createError;
   }
 
   public async dispatchForm(): Promise<void> {

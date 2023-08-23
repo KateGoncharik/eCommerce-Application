@@ -6,7 +6,7 @@ import { ClientResponse, ErrorResponse } from '@commercetools/platform-sdk';
 import { DataUser } from '@app/types/datauser';
 import { rememberAuthorizedUser } from '@app/state';
 
-const createUser = async (form: DataUser): Promise<number | undefined> => {
+export const createUser = async (form: DataUser): Promise<number | undefined> => {
   try {
     const request = await getApiRoot().customers().post(form).execute();
     return request.statusCode;
@@ -14,7 +14,14 @@ const createUser = async (form: DataUser): Promise<number | undefined> => {
     console.log(err);
   }
 };
-export { createUser };
+
+export async function isUserExist(email: string): Promise<boolean> {
+  const result = await getApiRoot()
+    .customers()
+    .get({ queryArgs: { where: `email="${email}"` } })
+    .execute();
+  return result.body.count > 0;
+}
 
 export async function authorizeUser(email: string, password: string): Promise<void | string> {
   return await withPasswordFlowClient(email, password)
