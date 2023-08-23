@@ -2,7 +2,7 @@ import { Schemas, dataValue } from '@schemas/schemas-registration-form';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
 import { createUser, isUserExist } from '@sdk/requests';
 import { DataUser } from '@app/types/datauser';
-import { CodeCountry } from '@app/types/enums';
+import { Country } from '@app/types/enums';
 
 export class ValidationForm {
   
@@ -31,7 +31,6 @@ export class ValidationForm {
         }
       }
     } else {
-      //registered Email check
       input.getAttribute('data') === 'country' && input.classList.add('active');
 
       showBlock.textContent = '';
@@ -131,7 +130,7 @@ export class ValidationForm {
     isUserExist(emailInput.value).then((result) => {
       if (result) {
         showErrorBlock.style.display = 'flex';
-        showErrorBlock.textContent = 'An account with Email already exists.';
+        showErrorBlock.textContent = 'An account with this email already exists.';
 
         emailInput.classList.remove('input-valid');
         emailInput.classList.add('input-error');
@@ -140,9 +139,9 @@ export class ValidationForm {
   }
   
   private getAssembleArray(): object | undefined {
-    const checkboxDefaultBilling = safeQuerySelector('#billing-default-checkbox');
-    const checkboxDefaultShipping = safeQuerySelector('#shipping-default-checkbox');
-    const checkboxShippingUseAll = safeQuerySelector('#use-shipping-for-billing');
+    const checkboxDefaultBilling = safeQuerySelector<HTMLInputElement>('#billing-default-checkbox');
+    const checkboxDefaultShipping = safeQuerySelector<HTMLInputElement>('#shipping-default-checkbox');
+    const checkboxShippingUseAll = safeQuerySelector<HTMLInputElement>('#use-shipping-for-billing');
     const inputs = document.getElementsByClassName('input');
     let value: string | undefined;
     const userData: { [key: string]: Record<string, string | number | Record<string, string>[]> } = {
@@ -151,14 +150,6 @@ export class ValidationForm {
     const objBilling: Record<string, string> = {};
     const objShipping: Record<string, string> = {};
 
-    if (
-      !(checkboxDefaultBilling instanceof HTMLInputElement) ||
-      !(checkboxDefaultShipping instanceof HTMLInputElement) ||
-      !(checkboxShippingUseAll instanceof HTMLInputElement)
-    ) {
-      return;
-    }
-
     Array.from(inputs).forEach((input) => {
       if (!(input instanceof HTMLInputElement) || input.classList.contains('checkbox-reg')) {
         return;
@@ -166,7 +157,7 @@ export class ValidationForm {
 
       const dataAttribute = input.getAttribute('data')!;
 
-      input.getAttribute('data')! === 'country' ? (value = this.getCodeCountry(input)) : (value = input.value);
+      dataAttribute === 'country' ? (value = this.getCodeCountry(input)) : (value = input.value);
 
       if (input.classList.contains('input-billing')) {
          if (!checkboxShippingUseAll.checked) {
@@ -192,21 +183,20 @@ export class ValidationForm {
     return userData;
   }
 
-
   public getCodeCountry(input: HTMLInputElement): string {
     let codeCountry: string | undefined;
     switch (input.value) {
-      case 'United States':
-        codeCountry = CodeCountry[0];
+      case Country.UnitedStates:
+        codeCountry = 'US';
         break;
-      case 'Germany':
-        codeCountry = CodeCountry[1];
+      case Country.Germany:
+        codeCountry = 'DE';
         break;
-      case 'Spain':
-        codeCountry = CodeCountry[2];
+      case Country.Spain:
+        codeCountry = 'ES';
         break;
-      case 'Australia':
-        codeCountry = CodeCountry[3];
+      case Country.Australia:
+        codeCountry = 'AU';
         break;
     }
     return codeCountry!;

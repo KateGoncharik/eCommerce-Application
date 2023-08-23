@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
+import { Country } from '@app/types/enums';
 
 function checkValidationPostCode(element: HTMLInputElement, val: string, ctx: z.RefinementCtx): void {
   if (element.value === 'United States') {
@@ -98,9 +99,13 @@ export const Schemas = z.object({
     .optional(),
 
   country: z
-    .enum(['Germany', 'United States', 'Australia', 'Spain'], {
+    .enum([Country.UnitedStates, Country.Germany, Country.Spain, Country.Australia], {
       errorMap: () => ({
-        message: 'Enter the correct country from this list: Germany | United States | Australia | Spain',
+        message: `Enter the correct country from this list: 
+        ${Country.UnitedStates} | 
+        ${Country.Germany} | 
+        ${Country.Spain} | 
+        ${Country.Australia}`,
       }),
     })
     .optional(),

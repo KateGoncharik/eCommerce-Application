@@ -1,6 +1,7 @@
-export enum CodeCountry {
-    US,
-    DE,
-    ES,
-    AU,
-}
+
+export enum Country {
+    UnitedStates = 'United States',
+    Germany = 'Germany',
+    Spain = 'Spain',
+    Australia = 'Australia',
+  }
