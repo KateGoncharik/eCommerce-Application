@@ -48,6 +48,7 @@ export const Schemas = z.object({
     .regex(/(?=.*[a-z])/, 'Password must contain at least 1 lowercase letter')
     .regex(/(?=.*[A-Z])/, 'Password must contain at least 1 uppercase letter')
     .regex(/^[^\s].+[^\s]$/, 'Password must not contain leading or trailing whitespace')
+    .regex(/^[A-Za-z0-9]+$/, 'Password must not contain special character')
     .min(8, 'Password must be at least 8 characters long')
     .optional(),
 
