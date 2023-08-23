@@ -10,8 +10,10 @@
   display: none;
   align-items: center;
   height: 30px;
-  font: 14px Gilroy, serif;
-  color: red;  
+  font:
+    14px Gilroy,
+    serif;
+  color: red;
 }
 
 .disabled-input {
@@ -35,7 +37,9 @@
 }
 
 .message {
-  font: 26px Gilroy, serif;
+  font:
+    26px Gilroy,
+    serif;
 }
 
 @media (width <= 650px) {

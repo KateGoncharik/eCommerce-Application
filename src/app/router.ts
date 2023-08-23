@@ -11,8 +11,13 @@ function bindRoutes(routes: Record<Route, Page>): void {
       page.render();
     })
     .on(Route.Login, () => {
-      const page = routes[Route.Login];
-      page.render();
+      const user = localStorage.getItem('user');
+      if (user) {
+        router.navigate(Route.Main);
+      } else {
+        const page = routes[Route.Login];
+        page.render();
+      }
     })
     .on(Route.Registration, () => {
       const page = routes[Route.Registration];
@@ -25,4 +30,6 @@ function bindRoutes(routes: Record<Route, Page>): void {
     .resolve();
 }
 
-export { router, bindRoutes };
+const redirectOnMain = (): void => router.navigate(Route.Main);
+
+export { router, bindRoutes, redirectOnMain };

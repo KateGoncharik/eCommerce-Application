@@ -1,8 +1,10 @@
 import { Schemas, dataValue } from '@schemas/schemas-registration-form';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
-import { createUser, isUserExist } from '@sdk/requests';
+import { createUser, isUserExist, authorizeUser } from '@sdk/requests';
 import { DataUser } from '@app/types/datauser';
 import { Country } from '@app/types/enums';
+import { redirectOnMain } from '@app/router';
+
 
 export class ValidationForm {
   
@@ -98,7 +100,7 @@ export class ValidationForm {
   public checkValidationAllForm(elementBtn: HTMLElement): void {
     const inputs = document.getElementsByClassName('input');
     let countTrue = 0;
-    const checkInputsValid = (): void => {
+    const checkInputsValid = async (): Promise<void> => {
       countTrue = 0;
 
       this.checkNewUSer()
@@ -117,7 +119,15 @@ export class ValidationForm {
         this.checkChangeInput(input);
       });
 
-      countTrue === inputs.length && this.dispatchForm();
+      if (countTrue === inputs.length) {
+        const email = safeQuerySelector<HTMLInputElement>('.email-input').value;
+        const password = safeQuerySelector<HTMLInputElement>('.password-input').value;
+        await this.dispatchForm();
+        const authError = await authorizeUser(email, password);
+        if (!authError) {
+          redirectOnMain();
+        }
+      }
     };
 
     elementBtn.addEventListener('click', checkInputsValid);
@@ -214,13 +224,12 @@ export class ValidationForm {
     return createError;
   }
 
-  public dispatchForm(): void {
+  public async dispatchForm(): Promise<void> {
     const getArray = this.getAssembleArray() as DataUser;
 
-    createUser(getArray!).then((statusCode) => {
-      if (statusCode === 201) {
-        this.showSuccessfulRegistrartion();
-      }
-    });
+    const statusCode = await createUser(getArray!);
+    if (statusCode === 201) {
+      this.showSuccessfulRegistrartion();
+    }
   }
 }

@@ -80,7 +80,7 @@
   padding-top: 20px;
 }
 
-.block-shipping, 
+.block-shipping,
 .block-billing {
   display: flex;
   flex-direction: column;
@@ -88,11 +88,10 @@
   gap: 5px;
 }
 
-
-.billing-reg, input {
+.billing-reg,
+input {
   color: black;
   margin: 5px 5px 0 0;
-
 }
 
 @media (width <= 900px) {
@@ -117,7 +116,7 @@
   .form-btn {
     font-size: 14px;
   }
-    
+
   .input,
   .form-btn {
     max-height: 46px;

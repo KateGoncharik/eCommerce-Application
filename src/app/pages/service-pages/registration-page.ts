@@ -88,6 +88,7 @@ class RegistrationPage extends Page {
               }),
               el('.show-validation-postal-code-input  show-validation'),
             ]),
+
             el('.block-shipping-checkbox', [
               el('input#shipping-default-checkbox.checkbox-reg', { type: 'checkbox' }),
               el('label', 'Set shipping as default address', { for: 'shipping-default-checkbox' }),
