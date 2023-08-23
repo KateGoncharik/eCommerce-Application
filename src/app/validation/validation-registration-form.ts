@@ -2,6 +2,7 @@ import { Schemas, dataValue } from '@schemas/schemas-registration-form';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
 import { createUser, isUserExist } from '@sdk/requests';
 import { DataUser } from '@app/types/datauser';
+import { CodeCountry } from '@app/types/enums';
 
 export class ValidationForm {
   
@@ -32,7 +33,7 @@ export class ValidationForm {
     } else {
       //registered Email check
       input.getAttribute('data') === 'country' && input.classList.add('active');
-      
+
       showBlock.textContent = '';
       showBlock.style.display = 'none';
 
@@ -196,16 +197,16 @@ export class ValidationForm {
     let codeCountry: string | undefined;
     switch (input.value) {
       case 'United States':
-        codeCountry = 'US';
+        codeCountry = CodeCountry[0];
         break;
       case 'Germany':
-        codeCountry = 'DE';
+        codeCountry = CodeCountry[1];
         break;
       case 'Spain':
-        codeCountry = 'ES';
+        codeCountry = CodeCountry[2];
         break;
       case 'Australia':
-        codeCountry = 'AU';
+        codeCountry = CodeCountry[3];
         break;
     }
     return codeCountry!;
