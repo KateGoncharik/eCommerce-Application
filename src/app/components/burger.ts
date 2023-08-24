@@ -1,5 +1,8 @@
 import { el } from 'redom';
 import { Route } from '@customTypes/route';
+import { isUserAuthorized, logOutUser } from '@app/state';
+import { router } from '@app/router';
+import { renderHeader } from '@helpers/render-header';
 
 class Burger {
   public linkText: Record<string, string> = {
@@ -34,6 +37,7 @@ class Burger {
   });
 
   private createBurgerMenu(): HTMLElement {
+    const loginOrLogoutLink = isUserAuthorized() ? this.createLogOutLink() : this.createLogInLink();
     const burgerLinks = [
       this.mainPageLink,
       this.catalogPageLink,
@@ -48,7 +52,7 @@ class Burger {
       });
     });
     const separator = el('span', '/');
-    const logInOrJoin = el('.burger-signin', [this.logInPageLink, separator, this.joinPageLink]);
+    const logInOrJoin = el('.burger-signin', [loginOrLogoutLink, separator, this.joinPageLink]);
     const burgerMenu = el('.burger-menu', [this.mainPageLink, this.catalogPageLink, this.aboutUsPageLink, logInOrJoin]);
     return burgerMenu;
   }
@@ -69,6 +73,36 @@ class Burger {
     this.burgerMenu.classList.toggle('active');
     document.body.classList.toggle('lock');
     this.mask.classList.toggle('lock');
+  }
+
+  private createLogOutLink(): HTMLAnchorElement {
+    const logOutLink = el('a.logout', this.linkText.toLogOut, {
+      href: '/logout',
+      'data-navigo': '',
+    });
+
+    if (!(logOutLink instanceof HTMLAnchorElement)) {
+      throw new Error();
+    }
+
+    logOutLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+
+      logOutUser();
+
+      router.navigate(Route.Login);
+      renderHeader();
+    });
+
+    return logOutLink;
+  }
+
+  private createLogInLink(): HTMLAnchorElement {
+    return el('a', this.linkText.toLogIn, {
+      href: Route.Login,
+      'data-navigo': '',
+    });
   }
 }
 

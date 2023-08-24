@@ -5,7 +5,7 @@ import cart from '@icons/cart.svg';
 import { Burger } from '@components/burger';
 import { isUserAuthorized, logOutUser } from '@app/state';
 import { router } from '@app/router';
-import { renderHeader } from '@helpers/draw-header';
+import { renderHeader } from '@helpers/render-header';
 class Header {
   private burger = new Burger();
   public create(): HTMLElement {
