@@ -4,7 +4,7 @@ import { LoginFormValidator } from '@validation/login-form-validator';
 import { authorizeUser } from '@app/sdk/requests';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
 import { redirectOnMain } from '@app/router';
-import { Header } from '@app/components/header';
+import { drawHeader } from '@helpers/draw-header';
 
 class LoginPage extends Page {
   private loginFormValidator = new LoginFormValidator();
@@ -87,17 +87,7 @@ class LoginPage extends Page {
       emailErrorBlock.textContent = authError ?? '';
       if (!authError) {
         redirectOnMain();
-        const header = new Header();
-        const currentHeader = safeQuerySelector('.header', document);
-        const main = safeQuerySelector('main', document);
-        currentHeader.remove();
-        const newHeader = header.create();
-        const wrapperDiv = main.closest('div');
-        if (!wrapperDiv) {
-          throw new Error('Div expected');
-        }
-
-        wrapperDiv.insertBefore(newHeader, main);
+        drawHeader();
       }
     });
     return button;
