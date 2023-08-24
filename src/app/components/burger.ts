@@ -13,9 +13,40 @@ class Burger {
     toLogOut: 'Log out',
     toJoin: 'Join',
   };
+
   public mask = el('.header-mask');
 
   public burgerIcon = this.createBurgerIcon();
+
+  public createLogOutLink(): HTMLAnchorElement {
+    const logOutLink = el('a.logout', this.linkText.toLogOut, {
+      href: '/logout',
+      'data-navigo': '',
+    });
+
+    if (!(logOutLink instanceof HTMLAnchorElement)) {
+      throw new Error();
+    }
+
+    logOutLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+
+      logOutUser();
+
+      router.navigate(Route.Login);
+      renderHeader();
+    });
+
+    return logOutLink;
+  }
+
+  public createLogInLink(): HTMLAnchorElement {
+    return el('a', this.linkText.toLogIn, {
+      href: Route.Login,
+      'data-navigo': '',
+    });
+  }
 
   private mainPageLink = el('a.burger-link', this.linkText.toMain, {
     href: Route.Main,
@@ -73,36 +104,6 @@ class Burger {
     this.burgerMenu.classList.toggle('active');
     document.body.classList.toggle('lock');
     this.mask.classList.toggle('lock');
-  }
-
-  private createLogOutLink(): HTMLAnchorElement {
-    const logOutLink = el('a.logout', this.linkText.toLogOut, {
-      href: '/logout',
-      'data-navigo': '',
-    });
-
-    if (!(logOutLink instanceof HTMLAnchorElement)) {
-      throw new Error();
-    }
-
-    logOutLink.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopImmediatePropagation();
-
-      logOutUser();
-
-      router.navigate(Route.Login);
-      renderHeader();
-    });
-
-    return logOutLink;
-  }
-
-  private createLogInLink(): HTMLAnchorElement {
-    return el('a', this.linkText.toLogIn, {
-      href: Route.Login,
-      'data-navigo': '',
-    });
   }
 }
 

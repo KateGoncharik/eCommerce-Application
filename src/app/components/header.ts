@@ -3,13 +3,13 @@ import { Route } from '@customTypes/route';
 import logo from '@icons/logo-mini.png';
 import cart from '@icons/cart.svg';
 import { Burger } from '@components/burger';
-import { isUserAuthorized, logOutUser } from '@app/state';
-import { router } from '@app/router';
-import { renderHeader } from '@helpers/render-header';
+import { isUserAuthorized } from '@app/state';
+
 class Header {
   private burger = new Burger();
+
   public create(): HTMLElement {
-    const loginOrLogoutLink = isUserAuthorized() ? this.createLogOutLink() : this.createLogInLink();
+    const loginOrLogoutLink = isUserAuthorized() ? this.burger.createLogOutLink() : this.burger.createLogInLink();
     return el('header.header', [
       this.burger.mask,
       el('.header-big', [
@@ -54,37 +54,6 @@ class Header {
       ]),
       this.burger.burgerMenu,
     ]);
-  }
-
-  private createLogOutLink(): HTMLAnchorElement {
-    const logOutLink = el('a.logout', this.burger.linkText.toLogOut, {
-      //TODO we should use Route here, but each route bound to a real page, and we don't need this
-      href: '/logout',
-      'data-navigo': '',
-    });
-
-    if (!(logOutLink instanceof HTMLAnchorElement)) {
-      throw new Error();
-    }
-
-    logOutLink.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopImmediatePropagation();
-
-      logOutUser();
-
-      router.navigate(Route.Login);
-      renderHeader();
-    });
-
-    return logOutLink;
-  }
-
-  private createLogInLink(): HTMLAnchorElement {
-    return el('a', this.burger.linkText.toLogIn, {
-      href: Route.Login,
-      'data-navigo': '',
-    });
   }
 }
 
