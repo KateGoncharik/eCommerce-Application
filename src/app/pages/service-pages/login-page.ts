@@ -4,6 +4,7 @@ import { LoginFormValidator } from '@validation/login-form-validator';
 import { authorizeUser } from '@app/sdk/requests';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
 import { redirectOnMain } from '@app/router';
+import { renderHeader } from '@helpers/render-header';
 
 class LoginPage extends Page {
   private loginFormValidator = new LoginFormValidator();
@@ -86,6 +87,7 @@ class LoginPage extends Page {
       emailErrorBlock.textContent = authError ?? '';
       if (!authError) {
         redirectOnMain();
+        renderHeader();
       }
     });
     return button;
