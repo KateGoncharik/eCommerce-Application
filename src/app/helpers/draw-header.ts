@@ -1,7 +1,7 @@
 import { safeQuerySelector } from '@helpers/safe-query-selector';
 import { Header } from '@app/components/header';
 
-export function drawHeader(): void {
+export function renderHeader(): void {
   const main = safeQuerySelector('main', document);
   const newHeader = new Header().create();
   const wrapper = main.closest('div');
@@ -9,10 +9,8 @@ export function drawHeader(): void {
   if (!wrapper) {
     throw new Error('Div expected');
   }
-  const currentHeader = safeQuerySelector('.header', document);
-  if (currentHeader) {
-    currentHeader.remove();
-  }
+
+  document.body.querySelector('header')?.remove();
 
   wrapper.insertBefore(newHeader, main);
 }

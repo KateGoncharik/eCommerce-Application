@@ -4,6 +4,8 @@ import logo from '@icons/logo-mini.png';
 import cart from '@icons/cart.svg';
 import { Burger } from '@components/burger';
 import { isUserAuthorized, logOutUser } from '@app/state';
+import { router } from '@app/router';
+import { renderHeader } from '@helpers/draw-header';
 class Header {
   private burger = new Burger();
   public create(): HTMLElement {
@@ -71,9 +73,8 @@ class Header {
 
       logOutUser();
 
-      // we need to rerender the header. We do not have such functionality by now,
-      // so the simplest way to do this is page reloading
-      window.location.replace(Route.Main);
+      router.navigate(Route.Login);
+      renderHeader();
     });
 
     return logOutLink;
