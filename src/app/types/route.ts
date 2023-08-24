@@ -3,6 +3,7 @@ enum Route {
   Login = '/login',
   Registration = '/registration',
   NotFound = '404',
+  Catalog = '/catalog',
 }
 
 export { Route };

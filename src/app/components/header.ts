@@ -4,15 +4,23 @@ import logo from '@icons/logo-mini.png';
 import cart from '@icons/cart.svg';
 import { Burger } from '@components/burger';
 import { isUserAuthorized, logOutUser } from '@app/state';
+
 class Header {
   private burger = new Burger();
+
   public create(): HTMLElement {
     const loginOrLogoutLink = isUserAuthorized() ? this.createLogOutLink() : this.createLogInLink();
     return el('header.header', [
       this.burger.mask,
       el('.header-big', [
         el('.header-column', [
-          el('span.header-cell', this.burger.linkText.toCatalog),
+          el('span.header-cell', [
+            // TODO: use props of Burger class for elements in order to avoid duplication
+            el('a', this.burger.linkText.toCatalog, {
+              href: Route.Catalog,
+              'data-navigo': '',
+            }),
+          ]),
           el('span.header-cell', this.burger.linkText.toAboutUs),
         ]),
         el(

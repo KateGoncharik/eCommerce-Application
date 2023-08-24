@@ -19,7 +19,10 @@ class Burger {
     'data-navigo': '',
   });
 
-  private catalogPageLink = el('span.burger-link', this.linkText.toCatalog);
+  private catalogPageLink = el('a.burger-link', this.linkText.toCatalog, {
+    href: Route.Catalog,
+    'data-navigo': '',
+  });
 
   private aboutUsPageLink = el('span.burger-link', this.linkText.toAboutUs);
 

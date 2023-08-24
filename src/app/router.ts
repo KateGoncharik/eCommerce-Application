@@ -23,6 +23,10 @@ function bindRoutes(routes: Record<Route, Page>): void {
       const page = routes[Route.Registration];
       page.render();
     })
+    .on(Route.Catalog, () => {
+      const page = routes[Route.Catalog];
+      page.render();
+    })
     .notFound(() => {
       const page = routes[Route.NotFound];
       page.render();
