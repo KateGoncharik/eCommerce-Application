@@ -9,7 +9,7 @@
 .show-validation {
   display: none;
   align-items: center;
-  padding-top: 5px;
+  height: 30px;
   font:
     14px Gilroy,
     serif;
@@ -17,7 +17,7 @@
 }
 
 .disabled-input {
-  background: rgba($color: #979696, $alpha: 20%);
+  background: rgba(151, 150, 150, 0.2);
   border: 1px solid gray;
 }
 
