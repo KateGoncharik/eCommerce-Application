@@ -9,11 +9,16 @@
 .show-validation {
   display: none;
   align-items: center;
-  height: 30px;
+  padding-top: 5px;
   font:
     14px Gilroy,
     serif;
   color: red;
+}
+
+.disabled-input {
+  background: rgba($color: #979696, $alpha: 20%);
+  border: 1px solid gray;
 }
 
 .successful {
