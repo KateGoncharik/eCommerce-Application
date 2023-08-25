@@ -5,9 +5,7 @@ import { DataUser } from '@app/types/datauser';
 import { Country } from '@app/types/enums';
 import { redirectOnMain } from '@app/router';
 
-
 export class ValidationForm {
-  
   private checkValidation(userData: Schemas, input: Element, showElement: Element): void {
     const showBlock = showElement as HTMLElement;
     if (!(input instanceof HTMLInputElement)) {
@@ -58,7 +56,7 @@ export class ValidationForm {
 
   public eventCheckBox(element: HTMLElement, shipping: HTMLElement): void {
     const inputsBilling = document.getElementsByClassName('input-billing');
-  
+
     element.addEventListener('click', (event) => {
       if (!(shipping instanceof HTMLInputElement)) {
         return;
@@ -103,10 +101,9 @@ export class ValidationForm {
     const checkInputsValid = async (): Promise<void> => {
       countTrue = 0;
 
-      this.checkNewUSer()
+      this.checkNewUSer();
 
       Array.from(inputs).forEach((input) => {
-        
         if (!(input instanceof HTMLInputElement)) {
           return;
         }
@@ -133,7 +130,7 @@ export class ValidationForm {
     elementBtn.addEventListener('click', checkInputsValid);
   }
 
-  private checkNewUSer():void {
+  private checkNewUSer(): void {
     const emailInput = safeQuerySelector<HTMLInputElement>('.email-input ');
     const showErrorBlock = emailInput.nextElementSibling! as HTMLElement;
 
@@ -147,7 +144,7 @@ export class ValidationForm {
       }
     });
   }
-  
+
   private getAssembleArray(): object | undefined {
     const checkboxDefaultBilling = safeQuerySelector<HTMLInputElement>('#billing-default-checkbox');
     const checkboxDefaultShipping = safeQuerySelector<HTMLInputElement>('#shipping-default-checkbox');
@@ -170,7 +167,7 @@ export class ValidationForm {
       dataAttribute === 'country' ? (value = this.getCodeCountry(input)) : (value = input.value);
 
       if (input.classList.contains('input-billing')) {
-         if (!checkboxShippingUseAll.checked) {
+        if (!checkboxShippingUseAll.checked) {
           objBilling[dataAttribute] = value;
         }
       } else if (input.classList.contains('input-shipping')) {
