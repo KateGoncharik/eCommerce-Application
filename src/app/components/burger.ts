@@ -1,7 +1,7 @@
 import { el } from 'redom';
 import { Route } from '@customTypes/route';
 import { isUserAuthorized, logOutUser } from '@app/state';
-import { router } from '@app/router';
+import { router, redirect } from '@app/router';
 import { renderHeader } from '@helpers/render-header';
 
 class Burger {
@@ -34,8 +34,9 @@ class Burger {
 
       logOutUser();
 
-      router.navigate(Route.Login);
+      redirect(Route.Login);
       renderHeader();
+      router.updatePageLinks();
     });
 
     return logOutLink;

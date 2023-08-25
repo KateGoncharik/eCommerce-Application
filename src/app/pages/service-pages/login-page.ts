@@ -3,8 +3,9 @@ import { el, mount } from 'redom';
 import { LoginFormValidator } from '@validation/login-form-validator';
 import { authorizeUser } from '@app/sdk/requests';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
-import { redirectOnMain } from '@app/router';
 import { renderHeader } from '@helpers/render-header';
+import { router, redirect } from '@app/router';
+import { Route } from '@customTypes/route';
 
 class LoginPage extends Page {
   private loginFormValidator = new LoginFormValidator();
@@ -86,8 +87,9 @@ class LoginPage extends Page {
       const authError = await authorizeUser(emailInput.value, passwordInput.value);
       emailErrorBlock.textContent = authError ?? '';
       if (!authError) {
-        redirectOnMain();
+        redirect(Route.Main);
         renderHeader();
+        router.updatePageLinks();
       }
     });
     return button;

@@ -30,6 +30,6 @@ function bindRoutes(routes: Record<Route, Page>): void {
     .resolve();
 }
 
-const redirectOnMain = (): void => router.navigate(Route.Main);
+const redirect = (route: Route): void => router.navigate(route);
 
-export { router, bindRoutes, redirectOnMain };
+export { router, bindRoutes, redirect };
