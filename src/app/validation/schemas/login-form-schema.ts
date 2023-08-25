@@ -13,5 +13,6 @@ export const passwordSchema = z.object({
     .regex(
       /^(?! )[A-Za-z0-9]*(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[A-Za-z0-9]*(?<! )$/g,
       'Password must contain one uppercase and one lowercase letter, one digit '
-    ),
+    )
+    .regex(/^[A-Za-z0-9]+$/, 'Password must not contain special character.'),
 });

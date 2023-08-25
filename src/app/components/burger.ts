@@ -1,5 +1,8 @@
 import { el } from 'redom';
 import { Route } from '@customTypes/route';
+import { isUserAuthorized, logOutUser } from '@app/state';
+import { router, redirect } from '@app/router';
+import { renderHeader } from '@helpers/render-header';
 
 class Burger {
   public linkText: Record<string, string> = {
@@ -10,9 +13,41 @@ class Burger {
     toLogOut: 'Log out',
     toJoin: 'Join',
   };
+
   public mask = el('.header-mask');
 
   public burgerIcon = this.createBurgerIcon();
+
+  public createLogOutLink(): HTMLAnchorElement {
+    const logOutLink = el('a.logout', this.linkText.toLogOut, {
+      href: '/logout',
+      'data-navigo': '',
+    });
+
+    if (!(logOutLink instanceof HTMLAnchorElement)) {
+      throw new Error();
+    }
+
+    logOutLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+
+      logOutUser();
+
+      redirect(Route.Login);
+      renderHeader();
+      router.updatePageLinks();
+    });
+
+    return logOutLink;
+  }
+
+  public createLogInLink(): HTMLAnchorElement {
+    return el('a', this.linkText.toLogIn, {
+      href: Route.Login,
+      'data-navigo': '',
+    });
+  }
 
   private mainPageLink = el('a.burger-link', this.linkText.toMain, {
     href: Route.Main,
@@ -34,6 +69,7 @@ class Burger {
   });
 
   private createBurgerMenu(): HTMLElement {
+    const loginOrLogoutLink = isUserAuthorized() ? this.createLogOutLink() : this.createLogInLink();
     const burgerLinks = [
       this.mainPageLink,
       this.catalogPageLink,
@@ -48,7 +84,7 @@ class Burger {
       });
     });
     const separator = el('span', '/');
-    const logInOrJoin = el('.burger-signin', [this.logInPageLink, separator, this.joinPageLink]);
+    const logInOrJoin = el('.burger-signin', [loginOrLogoutLink, separator, this.joinPageLink]);
     const burgerMenu = el('.burger-menu', [this.mainPageLink, this.catalogPageLink, this.aboutUsPageLink, logInOrJoin]);
     return burgerMenu;
   }
