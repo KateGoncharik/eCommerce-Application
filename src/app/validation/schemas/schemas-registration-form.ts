@@ -77,13 +77,12 @@ export const Schemas = z.object({
 
   'postal code': z
     .string()
-    .superRefine((val:string, ctx: z.RefinementCtx) => {
+    .superRefine((val: string, ctx: z.RefinementCtx) => {
       const inputCountryCodeShipping = safeQuerySelector<HTMLInputElement>('.country-code-input-shipping');
       const inputCountryCodeBilling = safeQuerySelector<HTMLInputElement>('.country-code-input-billing');
       const inputPCBilling = safeQuerySelector('.postal-code-input-billing');
       const inputPCShipping = safeQuerySelector('.postal-code-input-shipping');
 
-      
       if (inputCountryCodeShipping.classList.contains('active') && inputPCShipping.classList.contains('active')) {
         inputPCShipping.classList.remove('active');
         checkValidationPostCode(inputCountryCodeShipping, val, ctx);
