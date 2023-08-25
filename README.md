@@ -1,6 +1,5 @@
 <a name="readme-top"></a>
 
-
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
@@ -11,8 +10,6 @@
   <h1 align="center">𝕎𝕠𝕟𝕕𝕖𝕣𝕝𝕒𝕟𝕕 - 𝕓𝕒𝕝𝕠𝕠𝕟𝕤 𝕒𝕟𝕕 𝕡𝕒𝕣𝕥𝕪 𝕟𝕖𝕖𝕕𝕤</h1>
 
 </div>
-
-
 
 <!-- TABLE OF CONTENTS -->
 <details>
@@ -35,14 +32,16 @@
   </ol>
 </details>
 
-
-
 <!-- ABOUT THE PROJECT -->
-## About The Project
-### ***Learning project from the course [The Rolling Scopes School  JavaScript/Front-end](https://rs.school/js/)***
-***Completed: September 2023***
 
-#### Wonderland -  online store for modern, stylish party decorations and supplies.
+## About The Project
+
+### **_Learning project from the course [The Rolling Scopes School JavaScript/Front-end](https://rs.school/js/)_**
+
+**_Completed: September 2023_**
+
+#### Wonderland - online store for modern, stylish party decorations and supplies.
+
 #### Team project by [Kate](https://github.com/KateGoncharik) and [Irina](https://github.com/Irina-Grebennikova).
 
 Users can browse through a vast range of products, view detailed descriptions, add their favorite items to the basket, and proceed to checkout . It includes features such as user registration and login, product search, product categorization, and sorting to make the shopping experience more streamlined and convenient.
@@ -62,24 +61,21 @@ An important aspect of our application is that it's responsive, ensuring it look
 
 ### Technology stack
 
-* [![NPM][NPM]][NPM-url]
-* [![HTML5][HTML5]][HTML5-url]
-* [![SASS][SASS]][SASS-url]
-* [![TypeScript][TypeScript]][TypeScript-url]
-* [![Webpack][Webpack]][Webpack-url]
-* [![Jest][Jest]][Jest-url]
-
-
+- [![NPM][NPM]][NPM-url]
+- [![HTML5][HTML5]][HTML5-url]
+- [![SASS][SASS]][SASS-url]
+- [![TypeScript][TypeScript]][TypeScript-url]
+- [![Webpack][Webpack]][Webpack-url]
+- [![Jest][Jest]][Jest-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
 <!-- GETTING STARTED -->
+
 ## Getting Started
 
 This is an example of how you may give instructions on setting up your project locally.
 To get a local copy up and running follow these simple example steps.
-
 
 ### Installation
 
@@ -100,27 +96,24 @@ _Below is an example of how to install and configure the application._
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- USAGE EXAMPLES -->
+
 ## Usage
 
 **Available scripts**:
 
-* **Webpack**  
-  * "build": "webpack --config ./webpack.config.js --env mode=prod"  
-  * "start": "webpack serve --open --config ./webpack.config.js --env mode=dev",
-* **Eslint** "lint:fix": "eslint --fix --ext .ts ."
-* **Stylelint** "stylelint": "stylelint */.scss"
-* **Prettier** "prettier": "npx prettier --check ."
-* **Jest** "test": "jest"
-
+- **Webpack**
+  - "build": "webpack --config ./webpack.config.js --env mode=prod"
+  - "start": "webpack serve --open --config ./webpack.config.js --env mode=dev",
+- **Eslint** "lint:fix": "eslint --fix --ext .ts ."
+- **Stylelint** "stylelint": "stylelint \*/.scss"
+- **Prettier** "prettier": "npx prettier --check ."
+- **Jest** "test": "jest"
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- CONTRIBUTING -->
+
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
@@ -136,10 +129,9 @@ Don't forget to give the project a star! Thanks again!
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+
 [NPM]: https://img.shields.io/badge/NPM-%23CB3837.svg?style=for-the-badge&logo=npm&logoColor=white
 [NPM-url]: https://www.npmjs.com
 [HTML5]: https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white

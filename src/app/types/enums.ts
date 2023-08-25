@@ -1,7 +1,6 @@
-
 export enum Country {
-    UnitedStates = 'United States',
-    Germany = 'Germany',
-    Spain = 'Spain',
-    Australia = 'Australia',
-  }
+  UnitedStates = 'United States',
+  Germany = 'Germany',
+  Spain = 'Spain',
+  Australia = 'Australia',
+}
