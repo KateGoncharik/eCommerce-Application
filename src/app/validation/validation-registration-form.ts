@@ -3,7 +3,8 @@ import { safeQuerySelector } from '@helpers/safe-query-selector';
 import { createUser, isUserExist, authorizeUser } from '@sdk/requests';
 import { DataUser } from '@app/types/datauser';
 import { Country } from '@app/types/enums';
-import { redirectOnMain } from '@app/router';
+import { router, redirect } from '@app/router';
+import { Route } from '@customTypes/route';
 import { renderHeader } from '@helpers/render-header';
 
 export class ValidationForm {
@@ -123,8 +124,9 @@ export class ValidationForm {
         await this.dispatchForm();
         const authError = await authorizeUser(email, password);
         if (!authError) {
-          redirectOnMain();
+          redirect(Route.Main);
           renderHeader();
+          router.updatePageLinks();
         }
       }
     };
