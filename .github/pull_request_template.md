@@ -3,7 +3,7 @@
 
 ## Proposed changes
 
-- Describe the big picture of your changes here:
+* Describe the big picture of your changes here:
 
 Create .gitignore with neсessary contents.
 
@@ -25,8 +25,7 @@ _Put an `x` in the boxes that apply. You can also fill these out after creating 
 - [x] I have added necessary documentation (if appropriate)
 
 ## Related tickets & documents
-
-- Link to the ticket: [link](https://kategoncharik.atlassian.net/browse/EA-9?atlOrigin=eyJpIjoiMmMxNzZmMDVmZWRkNGJkNWI0NWEzYjAxOWE5NTdkOTQiLCJwIjoiaiJ9)
+* Link to the ticket: [link](https://kategoncharik.atlassian.net/browse/EA-9?atlOrigin=eyJpIjoiMmMxNzZmMDVmZWRkNGJkNWI0NWEzYjAxOWE5NTdkOTQiLCJwIjoiaiJ9)
 
 ## Further comments
 
