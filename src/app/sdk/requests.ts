@@ -38,3 +38,31 @@ export async function authorizeUser(email: string, password: string): Promise<vo
       }
     );
 } //TODO make catch instead of then
+
+// // eslint-disable-next-line @typescript-eslint/no-explicit-any
+// export const queryProduct = (productID: string): => {
+//   return getApiRoot()
+//     .products()
+//     .withId({ ID: productID })
+//     .get()
+//     .execute();
+// };
+
+// queryProduct('cake-sparklers')
+//   .then(({ body }) => {
+//     console.log(body.version);
+//   })
+//   .catch(console.error);
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const returnProductByKey = (productKey: string): Promise<ClientResponse<any>> => {
+  return getApiRoot().products().withKey({ key: productKey }).get().execute();
+};
+
+// Output the Product's current English name
+returnProductByKey('cake-sparklers')
+  .then(({ body }) => {
+    console.log('ddddd');
+    console.log(body.masterData.current.name['en']);
+  })
+  .catch(console.error);
