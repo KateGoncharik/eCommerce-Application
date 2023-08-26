@@ -28,15 +28,25 @@ class RegistrationPage extends Page {
 
   private createInput(): HTMLElement {
     const useShipping = el('input#use-shipping-for-billing.checkbox-reg', { type: 'checkbox' });
-    const useBilling = el('input#use-billing-for-shipping.checkbox-reg', { type: 'checkbox' });
+    const passwordVisibility = el('input.password-checkbox', { type: 'checkbox' });
+    const passwordInput = el('input.password-input.input', {
+      type: 'password',
+      placeholder: 'password',
+      data: 'password',
+    });
+
     const blockInputsRegistration = el('.registration-inputs-block', [
       el('.input-block', [
         el('input.email-input.input', { type: 'text', placeholder: 'email', data: 'email' }),
         el('.show-validation-email-input show-validation'),
       ]),
       el('.input-block', [
-        el('input.password-input.input', { type: 'password', placeholder: 'password', data: 'password' }),
+        passwordInput,
         el('.show-validation-password-input show-validation'),
+        el('.password-visability-block', 'Show password', [
+          passwordVisibility,
+          el('.show-validation-password-input show-validation'),
+        ]),
       ]),
       el('.input-block', [
         el('input.first-name-input.input', { type: 'text', placeholder: 'first name', data: 'firstName' }),
@@ -52,41 +62,6 @@ class RegistrationPage extends Page {
       ]),
       [
         el('.block-address', [
-          el('.block-billing', [
-            el('span.billing', 'Address billing'),
-            el('.input-block', [
-              el('input.street-input.input.input-billing', { type: 'text', placeholder: 'street', data: 'streetName' }),
-              el('.show-validation-street-input show-validation'),
-            ]),
-            el('.input-block', [
-              el('input.city-input.input.input-billing', { type: 'text', placeholder: 'city', data: 'city' }),
-              el('.show-validation-city-input show-validation'),
-            ]),
-            el('.input-block', [
-              el('input.postal-code-input.input.input-billing', {
-                type: 'text',
-                placeholder: 'postal code',
-                data: 'postalCode',
-              }),
-              el('.show-validation-postal-code-input  show-validation'),
-            ]),
-            el('.input-block', [
-              el('input.country-code-input.input.input-billing', {
-                type: 'text',
-                placeholder: 'country code',
-                data: 'country',
-              }),
-              el('.show-validation-country-code-input show-validation'),
-            ]),
-            el('.block-billing-checkbox', [
-              el('input#billing-default-checkbox.checkbox-reg', { type: 'checkbox' }),
-              el('label', 'Set as default billing address', { for: 'billing-default-checkbox' }),
-            ]),
-            el('.block-billing-checkbox', [
-              useBilling,
-              el('label', 'Use this address for the shipping field', { for: 'use-billing-for-shipping' }),
-            ]),
-          ]),
           el('.block-shipping', [
             el('span.shipping', 'Address shipping'),
             el('.input-block', [
@@ -102,36 +77,81 @@ class RegistrationPage extends Page {
               el('.show-validation-city-input show-validation'),
             ]),
             el('.input-block', [
-              el('input.postal-code-input.input.input-shipping', {
+              el('input.country-code-input-shipping.input.input-shipping', {
+                type: 'text',
+                placeholder: 'country',
+                data: 'country',
+              }),
+              el('.show-validation-country-code-input show-validation'),
+            ]),
+            el('.input-block', [
+              el('input.postal-code-input-shipping.input.input-shipping', {
                 type: 'text',
                 placeholder: 'postal code',
                 data: 'postalCode',
               }),
               el('.show-validation-postal-code-input  show-validation'),
             ]),
+
+            el('.block-shipping-checkbox', [
+              el('input#shipping-default-checkbox.checkbox-reg', { type: 'checkbox' }),
+              el('label', 'Set shipping as default address', { for: 'shipping-default-checkbox' }),
+            ]),
+            el('.block-shipping-checkbox', [
+              useShipping,
+              el('label', 'Use shipping address for billing', { for: 'use-shipping-for-billing' }),
+            ]),
+          ]),
+          el('.block-billing', [
+            el('span.billing', 'Address billing'),
             el('.input-block', [
-              el('input.country-code-input.input.input-shipping', {
+              el('input.street-input.input.input-billing', { type: 'text', placeholder: 'street', data: 'streetName' }),
+              el('.show-validation-street-input show-validation'),
+            ]),
+            el('.input-block', [
+              el('input.city-input.input.input-billing', { type: 'text', placeholder: 'city', data: 'city' }),
+              el('.show-validation-city-input show-validation'),
+            ]),
+            el('.input-block', [
+              el('input.country-code-input-billing.input.input-billing', {
                 type: 'text',
-                placeholder: 'country code',
+                placeholder: 'country',
                 data: 'country',
               }),
               el('.show-validation-country-code-input show-validation'),
             ]),
-            el('.block-shipping-checkbox', [
-              el('input#shipping-default-checkbox.checkbox-reg', { type: 'checkbox' }),
-              el('label', 'Set as default shipping address', { for: 'shipping-default-checkbox' }),
+            el('.input-block', [
+              el('input.postal-code-input-billing.input.input-billing', {
+                type: 'text',
+                placeholder: 'postal code',
+                data: 'postalCode',
+              }),
+              el('.show-validation-postal-code-input  show-validation'),
             ]),
-            el('.block-shipping-checkbox', [
-              useShipping,
-              el('label', 'Use this address for the billing field', { for: 'use-shipping-for-billing' }),
+
+            el('.block-billing-checkbox', [
+              el('input#billing-default-checkbox.checkbox-reg', { type: 'checkbox' }),
+              el('label', 'Set billing as default address', { for: 'billing-default-checkbox' }),
             ]),
           ]),
         ]),
       ],
     ]);
 
+    if (!(passwordInput instanceof HTMLInputElement)) {
+      throw new Error('Input expected');
+    }
+
     this.validation.eventInput(blockInputsRegistration);
-    this.validation.eventCheckBox(blockInputsRegistration, useBilling, useShipping);
+    this.validation.eventCheckBox(blockInputsRegistration, useShipping);
+
+    passwordVisibility.addEventListener('click', () => {
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+      } else {
+        passwordInput.type = 'password';
+      }
+    });
 
     return blockInputsRegistration;
   }

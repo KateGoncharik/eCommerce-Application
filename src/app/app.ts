@@ -5,6 +5,7 @@ import { MainPage } from '@pages/main-page';
 import { LoginPage } from '@servicePages/login-page';
 import { RegistrationPage } from '@servicePages/registration-page';
 import { NotFoundPage } from '@servicePages/404-page';
+import { CatalogPage } from '@catalog/catalog-page';
 import { Header } from '@components/header';
 
 const main = document.createElement('main');
@@ -13,6 +14,7 @@ const routes: Record<Route, Page> = {
   [Route.Login]: new LoginPage(),
   [Route.Registration]: new RegistrationPage(),
   [Route.NotFound]: new NotFoundPage(),
+  [Route.Catalog]: new CatalogPage(),
 };
 
 class App {

@@ -23,6 +23,10 @@ function bindRoutes(routes: Record<Route, Page>): void {
       const page = routes[Route.Registration];
       page.render();
     })
+    .on(Route.Catalog, () => {
+      const page = routes[Route.Catalog];
+      page.render();
+    })
     .notFound(() => {
       const page = routes[Route.NotFound];
       page.render();
@@ -30,6 +34,6 @@ function bindRoutes(routes: Record<Route, Page>): void {
     .resolve();
 }
 
-const redirectOnMain = (): void => router.navigate(Route.Main);
+const redirect = (route: Route): void => router.navigate(route);
 
-export { router, bindRoutes, redirectOnMain };
+export { router, bindRoutes, redirect };
