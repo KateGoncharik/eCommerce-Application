@@ -2,16 +2,18 @@ import { getApiRoot } from '@sdk/build-client';
 import { withPasswordFlowClient } from '@sdk/login-api';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
 import { markInputAsInvalid } from '@helpers/toggle-validation-state';
-import { ClientResponse, ErrorResponse } from '@commercetools/platform-sdk';
-import { DataUser } from '@app/types/datauser';
+import { ClientResponse, ErrorResponse, ProductProjection } from '@commercetools/platform-sdk';
+import { DataUser } from '@customTypes/datauser';
 import { rememberAuthorizedUser } from '@app/state';
+
+const errorMessage = 'Wrong email or password. Try again or register';
 
 export const createUser = async (form: DataUser): Promise<number | undefined> => {
   try {
     const request = await getApiRoot().customers().post(form).execute();
     return request.statusCode;
   } catch (e) {
-    console.log('Error: no connection to server');
+    console.log(errorMessage);
   }
 };
 
@@ -23,7 +25,7 @@ export async function isUserExist(email: string): Promise<boolean | void> {
       .execute();
     return result.body.count > 0;
   } catch (err) {
-    console.log('Error: no connection to server');
+    console.log(errorMessage);
   }
 }
 
@@ -50,6 +52,17 @@ export async function authorizeUser(email: string, password: string): Promise<vo
         }
       );
   } catch (err) {
-    console.log('Error: no connection to server');
+    console.log(errorMessage);
+  }
+}
+
+export async function getProducts(): Promise<ProductProjection[]> {
+  try {
+    const request = await getApiRoot().productProjections().get().execute();
+    const products = request.body.results;
+    return products;
+  } catch (err) {
+    console.log(errorMessage);
+    return [];
   }
 }
