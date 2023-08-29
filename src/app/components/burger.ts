@@ -1,6 +1,6 @@
 import { el } from 'redom';
 import { Route } from '@customTypes/route';
-import { isUserAuthorized, logOutUser } from '@app/state';
+import { UserState } from '@app/state';
 import { router, redirect } from '@app/router';
 import { renderHeader } from '@helpers/render-header';
 
@@ -32,7 +32,7 @@ class Burger {
       e.preventDefault();
       e.stopImmediatePropagation();
 
-      logOutUser();
+      this.userState.logOutUser();
 
       redirect(Route.Login);
       renderHeader();
@@ -71,8 +71,10 @@ class Burger {
     'data-navigo': '',
   });
 
+  private userState = new UserState();
+
   private createBurgerMenu(): HTMLElement {
-    const loginOrLogoutLink = isUserAuthorized() ? this.createLogOutLink() : this.createLogInLink();
+    const loginOrLogoutLink = this.userState.isUserAuthorized() ? this.createLogOutLink() : this.createLogInLink();
     const burgerLinks = [
       this.mainPageLink,
       this.catalogPageLink,

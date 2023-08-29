@@ -6,6 +6,7 @@ import { Country } from '@app/types/enums';
 import { router, redirect } from '@app/router';
 import { Route } from '@customTypes/route';
 import { renderHeader } from '@helpers/render-header';
+
 export class ValidationForm {
   private checkValidation(userData: Schemas, input: Element, showElement: Element): void {
     const showBlock = showElement as HTMLElement;

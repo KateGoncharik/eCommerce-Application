@@ -4,7 +4,7 @@ import { safeQuerySelector } from '@helpers/safe-query-selector';
 import { markInputAsInvalid } from '@helpers/toggle-validation-state';
 import { ClientResponse, ErrorResponse, ProductProjection } from '@commercetools/platform-sdk';
 import { DataUser } from '@customTypes/datauser';
-import { rememberAuthorizedUser } from '@app/state';
+import { UserState } from '@app/state';
 
 const registerErrorMessage = 'Something went wrong. Try again';
 const authErrorMessage = 'Wrong email or password. Try again or register';
@@ -39,8 +39,8 @@ export async function authorizeUser(email: string, password: string): Promise<vo
       .execute()
       .then(
         (result) => {
-          const customer = result.body.customer;
-          rememberAuthorizedUser(customer);
+          const userState = new UserState();
+          userState.rememberAuthorizedUser(result.body.customer);
         },
         (errorResponse: ClientResponse<ErrorResponse>) => {
           const emailInput = safeQuerySelector<HTMLInputElement>('.email-input', document);

@@ -3,12 +3,16 @@ import { Route } from '@customTypes/route';
 import logo from '@icons/logo-mini.png';
 import cart from '@icons/cart.svg';
 import { Burger } from '@components/burger';
-import { isUserAuthorized } from '@app/state';
+import { UserState } from '@app/state';
 class Header {
   private burger = new Burger();
 
+  private userState = new UserState();
+
   public create(): HTMLElement {
-    const loginOrLogoutLink = isUserAuthorized() ? this.burger.createLogOutLink() : this.burger.createLogInLink();
+    const loginOrLogoutLink = this.userState.isUserAuthorized()
+      ? this.burger.createLogOutLink()
+      : this.burger.createLogInLink();
     return el('header.header', [
       this.burger.mask,
       el('.header-big', [

@@ -1,8 +1,8 @@
 import { Customer } from '@commercetools/platform-sdk';
 import { Page } from '@templates/page';
 import { el, mount } from 'redom';
-import girlAvatar from '@icons/avatar-girl.png';
-import boyAvatar from '@icons/avatar-boy.png';
+import { getAvatarByGender } from '@helpers/get-avatar-by-gender';
+import { getUserGender } from '@helpers/get-user-gender';
 
 class UserPage extends Page {
   protected textObject = {
@@ -11,32 +11,13 @@ class UserPage extends Page {
 
   private createAvatar(): HTMLElement {
     const userAvatarWrapper = el('.user-avatar-wrapper');
-    const userGender = this.getUserGender();
+    const userGender = getUserGender();
 
-    if (userGender === 'female') {
-      const userAvatar = el('.avatar-wrapper', [el('img.avatar', { src: girlAvatar, alt: 'girl' })]);
-      mount(userAvatarWrapper, userAvatar);
-    } else {
-      const userAvatar = el('.avatar-wrapper', [el('img.avatar', { src: boyAvatar, alt: 'boy' })]);
-      mount(userAvatarWrapper, userAvatar);
-    }
+    const src = getAvatarByGender(userGender);
+    const userAvatar = el('.avatar-wrapper', [el('img.avatar', { src: src, alt: 'girl' })]);
+    mount(userAvatarWrapper, userAvatar);
+
     return userAvatarWrapper;
-  }
-
-  private getUserGender(): string {
-    const user = localStorage.getItem('user');
-    if (user === null) {
-      throw new Error('No user');
-    }
-    const parsedUser = JSON.parse(user);
-    if (parsedUser.id) {
-      const userGender = localStorage.getItem(parsedUser.id);
-      if (!userGender) {
-        return 'male';
-      }
-      return userGender;
-    }
-    throw new Error('Incorrect user object');
   }
 
   private createUserInfoBlock(): HTMLElement {
@@ -79,7 +60,7 @@ class UserPage extends Page {
             el('span.user-info-subtitle', 'Gender'),
             el('input.gender-input', {
               type: 'text',
-              placeholder: `${this.getUserGender()}`,
+              placeholder: `${getUserGender()}`,
               name: 'gender',
               disabled: true,
             }),
@@ -177,7 +158,6 @@ class UserPage extends Page {
     if (!(button instanceof HTMLButtonElement)) {
       throw new Error('Button expected');
     }
-    button.addEventListener('click', () => console.log('here will be edit function'));
     return button;
   }
 
@@ -185,15 +165,13 @@ class UserPage extends Page {
     const authenticatedUser = localStorage.getItem('user');
     if (!authenticatedUser) {
       throw new Error('No authenticated user');
-    } else {
-      const parsedUser = JSON.parse(authenticatedUser);
-      return parsedUser;
     }
+    const parsedUser = JSON.parse(authenticatedUser);
+    return parsedUser;
   }
 
   protected build(): HTMLElement {
-    const userInfo = this.createUserInfoBlock();
-    return userInfo;
+    return this.createUserInfoBlock();
   }
 }
 
