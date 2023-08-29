@@ -31,7 +31,7 @@
   gap: 20px;
 }
 
-.icon-ssuccessful {
+.icon-successful {
   width: 100px;
   height: auto;
 }
@@ -42,12 +42,18 @@
     serif;
 }
 
+.gender-label {
+  font:
+    16px Gilroy,
+    serif;
+}
+
 @media (width <= 650px) {
   .message {
     font-size: 16px;
   }
 
-  .icon-ssuccessful {
+  .icon-successful {
     width: 60px;
   }
 }

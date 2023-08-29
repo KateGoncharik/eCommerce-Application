@@ -6,7 +6,6 @@ import { Country } from '@app/types/enums';
 import { router, redirect } from '@app/router';
 import { Route } from '@customTypes/route';
 import { renderHeader } from '@helpers/render-header';
-
 export class ValidationForm {
   private checkValidation(userData: Schemas, input: Element, showElement: Element): void {
     const showBlock = showElement as HTMLElement;
@@ -213,7 +212,7 @@ export class ValidationForm {
     return codeCountry!;
   }
 
-  public showSuccessfulRegistrartion(): void {
+  public showSuccessfulRegistration(): void {
     const successfulBlock = safeQuerySelector('.successful');
     const formBlock = safeQuerySelector('.registration-form');
 
@@ -230,7 +229,7 @@ export class ValidationForm {
 
     const statusCode = await createUser(getArray!);
     if (statusCode === 201) {
-      this.showSuccessfulRegistrartion();
+      this.showSuccessfulRegistration();
     }
   }
 }

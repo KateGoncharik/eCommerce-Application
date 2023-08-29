@@ -27,6 +27,15 @@ function bindRoutes(routes: Record<Route, Page>): void {
       const page = routes[Route.Catalog];
       page.render();
     })
+    .on(Route.UserPage, () => {
+      const user = localStorage.getItem('user');
+      if (user) {
+        const page = routes[Route.UserPage];
+        page.render();
+      } else {
+        router.navigate(Route.Main);
+      }
+    })
     .notFound(() => {
       const page = routes[Route.NotFound];
       page.render();

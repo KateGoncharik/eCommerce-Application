@@ -6,14 +6,16 @@ import { ClientResponse, ErrorResponse, ProductProjection } from '@commercetools
 import { DataUser } from '@customTypes/datauser';
 import { rememberAuthorizedUser } from '@app/state';
 
-const errorMessage = 'Wrong email or password. Try again or register';
+const registerErrorMessage = 'Something went wrong. Try again';
+const authErrorMessage = 'Wrong email or password. Try again or register';
+const productsErrorMessage = 'No products found ';
 
 export const createUser = async (form: DataUser): Promise<number | undefined> => {
   try {
     const request = await getApiRoot().customers().post(form).execute();
     return request.statusCode;
   } catch (e) {
-    console.log(errorMessage);
+    console.error(registerErrorMessage);
   }
 };
 
@@ -25,7 +27,7 @@ export async function isUserExist(email: string): Promise<boolean | void> {
       .execute();
     return result.body.count > 0;
   } catch (err) {
-    console.log(errorMessage);
+    console.error(authErrorMessage);
   }
 }
 
@@ -37,7 +39,8 @@ export async function authorizeUser(email: string, password: string): Promise<vo
       .execute()
       .then(
         (result) => {
-          rememberAuthorizedUser(result.body.customer);
+          const customer = result.body.customer;
+          rememberAuthorizedUser(customer);
         },
         (errorResponse: ClientResponse<ErrorResponse>) => {
           const emailInput = safeQuerySelector<HTMLInputElement>('.email-input', document);
@@ -46,13 +49,13 @@ export async function authorizeUser(email: string, password: string): Promise<vo
           markInputAsInvalid(passwordInput);
 
           if (errorResponse.body.message === 'Customer account with the given credentials not found.') {
-            return 'Wrong email or password. Try again or register';
+            return authErrorMessage;
           }
           return errorResponse.body.message;
         }
       );
   } catch (err) {
-    console.log(errorMessage);
+    console.error(err);
   }
 }
 
@@ -62,7 +65,7 @@ export async function getProducts(): Promise<ProductProjection[]> {
     const products = request.body.results;
     return products;
   } catch (err) {
-    console.log(errorMessage);
+    console.error(productsErrorMessage);
     return [];
   }
 }
