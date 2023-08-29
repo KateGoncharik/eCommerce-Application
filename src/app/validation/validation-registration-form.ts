@@ -148,7 +148,7 @@ export class ValidationForm {
     });
   }
 
-  private getAssembleArray(): object | undefined {
+  public getAssembleArray(): object | undefined {
     const checkboxDefaultBilling = safeQuerySelector<HTMLInputElement>('#billing-default-checkbox');
     const checkboxDefaultShipping = safeQuerySelector<HTMLInputElement>('#shipping-default-checkbox');
     const checkboxShippingUseAll = safeQuerySelector<HTMLInputElement>('#use-shipping-for-billing');

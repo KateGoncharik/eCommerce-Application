@@ -3,11 +3,14 @@ import { Page } from '@templates/page';
 import { el, mount } from 'redom';
 import girlAvatar from '@icons/avatar-girl.png';
 import boyAvatar from '@icons/avatar-boy.png';
+import { EditUserPage } from '@app/edit/edit-user-page';
 
 class UserPage extends Page {
   protected textObject = {
     title: 'User page',
   };
+
+  private editUserPage = new EditUserPage();
 
   private createAvatar(): HTMLElement {
     const userAvatarWrapper = el('.user-avatar-wrapper');
@@ -169,6 +172,7 @@ class UserPage extends Page {
         ]),
       ]),
       this.createEditButton(),
+      this.createSaveButton(),
     ]);
     return infoBlock;
   }
@@ -177,7 +181,20 @@ class UserPage extends Page {
     if (!(button instanceof HTMLButtonElement)) {
       throw new Error('Button expected');
     }
-    button.addEventListener('click', () => console.log('here will be edit function'));
+    button.addEventListener('click', () => {
+      this.editUserPage.editUserInformation();
+    });
+    return button;
+  }
+
+  private createSaveButton(): HTMLButtonElement {
+    const button = el('button.save-button', 'Save');
+    if (!(button instanceof HTMLButtonElement)) {
+      throw new Error('Button expected');
+    }
+    button.addEventListener('click', () => {
+      console.log('I will save your information, one day');
+    });
     return button;
   }
 
