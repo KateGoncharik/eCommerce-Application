@@ -111,7 +111,5 @@ export const Schemas = z.object({
     .optional(),
 });
 
-export function checkGenderValidation(): void {}
-
 export type Schemas = z.infer<typeof Schemas>;
 export type dataValue = Record<string, string>;
