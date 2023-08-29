@@ -4,6 +4,7 @@ import { safeQuerySelector } from '@helpers/safe-query-selector';
 import { markInputAsInvalid } from '@helpers/toggle-validation-state';
 import { ClientResponse, ErrorResponse, ProductProjection } from '@commercetools/platform-sdk';
 import { DataUser } from '@customTypes/datauser';
+import { ProductData } from '@customTypes/data-product';
 import { rememberAuthorizedUser } from '@app/state';
 
 const errorMessage = 'Wrong email or password. Try again or register';
@@ -66,115 +67,21 @@ export async function getProducts(): Promise<ProductProjection[]> {
     return [];
   }
 }
-//TODO make catch instead of then
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-// export const queryProduct = (productID: string):Promise<ClientResponse<any>> => {
-//   return getApiRoot()
-//     .products()
-//     .withId({ ID: productID })
-//     .get()
-//     .execute();
-// };
-
-// queryProduct('7dfdebc7-4d74-40a8-9e6d-24602e47adb7')
-//   .then(({ body }) => {
-//     console.log(body.version);
-//   })
-//   .catch(console.error);
-
-const objProd: Record<string, string> = {};
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const returnProductByKey = (productKey: string): Promise<ClientResponse<any>> => {
+const returnProductByKey = (productKey: string): Promise<ClientResponse> => {
   return getApiRoot().products().withKey({ key: productKey }).get().execute();
 };
 
-// Output the Product's current English name
-const getBodyProduct = async (): Promise<void> => {
-  returnProductByKey('tiger-head-balloon')
+export const getProduct = async (key: string): Promise<ProductData | void> => {
+  return returnProductByKey(key)
     .then(({ body }) => {
-      console.log(body);
-      console.log('1');
-    })
-    .catch(console.error);
-  //body.masterData.current.name["en"]
-};
-const getProductName = async (): Promise<void> => {
-  returnProductByKey('tiger-head-balloon')
-    .then(({ body }) => {
-      console.log(body.masterData.current.name['en-US']);
-      console.log('2');
-      return (objProd.name = body.masterData.current.name['en-US']);
-    })
-    .catch(console.error);
-};
+      const dataUser = {
+        name: body.masterData.current.name['en-US'],
+        img: body.masterData.current.masterVariant.images[0].url,
+        description: body.masterData.current.metaDescription['en-US'],
+      };
 
-const getProductImg = async (): Promise<void> => {
-  returnProductByKey('tiger-head-balloon')
-    .then(({ body }) => {
-      console.log(body.masterData.current.masterVariant.images[0].url);
-      console.log('3');
-      return (objProd.img = body.masterData.current.masterVariant.images[0].url);
+      return dataUser;
     })
-    .catch(console.error);
+    .catch((err) => console.log(err));
 };
-const getProductDescription = async (): Promise<void> => {
-  returnProductByKey('tiger-head-balloon')
-    .then(({ body }) => {
-      console.log(body.masterData.current.metaDescription['en-US']);
-      console.log('4');
-      return (objProd.description = body.masterData.current.metaDescription['en-US']);
-    })
-    .catch(console.error);
-  //body.masterData.current.name["en"]
-};
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function getProductss(): Promise<ProductProjection[]> {
-  try {
-    const request = await getApiRoot().productProjections().get().execute();
-    const products = request.body.results;
-    console.log(products);
-    return products;
-  } catch (err) {
-    console.log(err);
-    return [];
-  }
-}
-
-const add = async (objProd: Record<string, string>): Promise<void> => {
-  // console.log(objProd)
-  // console.log(objProd['description'])
-  // console.log(objProd.name)
-  // console.log(objProd.img)
-  const img = document.createElement('div');
-  img.className = 'img';
-  img.style.backgroundImage = `url(${objProd.img})`;
-  const name = document.createElement('div');
-  name.className = 'name';
-  name.textContent = objProd.name;
-  const dis = document.createElement('div');
-  dis.className = 'dis';
-  dis.textContent = objProd.description;
-  document.body.append(img);
-  document.body.append(name);
-  document.body.append(dis);
-};
-const update = async (): Promise<void> => {
-  const q = await getBodyProduct();
-  const w = await getProductName();
-  const e = await getProductImg();
-  const r = await getProductDescription();
-  const g = await getProductss();
-  console.log(objProd);
-  const t = await add(objProd);
-  q;
-  w;
-  e;
-  r;
-  g;
-  t;
-};
-
-update();
