@@ -1,0 +1,16 @@
+@import '../../node_modules/swiper/swiper-bundle.css';
+
+.swiper .swiper-button-next::after,
+.swiper .swiper-button-prev::after {
+  color: $black;
+  font-size: 50px;
+}
+
+@media (width <= 420px) {
+  .swiper .swiper-button-next::after,
+  .swiper .swiper-button-prev::after {
+    color: $black;
+    font-size: 35px;
+  }
+}
+
