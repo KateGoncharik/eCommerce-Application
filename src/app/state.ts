@@ -8,11 +8,8 @@ function rememberAuthorizedUser(customer: Customer): void {
 }
 
 function getUser(): Customer {
-  const user = localStorage.getItem(userKey);
-  if (user === null) {
-    throw new Error('User expected');
-  }
-  return JSON.parse(user);
+  //TODO make sure that retun type is Customer | null
+  return JSON.parse(localStorage.getItem(userKey)!);
 }
 
 function logOutUser(): void {
