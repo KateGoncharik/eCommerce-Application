@@ -75,10 +75,11 @@ const returnProductByKey = (productKey: string): Promise<ClientResponse> => {
 export const getProduct = async (key: string): Promise<ProductData | void> => {
   return returnProductByKey(key)
     .then(({ body }) => {
+      const { current } = body.masterData;
       const dataUser = {
-        name: body.masterData.current.name['en-US'],
-        img: body.masterData.current.masterVariant.images[0].url,
-        description: body.masterData.current.metaDescription['en-US'],
+        name: current.name['en-US'],
+        img: current.masterVariant.images[0].url,
+        description: current.metaDescription['en-US'],
       };
 
       return dataUser;
