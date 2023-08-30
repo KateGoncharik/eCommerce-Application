@@ -101,10 +101,10 @@ export const Schemas = z.object({
   country: z
     .enum([Country.UnitedStates, Country.Germany, Country.Spain, Country.Australia], {
       errorMap: () => ({
-        message: `Enter the correct country from this list: 
-        ${Country.UnitedStates} | 
-        ${Country.Germany} | 
-        ${Country.Spain} | 
+        message: `Enter the correct country from this list:
+        ${Country.UnitedStates} |
+        ${Country.Germany} |
+        ${Country.Spain} |
         ${Country.Australia}`,
       }),
     })

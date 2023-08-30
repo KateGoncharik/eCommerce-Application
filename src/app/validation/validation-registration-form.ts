@@ -213,7 +213,7 @@ export class ValidationForm {
     return codeCountry!;
   }
 
-  public showSuccessfulRegistrartion(): void {
+  public showSuccessfulRegistration(): void {
     const successfulBlock = safeQuerySelector('.successful');
     const formBlock = safeQuerySelector('.registration-form');
 
@@ -230,7 +230,7 @@ export class ValidationForm {
 
     const statusCode = await createUser(getArray!);
     if (statusCode === 201) {
-      this.showSuccessfulRegistrartion();
+      this.showSuccessfulRegistration();
     }
   }
 }

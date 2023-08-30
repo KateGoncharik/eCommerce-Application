@@ -160,7 +160,7 @@ class RegistrationPage extends Page {
     const SuccessfulBlock = el('.successful-block', [
       el('.successful', [
         el('.img-massege', [
-          el('img.icon-ssuccessful', {
+          el('img.icon-successful', {
             src: successful,
             alt: 'icon successful',
           }),
@@ -181,7 +181,6 @@ class RegistrationPage extends Page {
     const button = el('button.form-btn.btn', 'Join us', { type: 'submit' });
 
     this.validation.checkValidationAllForm(button);
-
     return button;
   }
 
