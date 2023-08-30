@@ -70,6 +70,8 @@
 }
 
 .header-mask {
+  position: relative;
+  z-index: 1;
   background-color: transparent;
   transition: 0.5s;
 }

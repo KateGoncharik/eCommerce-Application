@@ -1,3 +1,7 @@
+body.no-scroll {
+  overflow: hidden;
+}
+
 .catalog {
   display: flex;
   overflow: hidden;
@@ -164,6 +168,10 @@
 
   a {
     color: inherit;
+
+    &.active {
+      font-weight: 700;
+    }
   }
 }
 
@@ -268,12 +276,8 @@
     }
   }
 
-  &.active {
-    font-weight: 700;
-
-    &::after {
-      transform: rotate(90deg);
-    }
+  &.active::after {
+    transform: rotate(90deg);
   }
 
   &.active + .subcategories-list {

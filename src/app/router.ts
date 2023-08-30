@@ -22,7 +22,7 @@ function bindRoutes(routes: Record<Route, Page>): void {
       }
     })
     .on(Route.Registration, () => {
-      const user = localStorage.getItem('user');
+      const user = getUser();
       if (user) {
         router.navigate(Route.Main);
       } else {

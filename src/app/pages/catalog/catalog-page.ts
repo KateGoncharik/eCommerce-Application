@@ -46,6 +46,8 @@ class CatalogPage extends Page {
 
   protected categoryNav: HTMLElement | null = null;
 
+  private activeCategoryLink: HTMLElement | null = null;
+
   private productsContainer: HTMLElement = el('.products');
 
   protected createProductsContainer(): HTMLElement {
@@ -65,57 +67,83 @@ class CatalogPage extends Page {
     const container = el('.categories', [el('.categories-mask'), title]);
     const categoriesList = el('ul.categories-list');
 
-    this.listenTitleClick(title);
-
     buildCategoriesObject(getCategories()).then((categoriesObject) => {
       Object.values(categoriesObject).forEach((category) => {
         const subcategoriesList = el('ul.subcategories-list');
-        const categoryName = el('.category-name', [
-          el('a', category.name, {
-            href: `/catalog/${category.key}`,
-            'data-navigo': '',
-          }),
-          el('span', '▶'),
-        ]);
+        const categoryLink = el('a', category.name, {
+          href: `/catalog/${category.key}`,
+          'data-navigo': '',
+        });
+        const categoryName = el('.category-name', [categoryLink, el('span', '▶')]);
         const categoryItem = el('li', [categoryName, subcategoriesList]);
 
+        this.handleCategoryLinkClick(categoryLink, title);
         this.toggleActiveOnClick(categoryName);
 
         category.subcategories.forEach((subcategory) => {
-          const subcategoryName = el('a.subcategory-name', subcategory.name, {
+          const subcategoryLink = el('a.subcategory-name', subcategory.name, {
             href: `/catalog/${category.key}/${subcategory.key}`,
             'data-navigo': '',
           });
-          const subcategoryItem = el('li', [subcategoryName]);
+          const subcategoryItem = el('li', [subcategoryLink]);
 
+          this.handleCategoryLinkClick(subcategoryLink, title);
           mount(subcategoriesList, subcategoryItem);
         });
 
         mount(categoriesList, categoryItem);
         mount(container, categoriesList);
       });
+      this.listenTitleClick(title);
       router.updatePageLinks();
     });
-
-    this.toggleActiveOnClick(title);
     this.categoryNav = container;
     return container;
   }
 
-  private listenTitleClick(title: HTMLElement): void {
-    const m_width768 = window.matchMedia('(max-width: 768px)');
+  private handleCategoryLinkClick(link: HTMLElement, title: HTMLElement): void {
+    link.addEventListener('click', () => {
+      if (this.activeCategoryLink) {
+        this.activeCategoryLink.classList.remove('active');
+      }
+      link.classList.add('active');
+      this.activeCategoryLink = link;
 
-    title.addEventListener('click', () => {
-      if (m_width768.matches) {
-        const mask = safeQuerySelector('.categories-mask');
-        mask.classList.toggle('lock');
-        document.body.classList.toggle('lock');
+      if (window.matchMedia('(max-width: 768px)').matches) {
+        this.closeCategoryNav(title, safeQuerySelector('.categories-mask'));
       }
     });
-    m_width768.addEventListener('change', () => {
-      const mask = safeQuerySelector('.categories-mask');
-      mask.classList.remove('lock');
-      document.body.classList.remove('lock');
+  }
+
+  private listenTitleClick(title: HTMLElement): void {
+    const windowSize = window.matchMedia('(max-width: 768px)');
+    const mask = safeQuerySelector('.categories-mask');
+
+    title.addEventListener('click', () => {
+      title.classList.toggle('active');
+
+      if (windowSize.matches) {
+        mask.classList.toggle('lock');
+        document.body.classList.toggle('no-scroll');
+      }
+    });
+    windowSize.addEventListener('change', () => {
+      this.closeCategoryNav(title, mask);
+    });
+    this.closeCategoryNavOnBurgerClick(title, mask);
+  }
+
+  private closeCategoryNav(title: HTMLElement, mask: HTMLElement): void {
+    title.classList.remove('active');
+    mask.classList.remove('lock');
+    document.body.classList.remove('no-scroll');
+  }
+
+  private closeCategoryNavOnBurgerClick(title: HTMLElement, mask: HTMLElement): void {
+    const burger = safeQuerySelector('.burger');
+
+    burger.addEventListener('click', () => {
+      this.closeCategoryNav(title, mask);
     });
   }
 
