@@ -3,23 +3,30 @@ import { Customer } from '@commercetools/platform-sdk';
 const userKey = 'user';
 const genderKey = 'gender';
 
-class UserState {
-  public rememberAuthorizedUser(customer: Customer): void {
-    localStorage.setItem(userKey, JSON.stringify(customer));
-  }
-
-  public getUser(): string {
-    return localStorage.getItem(userKey)!;
-  }
-
-  public logOutUser(): void {
-    localStorage.removeItem(userKey);
-    localStorage.removeItem(genderKey);
-  }
-
-  public isUserAuthorized(): boolean {
-    return !!localStorage.getItem(userKey);
-  }
+function rememberAuthorizedUser(customer: Customer): void {
+  localStorage.setItem(userKey, JSON.stringify(customer));
 }
 
-export { UserState };
+function getUser(): Customer {
+  return JSON.parse(localStorage.getItem(userKey)!);
+}
+
+function logOutUser(): void {
+  localStorage.removeItem(userKey);
+  localStorage.removeItem(genderKey);
+}
+
+function isUserAuthorized(): boolean {
+  return !!localStorage.getItem(userKey);
+}
+
+function getUserGender(): string {
+  const user = getUser();
+  const userGender = localStorage.getItem(user.id);
+  if (!userGender) {
+    return 'male';
+  }
+  return userGender;
+}
+
+export { getUser, getUserGender, isUserAuthorized, logOutUser, rememberAuthorizedUser };

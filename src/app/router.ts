@@ -1,6 +1,7 @@
 import Navigo from 'navigo';
 import { Page } from '@templates/page';
 import { Route } from '@customTypes/route';
+import { getUser } from './state';
 
 const router = new Navigo('/');
 
@@ -11,7 +12,7 @@ function bindRoutes(routes: Record<Route, Page>): void {
       page.render();
     })
     .on(Route.Login, () => {
-      const user = localStorage.getItem('user');
+      const user = getUser();
       if (user) {
         router.navigate(Route.Main);
       } else {
@@ -28,7 +29,7 @@ function bindRoutes(routes: Record<Route, Page>): void {
       page.render();
     })
     .on(Route.UserPage, () => {
-      const user = localStorage.getItem('user');
+      const user = getUser();
       if (user) {
         const page = routes[Route.UserPage];
         page.render();

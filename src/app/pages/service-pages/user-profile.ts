@@ -1,8 +1,7 @@
-import { Customer } from '@commercetools/platform-sdk';
 import { Page } from '@templates/page';
 import { el, mount } from 'redom';
 import { getAvatarByGender } from '@helpers/get-avatar-by-gender';
-import { getUserGender } from '@helpers/get-user-gender';
+import { getUserGender, getUser } from '@app/state';
 
 class UserPage extends Page {
   protected textObject = {
@@ -16,7 +15,6 @@ class UserPage extends Page {
     const src = getAvatarByGender(userGender);
     const userAvatar = el('.avatar-wrapper', [el('img.avatar', { src: src, alt: 'girl' })]);
     mount(userAvatarWrapper, userAvatar);
-
     return userAvatarWrapper;
   }
 
@@ -30,7 +28,7 @@ class UserPage extends Page {
             el('span.user-info-subtitle', 'First name'),
             el('input.first-name.input', {
               type: 'text',
-              placeholder: `${this.getUserInfo().firstName}`,
+              placeholder: `${getUser().firstName}`,
               data: 'firstName',
               disabled: true,
             }),
@@ -39,7 +37,7 @@ class UserPage extends Page {
             el('span.user-info-subtitle', 'Last name'),
             el('input.last-name.input', {
               type: 'text',
-              placeholder: `${this.getUserInfo().lastName}`,
+              placeholder: `${getUser().lastName}`,
               data: 'lastName',
               disabled: true,
             }),
@@ -51,7 +49,7 @@ class UserPage extends Page {
             el('span.user-info-subtitle', 'Birth date'),
             el('input.date-input.input', {
               type: 'text',
-              placeholder: `${this.getUserInfo().dateOfBirth}`,
+              placeholder: `${getUser().dateOfBirth}`,
               data: 'dateOfBirth',
               disabled: true,
             }),
@@ -76,7 +74,7 @@ class UserPage extends Page {
             el('span.addresses-subtitle', 'Street'),
             el('input.street-input.input.input-shipping', {
               type: 'text',
-              placeholder: `${this.getUserInfo().addresses[0].streetName} `,
+              placeholder: `${getUser().addresses[0].streetName} `,
               data: 'streetName',
               disabled: true,
             }),
@@ -85,7 +83,7 @@ class UserPage extends Page {
             el('span.addresses-subtitle', 'City'),
             el('input.city-input.input.input-shipping', {
               type: 'text',
-              placeholder: `${this.getUserInfo().addresses[0].city}`,
+              placeholder: `${getUser().addresses[0].city}`,
               data: 'city',
               disabled: true,
             }),
@@ -94,7 +92,7 @@ class UserPage extends Page {
             el('span.addresses-subtitle', 'Country'),
             el('input.country-code-input-shipping.input.input-shipping', {
               type: 'text',
-              placeholder: `${this.getUserInfo().addresses[0].country}`,
+              placeholder: `${getUser().addresses[0].country}`,
               data: 'country',
               disabled: true,
             }),
@@ -103,7 +101,7 @@ class UserPage extends Page {
             el('span.addresses-subtitle', 'Postal code'),
             el('input.postal-code-input-shipping.input.input-shipping', {
               type: 'text',
-              placeholder: `${this.getUserInfo().addresses[0].postalCode}`,
+              placeholder: `${getUser().addresses[0].postalCode}`,
               data: 'postalCode',
               disabled: true,
             }),
@@ -115,7 +113,7 @@ class UserPage extends Page {
             el('span.addresses-subtitle', 'Street'),
             el('input.street-input.input.input-billing', {
               type: 'text',
-              placeholder: `${this.getUserInfo().addresses[1].streetName}`,
+              placeholder: `${getUser().addresses[1].streetName}`,
               data: 'streetName',
               disabled: true,
             }),
@@ -124,7 +122,7 @@ class UserPage extends Page {
             el('span.addresses-subtitle', 'City'),
             el('input.city-input.input.input-billing', {
               type: 'text',
-              placeholder: `${this.getUserInfo().addresses[1].city}`,
+              placeholder: `${getUser().addresses[1].city}`,
               data: 'city',
               disabled: true,
             }),
@@ -133,7 +131,7 @@ class UserPage extends Page {
             el('span.addresses-subtitle', 'Country'),
             el('input.country-code-input-billing.input.input-billing', {
               type: 'text',
-              placeholder: `${this.getUserInfo().addresses[1].country}`,
+              placeholder: `${getUser().addresses[1].country}`,
               data: 'country',
               disabled: true,
             }),
@@ -142,7 +140,7 @@ class UserPage extends Page {
             el('span.addresses-subtitle', 'Postal code'),
             el('input.postal-code-input-billing.input.input-billing', {
               type: 'text',
-              placeholder: `${this.getUserInfo().addresses[1].postalCode}`,
+              placeholder: `${getUser().addresses[1].postalCode}`,
               data: 'postalCode',
               disabled: true,
             }),
@@ -159,15 +157,6 @@ class UserPage extends Page {
       throw new Error('Button expected');
     }
     return button;
-  }
-
-  private getUserInfo(): Customer {
-    const authenticatedUser = localStorage.getItem('user');
-    if (!authenticatedUser) {
-      throw new Error('No authenticated user');
-    }
-    const parsedUser = JSON.parse(authenticatedUser);
-    return parsedUser;
   }
 
   protected build(): HTMLElement {

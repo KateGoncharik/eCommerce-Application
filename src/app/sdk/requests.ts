@@ -4,20 +4,18 @@ import { safeQuerySelector } from '@helpers/safe-query-selector';
 import { markInputAsInvalid } from '@helpers/toggle-validation-state';
 import { ClientResponse, ErrorResponse, ProductProjection } from '@commercetools/platform-sdk';
 import { DataUser } from '@customTypes/datauser';
-import { UserState } from '@app/state';
+import { rememberAuthorizedUser } from '@app/state';
 
-const registerErrorMessage = 'Something went wrong. Try again';
-const authErrorMessage = 'Wrong email or password. Try again or register';
-const productsErrorMessage = 'No products found ';
+const errorMessage = 'Error: no connection to server';
 
-export const createUser = async (form: DataUser): Promise<number | undefined> => {
+export async function createUser(form: DataUser): Promise<number | undefined> {
   try {
     const request = await getApiRoot().customers().post(form).execute();
     return request.statusCode;
   } catch (e) {
-    console.error(registerErrorMessage);
+    console.error(errorMessage);
   }
-};
+}
 
 export async function isUserExist(email: string): Promise<boolean | void> {
   try {
@@ -27,7 +25,7 @@ export async function isUserExist(email: string): Promise<boolean | void> {
       .execute();
     return result.body.count > 0;
   } catch (err) {
-    console.error(authErrorMessage);
+    console.error(errorMessage);
   }
 }
 
@@ -39,8 +37,7 @@ export async function authorizeUser(email: string, password: string): Promise<vo
       .execute()
       .then(
         (result) => {
-          const userState = new UserState();
-          userState.rememberAuthorizedUser(result.body.customer);
+          rememberAuthorizedUser(result.body.customer);
         },
         (errorResponse: ClientResponse<ErrorResponse>) => {
           const emailInput = safeQuerySelector<HTMLInputElement>('.email-input', document);
@@ -49,7 +46,7 @@ export async function authorizeUser(email: string, password: string): Promise<vo
           markInputAsInvalid(passwordInput);
 
           if (errorResponse.body.message === 'Customer account with the given credentials not found.') {
-            return authErrorMessage;
+            return errorMessage;
           }
           return errorResponse.body.message;
         }
@@ -65,7 +62,7 @@ export async function getProducts(): Promise<ProductProjection[]> {
     const products = request.body.results;
     return products;
   } catch (err) {
-    console.error(productsErrorMessage);
+    console.error(errorMessage);
     return [];
   }
 }
