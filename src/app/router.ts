@@ -2,6 +2,7 @@ import Navigo from 'navigo';
 import { Page } from '@templates/page';
 import { Route } from '@customTypes/route';
 import { getUser } from './state';
+import { CatalogPage } from '@catalog/catalog-page';
 
 const router = new Navigo('/');
 
@@ -21,8 +22,13 @@ function bindRoutes(routes: Record<Route, Page>): void {
       }
     })
     .on(Route.Registration, () => {
-      const page = routes[Route.Registration];
-      page.render();
+      const user = localStorage.getItem('user');
+      if (user) {
+        router.navigate(Route.Main);
+      } else {
+        const page = routes[Route.Registration];
+        page.render();
+      }
     })
     .on(Route.Catalog, () => {
       const page = routes[Route.Catalog];
@@ -35,6 +41,16 @@ function bindRoutes(routes: Record<Route, Page>): void {
         page.render();
       } else {
         router.navigate(Route.Main);
+      }
+    })
+    .on(/catalog\/.+/, (path) => {
+      const categoryKey = path?.url.split('/').pop();
+      if (CatalogPage.current) {
+        CatalogPage.current.categoryKey = categoryKey;
+        CatalogPage.current.updateProductsContainer();
+      } else {
+        const page = new CatalogPage(categoryKey);
+        page.render();
       }
     })
     .notFound(() => {

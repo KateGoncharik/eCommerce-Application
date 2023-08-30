@@ -3,18 +3,6 @@
   overflow: hidden;
 }
 
-.catalog-sidebar {
-  flex: 0 1 25%;
-
-  @media (width <= 992px) {
-    flex: 0 1 50%;
-  }
-
-  @media (width <= 768px) {
-    display: none;
-  }
-}
-
 .products {
   flex: 0 1 75%;
   display: grid;
@@ -151,5 +139,161 @@
 
   @media (width <= 992px) {
     line-height: 100%;
+  }
+}
+
+// CATEGORIES ===============================================================================================================
+.catalog-sidebar {
+  flex: 0 1 25%;
+
+  @media (width <= 992px) {
+    flex: 0 1 50%;
+  }
+
+  @media (width <= 768px) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    text-align: center;
+  }
+}
+
+.categories {
+  border-left: 1px solid $black;
+
+  a {
+    color: inherit;
+  }
+}
+
+.categories-mask {
+  background-color: transparent;
+  transition: 0.5s;
+
+  &.lock {
+    position: fixed;
+    z-index: 1;
+    top: 56px;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba($color: #292929, $alpha: 60%);
+  }
+}
+
+.categories-list {
+  position: relative;
+  z-index: 1;
+  height: 0;
+  overflow: hidden;
+  transition: all 0.3s;
+  background-color: #fff;
+}
+
+.subcategories-list {
+  height: 0;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+.categories-title {
+  position: relative;
+  padding: 10px;
+  font-size: 18px;
+  font-weight: 500;
+  border-bottom: 1px solid $black;
+  background-color: #fff;
+  transition: all 0.2s;
+  cursor: pointer;
+
+  &::after {
+    content: '▶';
+    position: absolute;
+    right: 10px;
+    bottom: 0;
+    line-height: 38px;
+    transition: all 0.3s;
+  }
+
+  &:hover {
+    &,
+    &::after {
+      color: $hover-color;
+    }
+  }
+
+  &.active {
+    background-color: #eee;
+
+    &::after {
+      transform: rotate(90deg);
+    }
+  }
+
+  &.active + .categories-list {
+    height: auto;
+    padding: 2% 3% 3%;
+    border-bottom: 1px solid $black;
+  }
+
+  @media (width <= 768px) {
+    display: inline-block;
+    line-height: 36px;
+    border: none;
+    background-color: transparent;
+
+    &::after {
+      display: none;
+    }
+
+    &.active {
+      background-color: transparent;
+    }
+  }
+}
+
+.category-name {
+  position: relative;
+  display: inline-flex;
+  gap: 5px;
+  padding: 2% 0;
+  font-weight: 500;
+  font-size: 17px;
+
+  &:hover {
+    &,
+    &::after {
+      color: $hover-color;
+    }
+  }
+
+  &.active {
+    font-weight: 700;
+
+    &::after {
+      transform: rotate(90deg);
+    }
+  }
+
+  &.active + .subcategories-list {
+    height: auto;
+    padding-left: 3%;
+
+    @media (width <= 768px) {
+      padding-left: 0;
+    }
+  }
+
+  span {
+    cursor: pointer;
+  }
+}
+
+.subcategory-name {
+  display: inline-block;
+
+  &:hover {
+    color: $hover-color;
   }
 }

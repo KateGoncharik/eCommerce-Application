@@ -1,4 +1,4 @@
-import { ProductMainData } from '@customTypes/products';
+import { ProductMainData } from '@customTypes/catalog';
 import { el } from 'redom';
 
 class ProductCard {
