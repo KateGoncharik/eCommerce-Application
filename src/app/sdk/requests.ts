@@ -6,16 +6,16 @@ import { ClientResponse, ErrorResponse, ProductProjection } from '@commercetools
 import { DataUser } from '@customTypes/datauser';
 import { rememberAuthorizedUser } from '@app/state';
 
-const errorMessage = 'Wrong email or password. Try again or register';
+const errorMessage = 'Error: no connection to server';
 
-export const createUser = async (form: DataUser): Promise<number | undefined> => {
+export async function createUser(form: DataUser): Promise<number | undefined> {
   try {
     const request = await getApiRoot().customers().post(form).execute();
     return request.statusCode;
   } catch (e) {
-    console.log(errorMessage);
+    console.error(errorMessage);
   }
-};
+}
 
 export async function isUserExist(email: string): Promise<boolean | void> {
   try {
@@ -25,7 +25,7 @@ export async function isUserExist(email: string): Promise<boolean | void> {
       .execute();
     return result.body.count > 0;
   } catch (err) {
-    console.log(errorMessage);
+    console.error(errorMessage);
   }
 }
 
@@ -52,7 +52,7 @@ export async function authorizeUser(email: string, password: string): Promise<vo
         }
       );
   } catch (err) {
-    console.log(errorMessage);
+    console.error(err);
   }
 }
 
@@ -62,7 +62,7 @@ export async function getProducts(): Promise<ProductProjection[]> {
     const products = request.body.results;
     return products;
   } catch (err) {
-    console.log(errorMessage);
+    console.error(errorMessage);
     return [];
   }
 }
