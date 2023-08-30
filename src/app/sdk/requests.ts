@@ -4,6 +4,7 @@ import { safeQuerySelector } from '@helpers/safe-query-selector';
 import { markInputAsInvalid } from '@helpers/toggle-validation-state';
 import { ClientResponse, ErrorResponse, ProductProjection } from '@commercetools/platform-sdk';
 import { DataUser } from '@customTypes/datauser';
+import { ProductData } from '@customTypes/data-product';
 import { rememberAuthorizedUser } from '@app/state';
 
 const errorMessage = 'Error: no connection to server';
@@ -66,3 +67,22 @@ export async function getProducts(): Promise<ProductProjection[]> {
     return [];
   }
 }
+
+const returnProductByKey = (productKey: string): Promise<ClientResponse> => {
+  return getApiRoot().products().withKey({ key: productKey }).get().execute();
+};
+
+export const getProduct = async (key: string): Promise<ProductData | void> => {
+  return returnProductByKey(key)
+    .then(({ body }) => {
+      const { current } = body.masterData;
+      const dataUser = {
+        name: current.name['en-US'],
+        img: current.masterVariant.images[0].url,
+        description: current.metaDescription['en-US'],
+      };
+
+      return dataUser;
+    })
+    .catch((err) => console.log(err));
+};
