@@ -46,7 +46,7 @@ export async function authorizeUser(email: string, password: string): Promise<vo
           markInputAsInvalid(passwordInput);
 
           if (errorResponse.body.message === 'Customer account with the given credentials not found.') {
-            return errorMessage;
+            return 'Wrong email or password. Try again or register';
           }
           return errorResponse.body.message;
         }

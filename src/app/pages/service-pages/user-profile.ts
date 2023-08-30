@@ -1,7 +1,8 @@
 import { Page } from '@templates/page';
 import { el, mount } from 'redom';
-import { getAvatarByGender } from '@helpers/get-avatar-by-gender';
 import { getUserGender, getUser } from '@app/state';
+import girlAvatar from '@icons/avatar-girl.png';
+import boyAvatar from '@icons/avatar-boy.png';
 
 class UserPage extends Page {
   protected textObject = {
@@ -12,10 +13,14 @@ class UserPage extends Page {
     const userAvatarWrapper = el('.user-avatar-wrapper');
     const userGender = getUserGender();
 
-    const src = getAvatarByGender(userGender);
+    const src = this.getAvatarByGender(userGender);
     const userAvatar = el('.avatar-wrapper', [el('img.avatar', { src: src, alt: 'girl' })]);
     mount(userAvatarWrapper, userAvatar);
     return userAvatarWrapper;
+  }
+
+  private getAvatarByGender(gender: string): HTMLImageElement {
+    return gender === 'male' ? boyAvatar : girlAvatar;
   }
 
   private createUserInfoBlock(): HTMLElement {

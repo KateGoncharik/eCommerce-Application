@@ -8,7 +8,11 @@ function rememberAuthorizedUser(customer: Customer): void {
 }
 
 function getUser(): Customer {
-  return JSON.parse(localStorage.getItem(userKey)!);
+  const user = localStorage.getItem(userKey);
+  if (user === null) {
+    throw new Error('User expected');
+  }
+  return JSON.parse(user);
 }
 
 function logOutUser(): void {
