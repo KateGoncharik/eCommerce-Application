@@ -1,5 +1,5 @@
 export type ProductData = {
   name: string;
-  img: string;
+  img: Record<string, string>[];
   description: string;
 };

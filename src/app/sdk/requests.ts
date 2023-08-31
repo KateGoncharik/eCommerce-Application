@@ -78,7 +78,7 @@ export const getProduct = async (key: string): Promise<ProductData | void> => {
       const { current } = body.masterData;
       const dataUser = {
         name: current.name['en-US'],
-        img: current.masterVariant.images[0].url,
+        img: current.masterVariant.images,
         description: current.metaDescription['en-US'],
       };
 
