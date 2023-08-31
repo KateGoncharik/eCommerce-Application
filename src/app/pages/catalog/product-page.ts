@@ -9,7 +9,7 @@ export class ProductPage extends Page {
     title: 'Product page',
   };
 
-  private createSlider(userData: ProductData): HTMLElement {
+  private createSlider(productData: ProductData): HTMLElement {
     const slider = el('.swiper');
     const swiperWrapper = el('.swiper-wrapper');
     const btnPrev = el('.swiper-button-prev');
@@ -20,9 +20,9 @@ export class ProductPage extends Page {
     mount(slider, btnNext);
     mount(slider, scrollbar);
 
-    for (let i = 0; i < userData!.img.length; i++) {
+    for (let i = 0; i < productData!.img.length; i++) {
       const swiperSlide = el('.swiper-slide');
-      const img = el('img.product-img', { src: userData!.img[i].url });
+      const img = el('img.product-img', { src: productData!.img[i].url });
 
       mount(swiperSlide, img);
       mount(swiperWrapper, swiperSlide);
@@ -32,16 +32,31 @@ export class ProductPage extends Page {
     return slider;
   }
 
+  private addPrice(productData: ProductData): HTMLElement {
+    const blockPrice = el('.block-price');
+    const price = el('span', `$${(+productData!.price / 100).toFixed(2)}`);
+    const discount = el(
+      'span.discount',
+      `${productData!.discount ? `$${(+productData!.discount / 100).toFixed(2)}` : ''}`
+    );
+
+    productData!.discount ? (price.className = 'price-none') : (price.className = 'price');
+
+    mount(blockPrice, price);
+    mount(blockPrice, discount);
+    return blockPrice;
+  }
+
   private createProductPage(): HTMLElement {
     const blockProductPage = el('.block-product-page', [
       getProduct('pink-and-blue-tissue-garland')
-        .then((userData) => {
-          
+        .then((productData) => {
           const productPage = el('.product-page', [
-            el('.block-product-img', [this.createSlider(userData!)]),
+            el('.block-product-img', [this.createSlider(productData!)]),
             el('.block-product-info', [
-              el('h3.product-name', userData!.name),
-              el('p.product-description', userData!.description),
+              el('.product-name', `${productData!.name}`),
+              this.addPrice(productData!),
+              el('p.product-description', productData!.description),
             ]),
           ]);
 

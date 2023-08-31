@@ -32,12 +32,22 @@
   padding: 40px
 }
   
-.product-name {
+.product-name,
+.block-price {
   font-size: 2.4rem;
 }
   
 .product-description {
   line-height: 140%;
+}
+
+.block-price{
+  display: inline-block;
+}
+
+.price-none{
+  text-decoration: line-through;
+  color: $grey;
 }
   
 @media (width <= 769px) {
@@ -47,7 +57,8 @@
 }
   
 @media (width <= 420px) {
-  .product-name {
+  .product-name,
+  .block-price {
     font-size: 1.6rem;
   }
   
