@@ -2,7 +2,7 @@ import { getApiRoot } from '@sdk/build-client';
 import { withPasswordFlowClient } from '@sdk/login-api';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
 import { markInputAsInvalid } from '@helpers/toggle-validation-state';
-import { ClientResponse, ErrorResponse, ProductProjection } from '@commercetools/platform-sdk';
+import { ClientResponse, ErrorResponse, ProductProjection, Category } from '@commercetools/platform-sdk';
 import { DataUser } from '@customTypes/datauser';
 import { ProductData } from '@customTypes/data-product';
 import { rememberAuthorizedUser } from '@app/state';
@@ -86,3 +86,36 @@ export const getProduct = async (key: string): Promise<ProductData | void> => {
     })
     .catch((err) => console.log(err));
 };
+
+export async function getProductsOfCategory(id: string): Promise<ProductProjection[]> {
+  try {
+    const request = await getApiRoot()
+      .productProjections()
+      .get({ queryArgs: { where: `categories(id="${id}")` } })
+      .execute();
+    const products = request.body.results;
+    return products;
+  } catch (err) {
+    console.log(errorMessage);
+    return [];
+  }
+}
+
+export async function getCategories(): Promise<Category[]> {
+  try {
+    const categories = await getApiRoot().categories().get().execute();
+    return categories.body.results;
+  } catch (err) {
+    console.log(errorMessage);
+    return [];
+  }
+}
+
+export async function getCategoryByKey(key: string): Promise<Category | void> {
+  try {
+    const categories = await getApiRoot().categories().withKey({ key }).get().execute();
+    return categories.body;
+  } catch (err) {
+    console.log(errorMessage);
+  }
+}
