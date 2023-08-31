@@ -2,7 +2,7 @@ import { Page } from '@templates/page';
 import { getProduct } from '@sdk/requests';
 import { el, mount } from 'redom';
 import { ProductData } from '@app/types/data-product';
-import { slider } from '@helpers/slider';
+import { connectSlider } from '@helpers/slider';
 
 export class ProductPage extends Page {
   protected textObject = {
@@ -36,6 +36,7 @@ export class ProductPage extends Page {
     const blockProductPage = el('.block-product-page', [
       getProduct('pink-and-blue-tissue-garland')
         .then((userData) => {
+          
           const productPage = el('.product-page', [
             el('.block-product-img', [this.createSlider(userData!)]),
             el('.block-product-info', [
@@ -45,7 +46,7 @@ export class ProductPage extends Page {
           ]);
 
           mount(blockProductPage, productPage);
-          slider();
+          connectSlider();
         })
         .catch((err) => console.log(err)),
     ]);
