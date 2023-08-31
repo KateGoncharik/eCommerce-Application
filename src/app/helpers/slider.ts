@@ -1,8 +1,8 @@
 import SwiperBundle from 'swiper/bundle';
 import { Navigation, Pagination } from 'swiper/modules';
 
-export function slaider(): void {
-  const swiperr = new SwiperBundle('.swiper', {
+export function slider(): void {
+  const swiper = new SwiperBundle('.swiper', {
     modules: [Navigation, Pagination],
     slidesPerView: 'auto',
     direction: 'horizontal',
@@ -25,5 +25,5 @@ export function slaider(): void {
     },
   });
 
-  swiperr;
+  swiper;
 }

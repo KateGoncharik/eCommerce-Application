@@ -2,7 +2,7 @@ import { Page } from '@templates/page';
 import { getProduct } from '@sdk/requests';
 import { el, mount } from 'redom';
 import { ProductData } from '@app/types/data-product';
-import { slaider } from '@helpers/slider';
+import { slider } from '@helpers/slider';
 
 export class ProductPage extends Page {
   protected textObject = {
@@ -12,25 +12,21 @@ export class ProductPage extends Page {
   private createSlider(userData: ProductData): HTMLElement {
     const slider = el('.swiper');
     const swiperWrapper = el('.swiper-wrapper');
-    const btnPrew = el('.swiper-button-prev');
+    const btnPrev = el('.swiper-button-prev');
     const btnNext = el('.swiper-button-next');
     const scrollbar = el('.swiper-scrollbar');
 
-    mount(slider, btnPrew);
+    mount(slider, btnPrev);
     mount(slider, btnNext);
     mount(slider, scrollbar);
 
-    for (let i = 0; 0 < userData!.img.length; i++) {
+    for (let i = 0; i < userData!.img.length; i++) {
       const swiperSlide = el('.swiper-slide');
       const img = el('img.product-img', { src: userData!.img[i].url });
 
       mount(swiperSlide, img);
       mount(swiperWrapper, swiperSlide);
       mount(slider, swiperWrapper);
-
-      if (i === userData!.img.length - 1) {
-        return slider;
-      }
     }
 
     return slider;
@@ -49,7 +45,7 @@ export class ProductPage extends Page {
           ]);
 
           mount(blockProductPage, productPage);
-          slaider();
+          slider();
         })
         .catch((err) => console.log(err)),
     ]);
