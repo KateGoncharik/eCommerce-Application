@@ -1,4 +1,4 @@
-import { Schemas, dataValue } from '@schemas/schemas-registration-form';
+import { Schemas, dataValue, GenderSchema } from '@schemas/schemas-registration-form';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
 import { createUser, isUserExist, authorizeUser } from '@sdk/requests';
 import { DataUser } from '@app/types/datauser';
@@ -8,9 +8,29 @@ import { Route } from '@customTypes/route';
 import { renderHeader } from '@helpers/render-header';
 
 export class ValidationForm {
+  public validateGenderInput(genderInput: HTMLInputElement): void {
+    const showErrorBlock = safeQuerySelector('.show-validation-gender');
+    if (!(showErrorBlock instanceof HTMLElement)) {
+      return;
+    }
+    const result = GenderSchema.safeParse(genderInput.value);
+    if (result.success) {
+      genderInput.classList.remove('input-error');
+      genderInput.classList.add('input-valid');
+      showErrorBlock.textContent = '';
+    } else {
+      const errors = result.error.format();
+      showErrorBlock.style.display = 'flex';
+      showErrorBlock.textContent = `${errors._errors[0]}`;
+    }
+  }
+
   private checkValidation(userData: Schemas, input: Element, showElement: Element): void {
     const showBlock = showElement as HTMLElement;
     if (!(input instanceof HTMLInputElement)) {
+      return;
+    }
+    if (input.classList.contains('gender-input')) {
       return;
     }
     input.getAttribute('data') === 'country' && input.classList.remove('active');

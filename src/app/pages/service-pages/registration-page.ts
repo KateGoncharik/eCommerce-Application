@@ -77,7 +77,7 @@ class RegistrationPage extends Page {
               el('.show-validation-city-input show-validation'),
             ]),
             el('.input-block', [
-              el('input.country-code-input-shipping.input.input-shipping', {
+              el('input.country-code-input-shipping.input.shipping-input', {
                 type: 'text',
                 placeholder: 'country',
                 data: 'country',
