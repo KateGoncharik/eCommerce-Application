@@ -7,7 +7,7 @@ class ProductCard {
   }
 
   public create(): HTMLElement {
-    const { name, shortDescription, longDescription, image, priceFull, priceDiscounted } = this.productData;
+    const { key, name, shortDescription, longDescription, image, priceFull, priceDiscounted } = this.productData;
     let price: HTMLElement;
     if (priceDiscounted) {
       price = el('div', [el('span.card-old-price', priceFull), el('span.card-new-price', priceDiscounted)]);
@@ -16,7 +16,8 @@ class ProductCard {
     }
 
     return el(
-      'div.product-card',
+      'a.product-card',
+      { href: `${window.location}/product/${key}`, 'data-navigo': '' },
       el('.card-content', [
         el('.card-image-wrapper', [
           el('img.card-image', { src: image, alt: '' }),

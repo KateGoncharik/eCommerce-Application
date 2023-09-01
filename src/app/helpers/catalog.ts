@@ -10,6 +10,7 @@ async function extractProductData(productProjections: Promise<ProductProjection[
     const getPriceInUsd = (price: number | undefined): string => `$${(Number(price) / 100).toFixed(2)}`;
 
     return {
+      key: product.key || '',
       name: product.name['en-US'],
       shortDescription: description.slice(0, 125) + '...',
       longDescription: description.slice(0, 300) + '...',

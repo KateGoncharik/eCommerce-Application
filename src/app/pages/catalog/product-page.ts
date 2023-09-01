@@ -5,6 +5,10 @@ import { ProductData } from '@app/types/data-product';
 import { connectSlider } from '@helpers/slider';
 
 export class ProductPage extends Page {
+  constructor(private productKey: string) {
+    super();
+  }
+
   protected textObject = {
     title: 'Product page',
   };
@@ -32,11 +36,10 @@ export class ProductPage extends Page {
     return slider;
   }
 
-  private createProductPage(): HTMLElement {
+  private createProductPage(key: string): HTMLElement {
     const blockProductPage = el('.block-product-page', [
-      getProduct('pink-and-blue-tissue-garland')
+      getProduct(key)
         .then((userData) => {
-          
           const productPage = el('.product-page', [
             el('.block-product-img', [this.createSlider(userData!)]),
             el('.block-product-info', [
@@ -55,6 +58,6 @@ export class ProductPage extends Page {
   }
 
   protected build(): HTMLElement {
-    return this.createProductPage();
+    return this.createProductPage(this.productKey);
   }
 }
