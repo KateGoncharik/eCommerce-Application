@@ -76,19 +76,16 @@ export const getProduct = async (key: string): Promise<ProductData | void> => {
   return returnProductByKey(key)
     .then(({ body }) => {
       const { current } = body.masterData;
-      console.log(current);
-      console.log(current.masterVariant.prices[0].value.centAmount);
-      // console.log(current.masterVariant.prices[0].discounted.value.centAmount)
-      const dataUser = {
+      const price = current.masterVariant.prices[0];
+      const productData = {
         name: current.name['en-US'],
         img: current.masterVariant.images,
         description: current.metaDescription['en-US'],
-        price: current.masterVariant.prices[0].value.centAmount,
-        discount:
-          current.masterVariant.prices[0].discounted && current.masterVariant.prices[0].discounted.value.centAmount,
+        price: price.value.centAmount,
+        discount: price.discounted && price.discounted.value.centAmount,
       };
 
-      return dataUser;
+      return productData;
     })
     .catch((err) => console.log(err));
 };

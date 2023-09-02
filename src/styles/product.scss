@@ -28,17 +28,20 @@
 .block-product-info {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  justify-content: center;
+  gap: 20px;
   padding: 40px
 }
   
 .product-name,
 .block-price {
-  font-size: 2.4rem;
+  font-size: 3.4rem;
 }
   
 .product-description {
-  line-height: 140%;
+  padding-top: 40px;
+  font-size: 1.5rem;
+  line-height: 145%;
 }
 
 .block-price{
@@ -49,20 +52,68 @@
   text-decoration: line-through;
   color: $grey;
 }
-  
-@media (width <= 769px) {
-  .product-page {
-    flex-direction: column;
+
+@media (width <= 1440px) {
+  .product-name,
+  .block-price {
+    font-size: 2.4rem;
   }
-}
   
-@media (width <= 420px) {
+  .product-description {
+    padding-top: 40px;
+    font-size: 1.4rem;
+  }
+} 
+
+@media (width <= 1000px) {
+  .block-product-info {
+    gap: 10px;
+  }
+
   .product-name,
   .block-price {
     font-size: 1.6rem;
   }
   
   .product-description {
+    padding-top: 15px;
+    font-size: 0.9rem;
+    line-height: 120%; 
+  }
+}
+  
+@media (width <= 769px) {
+  .block-product-info {
+    gap: 20px;
+  }
+
+  .product-page {
+    flex-direction: column;
+  }
+  
+  .product-name,
+  .block-price {
+    font-size: 2.4rem;
+  }
+  
+  .product-description {
+    padding-top: 20px;
+    font-size: 1rem;
+  }
+}
+  
+@media (width <= 420px) {
+  .block-product-info {
+    gap: 10px;
+  }
+
+  .product-name,
+  .block-price {
+    font-size: 1.6rem;
+  }
+  
+  .product-description {
+    padding-top: 10px;
     font-size: 0.9rem;
     line-height: 120%; 
   }
