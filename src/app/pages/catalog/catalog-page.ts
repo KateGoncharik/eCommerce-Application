@@ -49,6 +49,34 @@ class CatalogPage extends Page {
     return extractProductData(products);
   }
 
+  private createBreadcrumbs(): HTMLElement {
+    const container = el('.breadcrumbs');
+
+    setTimeout(() => {
+      const path = window.location.pathname;
+      const pathArray = path.split('/');
+      let url = '';
+
+      pathArray.forEach((path, i) => {
+        let link: HTMLElement;
+        const linkText = path.slice(0, 1).toUpperCase() + path.slice(1).replace(/-/g, ' ') || 'Home';
+        url = i === 1 ? `${url}${path}` : `${url}/${path}`;
+
+        if (i !== pathArray.length - 1) {
+          link = el('a.breadcrumbs-link', linkText, {
+            href: url,
+            'data-navigo': '',
+          });
+        } else {
+          link = el('span.breadcrumbs-current', linkText);
+        }
+        mount(container, link);
+        router.updatePageLinks();
+      });
+    });
+    return container;
+  }
+
   protected createCategoryList(): HTMLElement {
     const title = el('h3.categories-title', [el('span', 'Categories')]);
     const container = el('.categories', [el('.categories-mask'), title]);
@@ -130,7 +158,10 @@ class CatalogPage extends Page {
   }
 
   protected build(): HTMLElement {
-    return el('section.catalog', [el('.catalog-sidebar', this.createCategoryList()), this.createProductContainer()]);
+    return el('section.catalog', [
+      el('.catalog-sidebar', this.createCategoryList()),
+      el('.products-wrapper', [this.createBreadcrumbs(), this.createProductContainer()]),
+    ]);
   }
 }
 
