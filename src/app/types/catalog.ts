@@ -1,4 +1,5 @@
 type ProductMainData = {
+  key: string;
   name: string;
   image: string;
   shortDescription: string;
