@@ -7,10 +7,10 @@ function rememberAuthorizedUser(customer: Customer): void {
   localStorage.setItem(userKey, JSON.stringify(customer));
 }
 
-function getUser(): Customer {
+function getUser(): Customer | null {
   const user = localStorage.getItem(userKey);
   if (user === null) {
-    throw new Error('User expected');
+    return user;
   }
   return JSON.parse(user);
 }
@@ -26,6 +26,9 @@ function isUserAuthorized(): boolean {
 
 function getUserGender(): string {
   const user = getUser();
+  if (user === null) {
+    throw new Error('No user found');
+  }
   const userGender = localStorage.getItem(user.id);
   if (!userGender) {
     return 'male';

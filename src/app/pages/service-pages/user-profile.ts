@@ -3,8 +3,10 @@ import { el, mount } from 'redom';
 import { getUserGender, getUser } from '@app/state';
 import girlAvatar from '@icons/avatar-girl.png';
 import boyAvatar from '@icons/avatar-boy.png';
-import { getFullCountryName } from '@app/edit/edit-user-profile';
+import { getFullCountryName } from '@helpers/get-full-country-name';
 import { ValidationForm } from '@app/validation/validation-registration-form';
+import { updateUser } from '@app/sdk/requests';
+import { collectAllInputsActions } from '@helpers/get-actions';
 
 class UserPage extends Page {
   protected textObject = {
@@ -28,15 +30,23 @@ class UserPage extends Page {
   }
 
   private createUserInfoBlock(): HTMLElement {
+    const user = getUser();
+    if (user === null) {
+      throw new Error('No user found');
+    }
     const useShipping = el('input#use-shipping-for-billing.checkbox-reg', { type: 'checkbox' });
     const genderInput = el('input.gender-input', {
       type: 'text',
-      placeholder: `${getUserGender()}`,
+      value: getUserGender(),
+      placeholder: 'gender',
       name: 'gender',
     });
     if (!(genderInput instanceof HTMLInputElement)) {
       throw new Error('Input expected');
     }
+    genderInput.addEventListener('input', () => {
+      this.validation.validateGenderInput(genderInput);
+    });
     const infoBlock = el('.user-info-wrapper', [
       el('span.user-info-title', 'User information'),
       this.createAvatar(),
@@ -46,7 +56,7 @@ class UserPage extends Page {
             el('span.user-info-subtitle', 'First name'),
             el('input.first-name-input.input', {
               type: 'text',
-              value: `${getUser().firstName}`,
+              value: user.firstName,
               placeholder: 'first name',
               data: 'firstName',
             }),
@@ -56,7 +66,7 @@ class UserPage extends Page {
             el('span.user-info-subtitle', 'Last name'),
             el('input.last-name-input.input', {
               type: 'text',
-              value: `${getUser().lastName}`,
+              value: user.lastName,
               placeholder: 'last name',
               data: 'lastName',
             }),
@@ -69,7 +79,7 @@ class UserPage extends Page {
             el('span.user-info-subtitle', 'Birth date'),
             el('input.date-input.input', {
               type: 'text',
-              value: `${getUser().dateOfBirth}`,
+              value: user.dateOfBirth,
               placeholder: 'date',
               data: 'dateOfBirth',
             }),
@@ -78,6 +88,16 @@ class UserPage extends Page {
           el('.input-gender-block', [el('span.user-info-subtitle', 'Gender'), genderInput]),
           el('.show-validation-gender show-validation'),
         ]),
+      ]),
+      el('.input-block', [
+        el('span.user-info-subtitle', 'Email'),
+        el('input.email-input.input', {
+          type: 'text',
+          value: user.email,
+          placeholder: 'email',
+          data: 'email',
+        }),
+        el('.show-validation-email-input show-validation'),
       ]),
 
       el('.user-addresses-block', [
@@ -88,7 +108,7 @@ class UserPage extends Page {
             el('span.addresses-subtitle', 'Street'),
             el('input.street-input.input.input-shipping', {
               type: 'text',
-              value: `${getUser().addresses[0].streetName} `,
+              value: user.addresses[0].streetName,
               placeholder: 'street',
               data: 'streetName',
             }),
@@ -96,9 +116,9 @@ class UserPage extends Page {
           ]),
           el('.input-block', [
             el('span.addresses-subtitle', 'City'),
-            el('input.city-input.input.shipping-input', {
+            el('input.city-input.input.input-shipping', {
               type: 'text',
-              value: `${getUser().addresses[0].city}`,
+              value: user.addresses[0].city,
               placeholder: 'city',
               data: 'city',
             }),
@@ -106,9 +126,9 @@ class UserPage extends Page {
           ]),
           el('.input-block', [
             el('span.addresses-subtitle', 'Country'),
-            el('input.country-code-input-shipping.input.shipping-input.active', {
+            el('input.country-code-input-shipping.input.input-shipping.active', {
               type: 'text',
-              value: getFullCountryName(getUser().addresses[0].country),
+              value: getFullCountryName(user.addresses[0].country),
               placeholder: 'country',
               data: 'country',
             }),
@@ -118,7 +138,7 @@ class UserPage extends Page {
             el('span.addresses-subtitle', 'Postal code'),
             el('input.postal-code-input-shipping.input.input-shipping.active', {
               type: 'text',
-              value: `${getUser().addresses[0].postalCode}`,
+              value: user.addresses[0].postalCode,
               placeholder: 'postal code',
               data: 'postalCode',
             }),
@@ -139,7 +159,7 @@ class UserPage extends Page {
             el('span.addresses-subtitle', 'Street'),
             el('input.street-billing-input.input.input-billing', {
               type: 'text',
-              value: `${getUser().addresses[1].streetName}`,
+              value: user.addresses[1].streetName,
               placeholder: 'street',
               data: 'streetName',
             }),
@@ -149,7 +169,7 @@ class UserPage extends Page {
             el('span.addresses-subtitle', 'City'),
             el('input.city-input.input.input-billing', {
               type: 'text',
-              value: `${getUser().addresses[1].city}`,
+              value: user.addresses[1].city,
               placeholder: 'city',
               data: 'city',
             }),
@@ -159,7 +179,7 @@ class UserPage extends Page {
             el('span.addresses-subtitle', 'Country'),
             el('input.country-code-input-billing.input.input-billing.active', {
               type: 'text',
-              value: getFullCountryName(getUser().addresses[1].country),
+              value: getFullCountryName(user.addresses[1].country),
               placeholder: 'country',
               data: 'country',
             }),
@@ -169,7 +189,7 @@ class UserPage extends Page {
             el('span.addresses-subtitle', 'Postal code'),
             el('input.postal-code-input-billing.input.input-billing.active', {
               type: 'text',
-              value: `${getUser().addresses[1].postalCode}`,
+              value: user.addresses[1].postalCode,
               placeholder: 'postal code',
               data: 'postalCode',
             }),
@@ -181,28 +201,43 @@ class UserPage extends Page {
           ]),
         ]),
       ]),
-      this.createSaveButton(() => {}),
+      this.createSaveButton(),
     ]);
-
-    this.handleListenerInGenderInput(genderInput);
     this.validation.eventInput(infoBlock);
     this.validation.eventCheckBox(infoBlock, useShipping);
     return infoBlock;
   }
 
-  private handleListenerInGenderInput(input: HTMLInputElement): void {
-    input.addEventListener('input', () => {
-      this.validation.validateGenderInput(input);
+  private isFormValid(): boolean {
+    const inputs = document.getElementsByClassName('input');
+    let validInputs = 0;
+    Array.from(inputs).forEach((input) => {
+      if (!(input instanceof HTMLInputElement)) {
+        return;
+      }
+      this.validation.checkChangeInput(input);
+      if (input.classList.contains('input-valid')) {
+        return validInputs++;
+      }
+      this.validation.checkChangeInput(input);
     });
+
+    return validInputs === inputs.length;
   }
 
-  private createSaveButton(handler: () => void): HTMLButtonElement {
+  private createSaveButton(): HTMLButtonElement {
     const button = el(`button.save-button`, `save`);
     if (!(button instanceof HTMLButtonElement)) {
       throw new Error('Button expected');
     }
-    button.addEventListener('click', () => {
-      handler();
+    button.addEventListener('click', async () => {
+      const actions = collectAllInputsActions();
+      if (this.isFormValid()) {
+        const result = await updateUser(actions);
+        if (!result) {
+          throw new Error('User update failure');
+        }
+      }
     });
     return button;
   }

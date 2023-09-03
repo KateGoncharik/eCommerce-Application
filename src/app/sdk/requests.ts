@@ -2,9 +2,15 @@ import { getApiRoot } from '@sdk/build-client';
 import { withPasswordFlowClient } from '@sdk/login-api';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
 import { markInputAsInvalid } from '@helpers/toggle-validation-state';
-import { ClientResponse, ErrorResponse, ProductProjection } from '@commercetools/platform-sdk';
+import {
+  ClientResponse,
+  Customer,
+  CustomerUpdateAction,
+  ErrorResponse,
+  ProductProjection,
+} from '@commercetools/platform-sdk';
 import { DataUser } from '@customTypes/datauser';
-import { rememberAuthorizedUser } from '@app/state';
+import { rememberAuthorizedUser, getUser } from '@app/state';
 
 const errorMessage = 'Error: no connection to server';
 
@@ -54,6 +60,28 @@ export async function authorizeUser(email: string, password: string): Promise<vo
   } catch (err) {
     console.error(err);
   }
+}
+
+export async function updateUser(actions: CustomerUpdateAction[]): Promise<ClientResponse<Customer> | null> {
+  try {
+    const user = getUser();
+    if (user === null) {
+      throw new Error('No user found');
+    }
+    if (!user) {
+      throw new Error('No user with such id found');
+    }
+    const request = await getApiRoot()
+      .customers()
+      .withId({ ID: user.id })
+      .post({ body: { version: user.version, actions: actions } })
+      .execute();
+    rememberAuthorizedUser(request.body);
+    return request;
+  } catch (e) {
+    console.error(errorMessage);
+  }
+  return null;
 }
 
 export async function getProducts(): Promise<ProductProjection[]> {

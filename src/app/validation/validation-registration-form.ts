@@ -27,12 +27,10 @@ export class ValidationForm {
 
   private checkValidation(userData: Schemas, input: Element, showElement: Element): void {
     const showBlock = showElement as HTMLElement;
-    if (!(input instanceof HTMLInputElement)) {
+    if (!(input instanceof HTMLInputElement) || input.classList.contains('gender-input')) {
       return;
     }
-    if (input.classList.contains('gender-input')) {
-      return;
-    }
+
     input.getAttribute('data') === 'country' && input.classList.remove('active');
     input.getAttribute('data') === 'postalCode' && input.classList.add('active');
 
