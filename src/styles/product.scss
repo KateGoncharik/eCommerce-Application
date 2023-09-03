@@ -24,7 +24,25 @@
   width: 100%;
   height: auto;
 }
-  
+
+.product-img:hover {
+  cursor: zoom-in;
+}
+
+.modal-active .product-img:hover {
+  cursor: pointer;
+}
+
+.blackout-active {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: $black;
+  z-index: 3;
+}
+
 .block-product-info {
   display: flex;
   flex-direction: column;
