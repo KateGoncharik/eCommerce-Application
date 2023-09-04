@@ -5,7 +5,6 @@ export function eventModal(blockSlider: HTMLElement, elementExit: HTMLElement): 
   const img = document.getElementsByClassName('product-img');
   function eventImg(event: MouseEvent): void {
     const target = event.target as HTMLElement;
-    console.log(img);
     if (
       !blockSlider.classList.contains('modal-active') &&
       !target.classList.contains('swiper-button-prev') &&
