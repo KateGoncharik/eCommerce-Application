@@ -104,13 +104,16 @@ export const getProduct = async (key: string): Promise<ProductData | void> => {
   return returnProductByKey(key)
     .then(({ body }) => {
       const { current } = body.masterData;
-      const dataUser = {
+      const price = current.masterVariant.prices[0];
+      const productData = {
         name: current.name['en-US'],
         img: current.masterVariant.images,
         description: current.metaDescription['en-US'],
+        price: price.value.centAmount,
+        discount: price.discounted && price.discounted.value.centAmount,
       };
 
-      return dataUser;
+      return productData;
     })
     .catch((err) => console.log(err));
 };
