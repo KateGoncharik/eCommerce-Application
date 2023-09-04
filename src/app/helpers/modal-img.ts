@@ -1,26 +1,26 @@
 import { safeQuerySelector } from '@helpers/safe-query-selector';
 
-export function eventModal(elemenImg: HTMLElement, elemenClose: HTMLElement): void {
+export function eventModal(blockSlider: HTMLElement, elementExit: HTMLElement): void {
   const blockout = safeQuerySelector('.blockout');
-  function eventImg(el: MouseEvent): void {
-    const target = el.target as HTMLElement;
+  function eventImg(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
     if (
-      !elemenImg.classList.contains('modal-active') &&
+      !blockSlider.classList.contains('modal-active') &&
       !target.classList.contains('swiper-button-prev') &&
       !target.classList.contains('swiper-button-next')
     ) {
-      elemenImg.classList.toggle('modal-active');
-      elemenClose.classList.toggle('exit-modal-active');
+      blockSlider.classList.toggle('modal-active');
+      elementExit.classList.toggle('exit-modal-active');
       document.body.style.overflow = 'hidden';
       blockout?.classList.toggle('blackout-active');
     }
     if (target.classList.contains('block-exit-modal') || target.classList.contains('exit-modal')) {
-      elemenImg.classList.toggle('modal-active');
-      elemenClose.classList.toggle('exit-modal-active');
+      blockSlider.classList.toggle('modal-active');
+      elementExit.classList.toggle('exit-modal-active');
       document.body.style.overflow = 'scroll';
       blockout?.classList.toggle('blackout-active');
     }
   }
 
-  elemenImg.addEventListener('click', eventImg);
+  blockSlider.addEventListener('click', eventImg);
 }

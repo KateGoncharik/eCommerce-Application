@@ -123,3 +123,17 @@ export async function getCategoryByKey(key: string): Promise<Category | void> {
   }
 }
 
+// delete
+import { Route } from '@customTypes/route';
+const btn = document.createElement('button');
+const a = document.createElement('a');
+a.href = Route.ProductPage;
+a.textContent = 'product page';
+btn.dataset.key = 'tiger-head-balloon';
+btn.className = 'testbrn';
+btn.append(a);
+document.body.append(btn);
+
+btn.addEventListener('click', () => {
+  Route.ProductPage;
+});
