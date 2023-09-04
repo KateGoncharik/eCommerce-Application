@@ -2,19 +2,23 @@ import { safeQuerySelector } from '@helpers/safe-query-selector';
 
 export function eventModal(blockSlider: HTMLElement, elementExit: HTMLElement): void {
   const blockout = safeQuerySelector('.blockout');
+  const img = document.getElementsByClassName('product-img');
   function eventImg(event: MouseEvent): void {
     const target = event.target as HTMLElement;
+    console.log(img);
     if (
       !blockSlider.classList.contains('modal-active') &&
       !target.classList.contains('swiper-button-prev') &&
       !target.classList.contains('swiper-button-next')
     ) {
+      img.length === 1 && img[0].classList.toggle('product-img-modal');
       blockSlider.classList.toggle('modal-active');
       elementExit.classList.toggle('exit-modal-active');
       document.body.style.overflow = 'hidden';
       blockout?.classList.toggle('blackout-active');
     }
     if (target.classList.contains('block-exit-modal') || target.classList.contains('exit-modal')) {
+      img.length === 1 && img[0].classList.toggle('product-img-modal');
       blockSlider.classList.toggle('modal-active');
       elementExit.classList.toggle('exit-modal-active');
       document.body.style.overflow = 'scroll';

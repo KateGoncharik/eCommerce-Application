@@ -53,13 +53,13 @@ export class ProductPage extends Page {
     return blockPrice;
   }
 
-  private createProductPage(): HTMLElement {
+  private createProductPage(key: string): HTMLElement {
     const blockCloseModal = el('.block-exit-modal');
     const closeModal = el('.exit-modal');
     const blockout = el('.blockout');
 
     const blockProductPage = el('.block-product-page', [
-      getProduct('pink-and-blue-tissue-garland')
+      getProduct(key)
         .then((productData) => {
           const slider = this.createSlider(productData!);
           const blockImg = el('.block-product-img', [slider]);

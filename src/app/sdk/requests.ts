@@ -115,7 +115,7 @@ export const getProduct = async (key: string): Promise<ProductData | void> => {
 
       return productData;
     })
-    .catch((err) => console.log(err));
+    .catch(() => console.log(errorMessage));
 };
 
 export async function getProductsOfCategory(id: string): Promise<ProductProjection[]> {
