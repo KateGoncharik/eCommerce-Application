@@ -8,9 +8,11 @@ import {
   CustomerUpdateAction,
   ErrorResponse,
   ProductProjection,
+  Category,
 } from '@commercetools/platform-sdk';
-import { DataUser } from '@customTypes/datauser';
 import { rememberAuthorizedUser, getUser } from '@app/state';
+import { DataUser } from '@customTypes/datauser';
+import { ProductData } from '@customTypes/data-product';
 
 const errorMessage = 'Error: no connection to server';
 
@@ -77,8 +79,10 @@ export async function updateUser(actions: CustomerUpdateAction[]): Promise<Clien
       .post({ body: { version: user.version, actions: actions } })
       .execute();
     rememberAuthorizedUser(request.body);
+    alert('User was successfully updated');
     return request;
   } catch (e) {
+    alert('Something went wrong. Try again');
     console.error(errorMessage);
   }
   return null;
@@ -92,5 +96,57 @@ export async function getProducts(): Promise<ProductProjection[]> {
   } catch (err) {
     console.error(errorMessage);
     return [];
+  }
+}
+
+const returnProductByKey = (productKey: string): Promise<ClientResponse> => {
+  return getApiRoot().products().withKey({ key: productKey }).get().execute();
+};
+
+export const getProduct = async (key: string): Promise<ProductData | void> => {
+  return returnProductByKey(key)
+    .then(({ body }) => {
+      const { current } = body.masterData;
+      const dataUser = {
+        name: current.name['en-US'],
+        img: current.masterVariant.images,
+        description: current.metaDescription['en-US'],
+      };
+
+      return dataUser;
+    })
+    .catch((err) => console.log(err));
+};
+
+export async function getProductsOfCategory(id: string): Promise<ProductProjection[]> {
+  try {
+    const request = await getApiRoot()
+      .productProjections()
+      .get({ queryArgs: { where: `categories(id="${id}")` } })
+      .execute();
+    const products = request.body.results;
+    return products;
+  } catch (err) {
+    console.log(errorMessage);
+    return [];
+  }
+}
+
+export async function getCategories(): Promise<Category[]> {
+  try {
+    const categories = await getApiRoot().categories().get().execute();
+    return categories.body.results;
+  } catch (err) {
+    console.log(errorMessage);
+    return [];
+  }
+}
+
+export async function getCategoryByKey(key: string): Promise<Category | void> {
+  try {
+    const categories = await getApiRoot().categories().withKey({ key }).get().execute();
+    return categories.body;
+  } catch (err) {
+    console.log(errorMessage);
   }
 }

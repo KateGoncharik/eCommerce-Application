@@ -7,6 +7,8 @@ import { getFullCountryName } from '@helpers/get-full-country-name';
 import { ValidationForm } from '@app/validation/validation-registration-form';
 import { updateUser } from '@app/sdk/requests';
 import { collectAllInputsActions } from '@helpers/get-actions';
+import { toggleInputsState } from '@helpers/toggle-inputs-state';
+import { toggleSaveButtonState } from '@helpers/toggle-save-button-state';
 
 class UserPage extends Page {
   protected textObject = {
@@ -34,12 +36,13 @@ class UserPage extends Page {
     if (user === null) {
       throw new Error('No user found');
     }
-    const useShipping = el('input#use-shipping-for-billing.checkbox-reg', { type: 'checkbox' });
-    const genderInput = el('input.gender-input', {
+    const useShipping = el('input#use-shipping-for-billing.checkbox-reg', { type: 'checkbox', disabled: true });
+    const genderInput = el('input.gender-input.input', {
       type: 'text',
       value: getUserGender(),
       placeholder: 'gender',
       name: 'gender',
+      disabled: true,
     });
     if (!(genderInput instanceof HTMLInputElement)) {
       throw new Error('Input expected');
@@ -59,6 +62,7 @@ class UserPage extends Page {
               value: user.firstName,
               placeholder: 'first name',
               data: 'firstName',
+              disabled: true,
             }),
             el('.show-validation-first-name-input show-validation'),
           ]),
@@ -69,6 +73,7 @@ class UserPage extends Page {
               value: user.lastName,
               placeholder: 'last name',
               data: 'lastName',
+              disabled: true,
             }),
             el('.show-validation-last-name-input show-validation'),
           ]),
@@ -82,6 +87,7 @@ class UserPage extends Page {
               value: user.dateOfBirth,
               placeholder: 'date',
               data: 'dateOfBirth',
+              disabled: true,
             }),
             el('.show-validation-date-input show-validation'),
           ]),
@@ -96,6 +102,7 @@ class UserPage extends Page {
           value: user.email,
           placeholder: 'email',
           data: 'email',
+          disabled: true,
         }),
         el('.show-validation-email-input show-validation'),
       ]),
@@ -111,6 +118,7 @@ class UserPage extends Page {
               value: user.addresses[0].streetName,
               placeholder: 'street',
               data: 'streetName',
+              disabled: true,
             }),
             el('.show-validation-street-input show-validation'),
           ]),
@@ -121,6 +129,7 @@ class UserPage extends Page {
               value: user.addresses[0].city,
               placeholder: 'city',
               data: 'city',
+              disabled: true,
             }),
             el('.show-validation-city-input show-validation'),
           ]),
@@ -131,6 +140,7 @@ class UserPage extends Page {
               value: getFullCountryName(user.addresses[0].country),
               placeholder: 'country',
               data: 'country',
+              disabled: true,
             }),
             el('.show-validation-country-code-input show-validation'),
           ]),
@@ -141,11 +151,12 @@ class UserPage extends Page {
               value: user.addresses[0].postalCode,
               placeholder: 'postal code',
               data: 'postalCode',
+              disabled: true,
             }),
             el('.show-validation-postal-code-input  show-validation'),
           ]),
           el('.block-shipping-checkbox', [
-            el('input#shipping-default-checkbox.checkbox-reg', { type: 'checkbox' }),
+            el('input#shipping-default-checkbox.checkbox-reg', { type: 'checkbox', disabled: true }),
             el('label', 'Set shipping as default address', { for: 'shipping-default-checkbox' }),
           ]),
           el('.block-shipping-checkbox', [
@@ -162,6 +173,7 @@ class UserPage extends Page {
               value: user.addresses[1].streetName,
               placeholder: 'street',
               data: 'streetName',
+              disabled: true,
             }),
             el('.show-validation-street-input show-validation'),
           ]),
@@ -172,6 +184,7 @@ class UserPage extends Page {
               value: user.addresses[1].city,
               placeholder: 'city',
               data: 'city',
+              disabled: true,
             }),
             el('.show-validation-city-input show-validation'),
           ]),
@@ -182,6 +195,7 @@ class UserPage extends Page {
               value: getFullCountryName(user.addresses[1].country),
               placeholder: 'country',
               data: 'country',
+              disabled: true,
             }),
             el('.show-validation-country-code-input show-validation'),
           ]),
@@ -192,16 +206,18 @@ class UserPage extends Page {
               value: user.addresses[1].postalCode,
               placeholder: 'postal code',
               data: 'postalCode',
+              disabled: true,
             }),
             el('.show-validation-postal-code-input  show-validation'),
           ]),
           el('.block-billing-checkbox', [
-            el('input#billing-default-checkbox.checkbox-reg', { type: 'checkbox' }),
+            el('input#billing-default-checkbox.checkbox-reg', { type: 'checkbox', disabled: true }),
             el('label', 'Set billing as default address', { for: 'billing-default-checkbox' }),
           ]),
         ]),
       ]),
       this.createSaveButton(),
+      this.createEditButton(),
     ]);
     this.validation.eventInput(infoBlock);
     this.validation.eventCheckBox(infoBlock, useShipping);
@@ -215,6 +231,9 @@ class UserPage extends Page {
       if (!(input instanceof HTMLInputElement)) {
         return;
       }
+      if (input.classList.contains('gender-input')) {
+        return validInputs++;
+      }
       this.validation.checkChangeInput(input);
       if (input.classList.contains('input-valid')) {
         return validInputs++;
@@ -226,10 +245,11 @@ class UserPage extends Page {
   }
 
   private createSaveButton(): HTMLButtonElement {
-    const button = el(`button.save-button`, `save`);
+    const button = el('button.save-button', 'save');
     if (!(button instanceof HTMLButtonElement)) {
       throw new Error('Button expected');
     }
+    button.disabled = true;
     button.addEventListener('click', async () => {
       const actions = collectAllInputsActions();
       if (this.isFormValid()) {
@@ -238,6 +258,18 @@ class UserPage extends Page {
           throw new Error('User update failure');
         }
       }
+    });
+    return button;
+  }
+
+  private createEditButton(): HTMLButtonElement {
+    const button = el('button.edit-button', 'edit');
+    if (!(button instanceof HTMLButtonElement)) {
+      throw new Error('Button expected');
+    }
+    button.addEventListener('click', () => {
+      toggleInputsState();
+      toggleSaveButtonState();
     });
     return button;
   }
