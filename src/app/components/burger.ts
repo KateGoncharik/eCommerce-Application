@@ -12,6 +12,7 @@ class Burger {
     toLogIn: 'Log in',
     toLogOut: 'Log out',
     toJoin: 'Join',
+    userPage: 'User page',
   };
 
   public mask = el('.header-mask');
@@ -71,12 +72,25 @@ class Burger {
     'data-navigo': '',
   });
 
+  private userPageLink = el('a.user-page-link.burger-link', this.linkText.userPage, {
+    href: Route.UserPage,
+    'data-navigo': '',
+  });
+
+  public changeUserPageBlockVisability(userPageBlock: HTMLElement, userPageLink: HTMLAnchorElement): void {
+    if (isUserAuthorized()) {
+      userPageBlock.style.display = 'flex';
+      userPageLink.style.display = 'flex';
+    }
+  }
+
   private createBurgerMenu(): HTMLElement {
     const loginOrLogoutLink = isUserAuthorized() ? this.createLogOutLink() : this.createLogInLink();
     const burgerLinks = [
       this.mainPageLink,
       this.catalogPageLink,
       this.aboutUsPageLink,
+      this.userPageLink,
       this.logInPageLink,
       this.joinPageLink,
     ];
@@ -88,7 +102,17 @@ class Burger {
     });
     const separator = el('span', '/');
     const logInOrJoin = el('.burger-signin', [loginOrLogoutLink, separator, this.joinPageLink]);
-    const burgerMenu = el('.burger-menu', [this.mainPageLink, this.catalogPageLink, this.aboutUsPageLink, logInOrJoin]);
+    const burgerMenu = el('.burger-menu', [
+      this.mainPageLink,
+      this.catalogPageLink,
+      this.aboutUsPageLink,
+      this.userPageLink,
+      logInOrJoin,
+    ]);
+    if (!(this.userPageLink instanceof HTMLAnchorElement)) {
+      throw new Error('Link expected');
+    }
+    this.changeUserPageBlockVisability(this.userPageLink, this.userPageLink);
     return burgerMenu;
   }
 

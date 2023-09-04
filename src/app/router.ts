@@ -3,6 +3,7 @@ import { Page } from '@templates/page';
 import { Route } from '@customTypes/route';
 import { getUser } from './state';
 import { CatalogPage } from '@catalog/catalog-page';
+import { ProductPage } from '@catalog/product-page';
 
 const router = new Navigo('/');
 
@@ -40,18 +41,18 @@ function bindRoutes(routes: Record<Route, Page>): void {
         const page = routes[Route.UserPage];
         page.render();
       } else {
-        router.navigate(Route.Main);
+        router.navigate(Route.Login);
       }
     })
-    .on(/catalog\/.+/, (path) => {
-      const categoryKey = path?.url.split('/').pop();
-      if (CatalogPage.current) {
-        CatalogPage.current.categoryKey = categoryKey;
-        CatalogPage.current.updateProductsContainer();
-      } else {
-        const page = new CatalogPage(categoryKey);
-        page.render();
-      }
+    .on(/catalog\/.*product\/.+/, (path) => {
+      const productKey = path?.url.split('/').pop() || '';
+      const page = new ProductPage(productKey);
+      page.render();
+    })
+    .on(/catalog\/(?!.+\/product\/)/, (path) => {
+      const categoryKey = path?.url.split('/').pop() || '';
+      const page = new CatalogPage(categoryKey);
+      page.render();
     })
     .notFound(() => {
       const page = routes[Route.NotFound];

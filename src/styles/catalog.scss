@@ -111,8 +111,10 @@ body.no-scroll {
 
 .product-card {
   position: relative;
+  display: block;
   border-right: 1px solid $black;
   border-bottom: 1px solid $black;
+  color: inherit;
   line-height: 120%;
   background-color: #fff;
   cursor: pointer;
