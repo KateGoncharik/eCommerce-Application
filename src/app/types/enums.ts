@@ -4,3 +4,8 @@ export enum Country {
   Spain = 'Spain',
   Australia = 'Australia',
 }
+
+export enum Gender {
+  Male = 'male',
+  Female = 'female',
+}

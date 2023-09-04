@@ -2,10 +2,17 @@ import { getApiRoot } from '@sdk/build-client';
 import { withPasswordFlowClient } from '@sdk/login-api';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
 import { markInputAsInvalid } from '@helpers/toggle-validation-state';
-import { ClientResponse, ErrorResponse, ProductProjection, Category } from '@commercetools/platform-sdk';
+import {
+  ClientResponse,
+  Customer,
+  CustomerUpdateAction,
+  ErrorResponse,
+  ProductProjection,
+  Category,
+} from '@commercetools/platform-sdk';
+import { rememberAuthorizedUser, getUser } from '@app/state';
 import { DataUser } from '@customTypes/datauser';
 import { ProductData } from '@customTypes/data-product';
-import { rememberAuthorizedUser } from '@app/state';
 
 const errorMessage = 'Error: no connection to server';
 
@@ -55,6 +62,27 @@ export async function authorizeUser(email: string, password: string): Promise<vo
   } catch (err) {
     console.error(err);
   }
+}
+
+export async function updateUser(actions: CustomerUpdateAction[]): Promise<ClientResponse<Customer> | null> {
+  try {
+    const user = getUser();
+    if (user === null) {
+      throw new Error('No user found');
+    }
+    const request = await getApiRoot()
+      .customers()
+      .withId({ ID: user.id })
+      .post({ body: { version: user.version, actions: actions } })
+      .execute();
+    rememberAuthorizedUser(request.body);
+    alert('Your information was successfully updated');
+    return request;
+  } catch (e) {
+    alert('Something went wrong. Try again');
+    console.error(errorMessage);
+  }
+  return null;
 }
 
 export async function getProducts(): Promise<ProductProjection[]> {
@@ -122,18 +150,3 @@ export async function getCategoryByKey(key: string): Promise<Category | void> {
     console.log(errorMessage);
   }
 }
-
-// delete
-import { Route } from '@customTypes/route';
-const btn = document.createElement('button');
-const a = document.createElement('a');
-a.href = Route.ProductPage;
-a.textContent = 'product page';
-btn.dataset.key = 'tiger-head-balloon';
-btn.className = 'testbrn';
-btn.append(a);
-document.body.append(btn);
-
-btn.addEventListener('click', () => {
-  Route.ProductPage;
-});

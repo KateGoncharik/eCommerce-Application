@@ -7,6 +7,10 @@ import { connectSlider } from '@helpers/slider';
 import { eventModal } from '@helpers/modal-img';
 
 export class ProductPage extends Page {
+  constructor(private productKey: string) {
+    super();
+  }
+
   protected textObject = {
     title: 'Product page',
   };
@@ -59,6 +63,7 @@ export class ProductPage extends Page {
         .then((productData) => {
           const slider = this.createSlider(productData!);
           const blockImg = el('.block-product-img', [slider]);
+
           const productPage = el('.product-page', [
             blockImg,
             el('.block-product-info', [
@@ -82,6 +87,6 @@ export class ProductPage extends Page {
   }
 
   protected build(): HTMLElement {
-    return this.createProductPage();
+    return this.createProductPage(this.productKey);
   }
 }

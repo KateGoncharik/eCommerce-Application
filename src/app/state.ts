@@ -7,9 +7,12 @@ function rememberAuthorizedUser(customer: Customer): void {
   localStorage.setItem(userKey, JSON.stringify(customer));
 }
 
-function getUser(): Customer {
-  //TODO make sure that retun type is Customer | null
-  return JSON.parse(localStorage.getItem(userKey)!);
+function getUser(): Customer | null {
+  const user = localStorage.getItem(userKey);
+  if (user === null) {
+    return user;
+  }
+  return JSON.parse(user);
 }
 
 function logOutUser(): void {
@@ -23,6 +26,9 @@ function isUserAuthorized(): boolean {
 
 function getUserGender(): string {
   const user = getUser();
+  if (user === null) {
+    throw new Error('No user found');
+  }
   const userGender = localStorage.getItem(user.id);
   if (!userGender) {
     return 'male';
