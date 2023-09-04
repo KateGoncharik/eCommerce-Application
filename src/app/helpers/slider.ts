@@ -7,7 +7,7 @@ export function connectSlider(): void {
     slidesPerView: 'auto',
     direction: 'horizontal',
     loop: true,
-    resizeObserver: false,
+    // resizeObserver: false,
 
     pagination: {
       el: '.swiper-pagination',

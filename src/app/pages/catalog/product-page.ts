@@ -50,8 +50,8 @@ export class ProductPage extends Page {
   }
 
   private createProductPage(): HTMLElement {
-    const blockCloseModal = el('.block-close-modal');
-    const closeModal = el('.close-modal');
+    const blockCloseModal = el('.block-exit-modal');
+    const closeModal = el('.exit-modal');
     const blockout = el('.blockout');
 
     const blockProductPage = el('.block-product-page', [

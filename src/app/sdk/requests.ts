@@ -122,3 +122,4 @@ export async function getCategoryByKey(key: string): Promise<Category | void> {
     console.log(errorMessage);
   }
 }
+

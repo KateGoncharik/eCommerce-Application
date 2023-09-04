@@ -10,13 +10,13 @@ export function eventModal(elemenImg: HTMLElement, elemenClose: HTMLElement): vo
       !target.classList.contains('swiper-button-next')
     ) {
       elemenImg.classList.toggle('modal-active');
-      elemenClose.classList.toggle('close-modal-active');
+      elemenClose.classList.toggle('exit-modal-active');
       document.body.style.overflow = 'hidden';
       blockout?.classList.toggle('blackout-active');
     }
-    if (target.classList.contains('block-close-modal') || target.classList.contains('close-modal')) {
+    if (target.classList.contains('block-exit-modal') || target.classList.contains('exit-modal')) {
       elemenImg.classList.toggle('modal-active');
-      elemenClose.classList.toggle('close-modal-active');
+      elemenClose.classList.toggle('exit-modal-active');
       document.body.style.overflow = 'scroll';
       blockout?.classList.toggle('blackout-active');
     }
