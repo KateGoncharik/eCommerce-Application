@@ -1,5 +1,9 @@
 @import '../../node_modules/swiper/swiper-bundle.css';
 
+.swiper {
+  z-index: 0;
+}
+
 .swiper .swiper-button-next::after,
 .swiper .swiper-button-prev::after {
   color: $black;

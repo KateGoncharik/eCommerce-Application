@@ -5,6 +5,11 @@ export enum Country {
   Australia = 'Australia',
 }
 
+export enum Gender {
+  Male = 'male',
+  Female = 'female',
+}
+
 export enum Colors {
   Red = '#ff0000',
   Green = '#00ff00',
