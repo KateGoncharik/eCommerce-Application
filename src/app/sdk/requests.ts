@@ -70,16 +70,13 @@ export async function updateUser(actions: CustomerUpdateAction[]): Promise<Clien
     if (user === null) {
       throw new Error('No user found');
     }
-    if (!user) {
-      throw new Error('No user with such id found');
-    }
     const request = await getApiRoot()
       .customers()
       .withId({ ID: user.id })
       .post({ body: { version: user.version, actions: actions } })
       .execute();
     rememberAuthorizedUser(request.body);
-    alert('User was successfully updated');
+    alert('Your information was successfully updated');
     return request;
   } catch (e) {
     alert('Something went wrong. Try again');
