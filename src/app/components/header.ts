@@ -9,6 +9,15 @@ class Header {
 
   public create(): HTMLElement {
     const loginOrLogoutLink = isUserAuthorized() ? this.burger.createLogOutLink() : this.burger.createLogInLink();
+    const userPageLink = el('a.user-page-link.burger-link', this.burger.linkText.userPage, {
+      href: Route.UserPage,
+      'data-navigo': '',
+    });
+    if (!(userPageLink instanceof HTMLAnchorElement)) {
+      throw new Error('Link expected');
+    }
+    const userPageBlock = el('.header-cell.user-page-link-block', [userPageLink]);
+    this.burger.changeUserPageBlockVisability(userPageBlock, userPageLink);
     return el('header.header', [
       this.burger.mask,
       el('.header-big', [
@@ -46,6 +55,7 @@ class Header {
               'data-navigo': '',
             }),
           ]),
+          userPageBlock,
           el('span.header-cell', 'Cart'),
         ]),
       ]),

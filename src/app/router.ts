@@ -41,7 +41,7 @@ function bindRoutes(routes: Record<Route, Page>): void {
         const page = routes[Route.UserPage];
         page.render();
       } else {
-        router.navigate(Route.Main);
+        router.navigate(Route.Login);
       }
     })
     .on(/catalog\/.*product\/.+/, (path) => {
