@@ -6,8 +6,9 @@ import { LoginPage } from '@servicePages/login-page';
 import { RegistrationPage } from '@servicePages/registration-page';
 import { NotFoundPage } from '@servicePages/404-page';
 import { CatalogPage } from '@catalog/catalog-page';
-import { UserPage } from '@servicePages/user-profile';
+import { UserPage } from '@servicePages/user-page';
 import { Header } from '@components/header';
+import { EditPasswordPage } from '@servicePages/edit-password-page';
 
 const main = document.createElement('main');
 const routes: Record<Route, Page> = {
@@ -17,6 +18,7 @@ const routes: Record<Route, Page> = {
   [Route.NotFound]: new NotFoundPage(),
   [Route.Catalog]: new CatalogPage(),
   [Route.UserPage]: new UserPage(),
+  [Route.EditPasswordPage]: new EditPasswordPage(),
 };
 
 class App {

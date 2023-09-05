@@ -5,6 +5,7 @@ enum Route {
   NotFound = '404',
   Catalog = '/catalog',
   UserPage = '/user',
+  EditPasswordPage = '/edit-password-page',
 }
 
 export { Route };

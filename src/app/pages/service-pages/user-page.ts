@@ -9,6 +9,8 @@ import { updateUser } from '@app/sdk/requests';
 import { collectAllInputsActions } from '@helpers/get-actions';
 import { toggleInputsState } from '@helpers/toggle-inputs-state';
 import { toggleSaveButtonState } from '@helpers/toggle-save-button-state';
+import { Route } from '@app/types/route';
+import { redirect } from '@app/router';
 
 class UserPage extends Page {
   protected textObject = {
@@ -95,16 +97,19 @@ class UserPage extends Page {
           el('.show-validation-gender show-validation'),
         ]),
       ]),
-      el('.input-block', [
-        el('span.user-info-subtitle', 'Email'),
-        el('input.email-input.input', {
-          type: 'text',
-          value: user.email,
-          placeholder: 'email',
-          data: 'email',
-          disabled: true,
-        }),
-        el('.show-validation-email-input show-validation'),
+      el('.email-password-block', [
+        el('.input-block', [
+          el('span.user-info-subtitle', 'Email'),
+          el('input.email-input.input', {
+            type: 'text',
+            value: user.email,
+            placeholder: 'email',
+            data: 'email',
+            disabled: true,
+          }),
+          el('.show-validation-email-input show-validation'),
+        ]),
+        el('.input-block', [el('span.user-info-subtitle', 'Password'), this.createEditPasswordButton()]),
       ]),
 
       el('.user-addresses-block', [
@@ -238,7 +243,6 @@ class UserPage extends Page {
       if (input.classList.contains('input-valid')) {
         return validInputs++;
       }
-      this.validation.checkChangeInput(input);
     });
 
     return validInputs === inputs.length;
@@ -270,6 +274,17 @@ class UserPage extends Page {
     button.addEventListener('click', () => {
       toggleInputsState();
       toggleSaveButtonState();
+    });
+    return button;
+  }
+
+  private createEditPasswordButton(): HTMLButtonElement {
+    const button = el('button.password-edit-button', 'edit password');
+    if (!(button instanceof HTMLButtonElement)) {
+      throw new Error('Button expected');
+    }
+    button.addEventListener('click', () => {
+      redirect(Route.EditPasswordPage);
     });
     return button;
   }

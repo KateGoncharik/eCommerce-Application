@@ -53,7 +53,7 @@ export class ProductPage extends Page {
 
   private createProductPage(key: string): HTMLElement {
     const blockProductPage = el('.block-product-page', [
-       getProduct(key)
+      getProduct(key)
         .then((productData) => {
           const productPage = el('.product-page', [
             el('.block-product-img', [this.createSlider(productData!)]),
@@ -67,7 +67,7 @@ export class ProductPage extends Page {
           mount(blockProductPage, productPage);
           connectSlider();
         })
-        .catch((err) => console.log(err)),
+        .catch((err) => console.error(err)),
     ]);
 
     return blockProductPage;

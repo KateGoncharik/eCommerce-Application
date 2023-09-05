@@ -9,6 +9,7 @@ import {
   ErrorResponse,
   ProductProjection,
   Category,
+  CustomerChangePassword,
 } from '@commercetools/platform-sdk';
 import { rememberAuthorizedUser, getUser } from '@app/state';
 import { DataUser } from '@customTypes/datauser';
@@ -85,6 +86,23 @@ export async function updateUser(actions: CustomerUpdateAction[]): Promise<Clien
   return null;
 }
 
+export async function editUserPassword(body: CustomerChangePassword): Promise<ClientResponse<Customer> | null> {
+  try {
+    const user = getUser();
+    if (user === null) {
+      throw new Error('No user found');
+    }
+    const request = await getApiRoot().customers().password().post({ body: body }).execute();
+    rememberAuthorizedUser(request.body);
+    alert('Your password was successfully updated');
+    return request;
+  } catch (e) {
+    alert('Something went wrong. Try again');
+    console.error(errorMessage);
+  }
+  return null;
+}
+
 export async function getProducts(): Promise<ProductProjection[]> {
   try {
     const request = await getApiRoot().productProjections().get().execute();
@@ -115,7 +133,7 @@ export const getProduct = async (key: string): Promise<ProductData | void> => {
 
       return productData;
     })
-    .catch((err) => console.log(err));
+    .catch((err) => console.error(err));
 };
 
 export async function getProductsOfCategory(id: string): Promise<ProductProjection[]> {
@@ -127,7 +145,7 @@ export async function getProductsOfCategory(id: string): Promise<ProductProjecti
     const products = request.body.results;
     return products;
   } catch (err) {
-    console.log(errorMessage);
+    console.error(errorMessage);
     return [];
   }
 }
@@ -137,7 +155,7 @@ export async function getCategories(): Promise<Category[]> {
     const categories = await getApiRoot().categories().get().execute();
     return categories.body.results;
   } catch (err) {
-    console.log(errorMessage);
+    console.error(errorMessage);
     return [];
   }
 }
@@ -147,6 +165,6 @@ export async function getCategoryByKey(key: string): Promise<Category | void> {
     const categories = await getApiRoot().categories().withKey({ key }).get().execute();
     return categories.body;
   } catch (err) {
-    console.log(errorMessage);
+    console.error(errorMessage);
   }
 }
