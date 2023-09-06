@@ -44,6 +44,15 @@ function bindRoutes(routes: Record<Route, Page>): void {
         router.navigate(Route.Login);
       }
     })
+    .on(Route.EditPasswordPage, () => {
+      const user = getUser();
+      if (user) {
+        const page = routes[Route.EditPasswordPage];
+        page.render();
+      } else {
+        router.navigate(Route.Login);
+      }
+    })
     .on(/catalog\/.*product\/.+/, (path) => {
       const productKey = path?.url.split('/').pop() || '';
       const page = new ProductPage(productKey);
