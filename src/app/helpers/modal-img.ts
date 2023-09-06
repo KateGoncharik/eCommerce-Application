@@ -1,7 +1,7 @@
 import { safeQuerySelector } from '@helpers/safe-query-selector';
 
 export function eventModal(blockSlider: HTMLElement, elementExit: HTMLElement): void {
-  const blockout = safeQuerySelector('.blockout');
+  const blackout = safeQuerySelector('.blackout');
   function eventImg(event: MouseEvent): void {
     const target = event.target as HTMLElement;
     if (
@@ -12,13 +12,13 @@ export function eventModal(blockSlider: HTMLElement, elementExit: HTMLElement): 
       blockSlider.classList.toggle('modal-active');
       elementExit.classList.toggle('exit-modal-active');
       document.body.style.overflow = 'hidden';
-      blockout?.classList.toggle('blackout-active');
+      blackout?.classList.toggle('blackout-active');
     }
     if (target.classList.contains('block-exit-modal') || target.classList.contains('exit-modal')) {
       blockSlider.classList.toggle('modal-active');
       elementExit.classList.toggle('exit-modal-active');
       document.body.style.overflow = 'scroll';
-      blockout?.classList.toggle('blackout-active');
+      blackout?.classList.toggle('blackout-active');
     }
   }
 
