@@ -133,7 +133,7 @@ export const getProduct = async (key: string): Promise<ProductData | void> => {
 
       return productData;
     })
-    .catch((err) => console.error(err));
+    .catch(() => console.error(errorMessage));
 };
 
 export async function getProductsOfCategory(id: string): Promise<ProductProjection[]> {
@@ -141,6 +141,21 @@ export async function getProductsOfCategory(id: string): Promise<ProductProjecti
     const request = await getApiRoot()
       .productProjections()
       .get({ queryArgs: { where: `categories(id="${id}")` } })
+      .execute();
+    const products = request.body.results;
+    return products;
+  } catch (err) {
+    console.error(errorMessage);
+    return [];
+  }
+}
+
+export async function getFilteredProducts(queryString: string | string[]): Promise<ProductProjection[]> {
+  try {
+    const request = await getApiRoot()
+      .productProjections()
+      .search()
+      .get({ queryArgs: { filter: queryString } })
       .execute();
     const products = request.body.results;
     return products;

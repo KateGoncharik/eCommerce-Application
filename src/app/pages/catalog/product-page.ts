@@ -4,6 +4,8 @@ import { el, mount } from 'redom';
 import { ProductData } from '@app/types/data-product';
 import { connectSlider } from '@helpers/slider';
 
+import { eventModal } from '@helpers/modal-img';
+
 export class ProductPage extends Page {
   constructor(private productKey: string) {
     super();
@@ -52,11 +54,18 @@ export class ProductPage extends Page {
   }
 
   private createProductPage(key: string): HTMLElement {
+    const blockCloseModal = el('.block-exit-modal');
+    const closeModal = el('.exit-modal');
+    const blockout = el('.blockout');
+
     const blockProductPage = el('.block-product-page', [
       getProduct(key)
         .then((productData) => {
+          const slider = this.createSlider(productData!);
+          const blockImg = el('.block-product-img', [slider]);
+
           const productPage = el('.product-page', [
-            el('.block-product-img', [this.createSlider(productData!)]),
+            blockImg,
             el('.block-product-info', [
               el('.product-name', `${productData!.name}`),
               this.addPrice(productData!),
@@ -64,8 +73,12 @@ export class ProductPage extends Page {
             ]),
           ]);
 
+          mount(document.body, blockout);
+          mount(blockCloseModal, closeModal);
           mount(blockProductPage, productPage);
+          mount(slider, blockCloseModal);
           connectSlider();
+          eventModal(slider, blockCloseModal);
         })
         .catch((err) => console.error(err)),
     ]);

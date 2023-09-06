@@ -1,5 +1,3 @@
-import { el } from 'redom';
-
 class Button {
   constructor(
     private text: string,
@@ -8,8 +6,11 @@ class Button {
     this.text = text;
     this.color = color;
   }
-  public render(): HTMLElement {
-    const button = el('button.default-btn', this.text);
+  public render(): HTMLButtonElement {
+    const button = document.createElement('button');
+    button.classList.add('default-btn');
+    button.textContent = this.text;
+
     if (this.color === 'black') {
       button.classList.add('default-btn-black');
     }
