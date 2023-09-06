@@ -6,14 +6,99 @@
 
 .swiper .swiper-button-next::after,
 .swiper .swiper-button-prev::after {
-  color: $black;
+  color: $hover-color;
   font-size: 50px;
+  transition: all 0.2s ease;
 }
 
-@media (width <= 420px) {
+.swiper .swiper-button-next:hover:after,
+.swiper .swiper-button-prev:hover:after {
+  color: $black;
+}
+
+.swiper-button-prev:hover {
+  color: $hover-color;
+}
+
+.modal-active {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 4;
+}
+
+.modal-active img{
+  position: absolute;
+  max-width: 90%;
+  height: auto;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+}
+
+.modal-active .swiper-button-next::after,
+.modal-active .swiper-button-prev::after {
+  color: $hover-color;
+}
+
+.modal-active .swiper-button-next:hover:after,
+.modal-active .swiper-button-prev:hover:after {
+  color: $white;
+}
+
+.block-exit-modal {
+  display: none;
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  right: 2%;
+  top: 2%;
+  cursor: pointer;
+}
+
+.exit-modal {
+  position: relative;
+  width: 100%;
+  height: 2px;
+  top: 50%;
+  transform: rotate(45deg);
+  background-color: $hover-color;
+  transition: all 0.2s ease;
+}
+
+.exit-modal::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  transform: rotate(90deg);
+  background-color: $hover-color;
+  transition: all 0.2s ease;
+}
+
+.block-exit-modal:hover {
+  .exit-modal,
+  .exit-modal::before{
+    background-color: $white;
+  }
+}
+
+.exit-modal-active {
+  display: block;
+  z-index: 6;
+}
+
+@media (width <= 769px) {
   .swiper .swiper-button-next::after,
   .swiper .swiper-button-prev::after {
     font-size: 35px;
   }
+
+  .modal-active img{
+    max-width: 80%;
+  }
 }
+
 
