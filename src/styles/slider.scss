@@ -4,6 +4,11 @@
   z-index: 0;
 }
 
+.modal-active .swiper-button-next::after,
+.modal-active .swiper-button-prev::after {
+  color: $hover-color;
+}
+
 .swiper .swiper-button-next::after,
 .swiper .swiper-button-prev::after {
   color: $hover-color;
@@ -11,8 +16,8 @@
   transition: all 0.2s ease;
 }
 
-.swiper .swiper-button-next:hover:after,
-.swiper .swiper-button-prev:hover:after {
+.swiper .swiper-button-next:hover::after,
+.swiper .swiper-button-prev:hover::after {
   color: $black;
 }
 
@@ -38,13 +43,10 @@
   transform:translate(-50%, -50%);
 }
 
-.modal-active .swiper-button-next::after,
-.modal-active .swiper-button-prev::after {
-  color: $hover-color;
-}
 
-.modal-active .swiper-button-next:hover:after,
-.modal-active .swiper-button-prev:hover:after {
+
+.modal-active .swiper-button-next:hover::after,
+.modal-active .swiper-button-prev:hover::after {
   color: $white;
 }
 

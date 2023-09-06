@@ -105,6 +105,9 @@ export class ValidationForm {
   }
 
   public checkChangeInput(input: HTMLInputElement): void {
+    if (input.classList.contains('password-checkbox')) {
+      return;
+    }
     const placeholder = input.placeholder;
     const showErrorBlock = input.nextElementSibling!;
 
