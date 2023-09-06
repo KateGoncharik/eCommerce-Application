@@ -132,6 +132,21 @@ export async function getProductsOfCategory(id: string): Promise<ProductProjecti
   }
 }
 
+export async function getFilteredProducts(queryString: string | string[]): Promise<ProductProjection[]> {
+  try {
+    const request = await getApiRoot()
+      .productProjections()
+      .search()
+      .get({ queryArgs: { filter: queryString } })
+      .execute();
+    const products = request.body.results;
+    return products;
+  } catch (err) {
+    console.log(errorMessage);
+    return [];
+  }
+}
+
 export async function getCategories(): Promise<Category[]> {
   try {
     const categories = await getApiRoot().categories().get().execute();
