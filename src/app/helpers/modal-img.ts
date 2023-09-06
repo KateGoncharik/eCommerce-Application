@@ -2,6 +2,7 @@ import { safeQuerySelector } from '@helpers/safe-query-selector';
 
 export function eventModal(blockSlider: HTMLElement, elementExit: HTMLElement): void {
   const blackout = safeQuerySelector('.blackout');
+
   function eventImg(event: MouseEvent): void {
     const target = event.target as HTMLElement;
     if (
