@@ -1,3 +1,5 @@
+import { CatalogPage } from '@app/pages/catalog/catalog-page';
+
 type ProductMainData = {
   key: string;
   name: string;
@@ -20,4 +22,6 @@ type CategoriesObject = {
   };
 };
 
-export { ProductMainData, CategoriesObject };
+type CatalogPageType = CatalogPage;
+
+export { ProductMainData, CategoriesObject, CatalogPageType };
