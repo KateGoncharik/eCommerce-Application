@@ -34,11 +34,26 @@ body.no-scroll {
   }
 }
 
+.breadcrumbs-search-wrap {
+  display: grid;
+  grid-template-columns: 1.3367fr 0.6633fr;
+  border-bottom: 1px solid $black;
+  border-right: 1px solid $black;
+
+  @media (width <= 992px) {
+    grid-template: 1fr 1fr / 1fr;
+  }
+}
+
 .breadcrumbs {
+  flex: auto;
   padding: 10.2px;
-  border: 1px solid $black;
-  border-top: none;
-  border-left: none;
+  border-right: 1px solid $black;
+
+  @media (width <= 992px) {
+    border-right: none;
+    border-bottom: 1px solid $black;
+  }
 }
 
 .breadcrumbs-link {
@@ -62,6 +77,19 @@ body.no-scroll {
 .breadcrumbs-current {
   font-weight: 500;
   color: $grey;
+}
+
+.catalog-search {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 10px;
+
+  input {
+    flex: auto;
+    margin: 0;
+    padding: 0 10px;
+  }
 }
 
 .products {
@@ -197,8 +225,6 @@ body.no-scroll {
 .catalog-sidebar {
   position: relative;
   flex: 0 1 25%;
-  border-left: 1px solid $black;
-  border-right: 1px solid $black;
 
   @media (width <= 992px) {
     flex: 0 1 50%;
@@ -241,7 +267,8 @@ body.no-scroll {
   padding: 10px;
   font-size: 18px;
   font-weight: 500;
-  border-bottom: 1px solid $black;
+  border: 1px solid $black;
+  border-top: none;
   background-color: #fff;
   transition: all 0.2s;
   cursor: pointer;
@@ -273,7 +300,8 @@ body.no-scroll {
   &.active + .sidebar-dropdown-content {
     height: auto;
     padding: 2% 3% 3%;
-    border-bottom: 1px solid $black;
+    border: 1px solid $black;
+    border-top: none;
   }
 
   @media (width <= 768px) {
