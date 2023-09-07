@@ -63,7 +63,9 @@
 .save-button,
 .edit-button,
 .password-edit-button,
-.cancel-button {
+.cancel-button,
+.remove-address-button,
+.add-address-button {
   width: 100%;
   height: 56px;
   margin: 0.3em;
@@ -96,12 +98,14 @@ input:disabled {
 .user-addresses-block {
   margin: 2% 0;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
 }
 
 .block-shipping,
 .block-billing {
-  width: 45%;
+  margin: 0 auto;
+  width: 65%;
 }
 
 .user-info-subtitle,
@@ -128,7 +132,7 @@ img.avatar {
   justify-content: space-between;
 }
 
-.password-update-block {
+.password-update-block, .add-address-block {
   width: 75%;
   margin: 0 auto;
   padding: 2%;
@@ -136,4 +140,8 @@ img.avatar {
   flex-direction: column;
   justify-content: center;
   border: 1px solid $black;
+}
+
+.hidden {
+  display: none;
 }

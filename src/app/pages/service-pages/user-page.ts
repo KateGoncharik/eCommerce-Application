@@ -6,11 +6,12 @@ import boyAvatar from '@icons/avatar-boy.png';
 import { getFullCountryName } from '@helpers/get-full-country-name';
 import { ValidationForm } from '@app/validation/validation-registration-form';
 import { updateUser } from '@app/sdk/requests';
-import { collectAllInputsActions } from '@helpers/get-actions';
+import { getRemoveAddressAction, collectAllInputsActions } from '@helpers/get-actions';
 import { toggleInputsState } from '@helpers/toggle-inputs-state';
 import { toggleSaveButtonState } from '@helpers/toggle-save-button-state';
 import { Route } from '@app/types/route';
 import { redirect } from '@app/router';
+import { safeQuerySelector } from '@helpers/safe-query-selector';
 
 class UserPage extends Page {
   protected textObject = {
@@ -38,7 +39,7 @@ class UserPage extends Page {
     if (user === null) {
       throw new Error('No user found');
     }
-    const useShipping = el('input#use-shipping-for-billing.checkbox-reg', { type: 'checkbox', disabled: true });
+    const userAddressesBlock = el('.user-addresses-block');
     const genderInput = el('input.gender-input.input', {
       type: 'text',
       value: getUserGender(),
@@ -80,7 +81,6 @@ class UserPage extends Page {
             el('.show-validation-last-name-input show-validation'),
           ]),
         ]),
-
         el('.user-date-gender-block', [
           el('.input-block', [
             el('span.user-info-subtitle', 'Birth date'),
@@ -110,123 +110,161 @@ class UserPage extends Page {
           el('.show-validation-email-input show-validation'),
         ]),
         el('.input-block', [el('span.user-info-subtitle', 'Password'), this.createEditPasswordButton()]),
-      ]),
-
-      el('.user-addresses-block', [
-        el('.block-shipping.default', [
-          el('span.shipping', 'Address (shipping)'),
-
-          el('.input-block', [
-            el('span.addresses-subtitle', 'Street'),
-            el('input.street-input.input.input-shipping', {
-              type: 'text',
-              value: user.addresses[0].streetName,
-              placeholder: 'street',
-              data: 'streetName',
-              disabled: true,
-            }),
-            el('.show-validation-street-input show-validation'),
-          ]),
-          el('.input-block', [
-            el('span.addresses-subtitle', 'City'),
-            el('input.city-input.input.input-shipping', {
-              type: 'text',
-              value: user.addresses[0].city,
-              placeholder: 'city',
-              data: 'city',
-              disabled: true,
-            }),
-            el('.show-validation-city-input show-validation'),
-          ]),
-          el('.input-block', [
-            el('span.addresses-subtitle', 'Country'),
-            el('input.country-code-input-shipping.input.input-shipping.active', {
-              type: 'text',
-              value: getFullCountryName(user.addresses[0].country),
-              placeholder: 'country',
-              data: 'country',
-              disabled: true,
-            }),
-            el('.show-validation-country-code-input show-validation'),
-          ]),
-          el('.input-block', [
-            el('span.addresses-subtitle', 'Postal code'),
-            el('input.postal-code-input-shipping.input.input-shipping.active', {
-              type: 'text',
-              value: user.addresses[0].postalCode,
-              placeholder: 'postal code',
-              data: 'postalCode',
-              disabled: true,
-            }),
-            el('.show-validation-postal-code-input  show-validation'),
-          ]),
-          el('.block-shipping-checkbox', [
-            el('input#shipping-default-checkbox.checkbox-reg', { type: 'checkbox', disabled: true }),
-            el('label', 'Set shipping as default address', { for: 'shipping-default-checkbox' }),
-          ]),
-          el('.block-shipping-checkbox', [
-            useShipping,
-            el('label', 'Use shipping address for billing', { for: 'use-shipping-for-billing' }),
-          ]),
+        el('.input-block.hidden', [
+          el('input.country-code-input-billing.input.input-billing.input-valid', {
+            type: 'text',
+            placeholder: 'country',
+            data: 'country',
+            disabled: true,
+          }),
+          el('.show-validation-country-code-input show-validation'),
         ]),
-        el('.block-billing', [
-          el('span.billing', 'Address (billing)'),
-          el('.input-block', [
-            el('span.addresses-subtitle', 'Street'),
-            el('input.street-billing-input.input.input-billing', {
-              type: 'text',
-              value: user.addresses[1].streetName,
-              placeholder: 'street',
-              data: 'streetName',
-              disabled: true,
-            }),
-            el('.show-validation-street-input show-validation'),
-          ]),
-          el('.input-block', [
-            el('span.addresses-subtitle', 'City'),
-            el('input.city-input.input.input-billing', {
-              type: 'text',
-              value: user.addresses[1].city,
-              placeholder: 'city',
-              data: 'city',
-              disabled: true,
-            }),
-            el('.show-validation-city-input show-validation'),
-          ]),
-          el('.input-block', [
-            el('span.addresses-subtitle', 'Country'),
-            el('input.country-code-input-billing.input.input-billing.active', {
-              type: 'text',
-              value: getFullCountryName(user.addresses[1].country),
-              placeholder: 'country',
-              data: 'country',
-              disabled: true,
-            }),
-            el('.show-validation-country-code-input show-validation'),
-          ]),
-          el('.input-block', [
-            el('span.addresses-subtitle', 'Postal code'),
-            el('input.postal-code-input-billing.input.input-billing.active', {
-              type: 'text',
-              value: user.addresses[1].postalCode,
-              placeholder: 'postal code',
-              data: 'postalCode',
-              disabled: true,
-            }),
-            el('.show-validation-postal-code-input  show-validation'),
-          ]),
-          el('.block-billing-checkbox', [
-            el('input#billing-default-checkbox.checkbox-reg', { type: 'checkbox', disabled: true }),
-            el('label', 'Set billing as default address', { for: 'billing-default-checkbox' }),
-          ]),
+        el('.input-block.hidden', [
+          el('input.postal-code-input-billing.input.input-billing.input-valid', {
+            type: 'text',
+            placeholder: 'postal code',
+            data: 'postalCode',
+            disabled: true,
+          }),
+          el('.show-validation-postal-code-input  show-validation'),
         ]),
       ]),
+      userAddressesBlock,
+      this.fillUserAddressesBlock(userAddressesBlock),
+      this.createAddAddressButton(),
       this.createSaveButton(),
       this.createEditButton(),
     ]);
     this.validation.eventInput(infoBlock);
-    this.validation.eventCheckBox(infoBlock, useShipping);
+
     return infoBlock;
+  }
+
+  public fillUserAddressesBlock(addressesBlock: HTMLElement): void {
+    const user = getUser();
+    if (user === null || !user.shippingAddressIds || !user.billingAddressIds) {
+      throw new Error('User with addresses expected');
+    }
+    const userShippingAddressesIds = user.shippingAddressIds;
+    const userBillingAddressesIds = user.billingAddressIds;
+    userShippingAddressesIds.forEach((shippindAddressId) => {
+      mount(addressesBlock, this.createBlockShipping(shippindAddressId));
+    });
+    userBillingAddressesIds.forEach((billingAddressId) => {
+      mount(addressesBlock, this.createBlockBilling(billingAddressId));
+    });
+  }
+
+  private createBlockShipping(shippingAddressId: string): HTMLElement {
+    const user = getUser();
+    if (user === null || !user.shippingAddressIds) {
+      throw new Error('No user found');
+    }
+    const currentAddress = user.addresses.filter((address) => address.id === shippingAddressId)[0];
+    return el(`.block-shipping#${shippingAddressId}`, [
+      el('span.shipping', `Address ${shippingAddressId} (shipping)`),
+      el('.input-block', [
+        el('span.addresses-subtitle', 'Street'),
+        el('input.street-input.input.input-shipping', {
+          type: 'text',
+          value: currentAddress.streetName,
+          placeholder: 'street',
+          data: 'streetName',
+          disabled: true,
+        }),
+        el('.show-validation-street-input show-validation'),
+      ]),
+      el('.input-block', [
+        el('span.addresses-subtitle', 'City'),
+        el('input.city-input.input.input-shipping', {
+          type: 'text',
+          value: currentAddress.city,
+          placeholder: 'city',
+          data: 'city',
+          disabled: true,
+        }),
+        el('.show-validation-city-input show-validation'),
+      ]),
+      el('.input-block', [
+        el('span.addresses-subtitle', 'Country'),
+        el('input.country-code-input-shipping.input.input-shipping.active', {
+          type: 'text',
+          value: getFullCountryName(currentAddress.country),
+          placeholder: 'country',
+          data: 'country',
+          disabled: true,
+        }),
+        el('.show-validation-country-code-input show-validation'),
+      ]),
+      el('.input-block', [
+        el('span.addresses-subtitle', 'Postal code'),
+        el('input.postal-code-input-shipping.input.input-shipping.active', {
+          type: 'text',
+          value: currentAddress.postalCode,
+          placeholder: 'postal code',
+          data: 'postalCode',
+          disabled: true,
+        }),
+        el('.show-validation-postal-code-input  show-validation'),
+      ]),
+      this.createRemoveAddressButton(shippingAddressId),
+    ]);
+  }
+
+  private createBlockBilling(billingAddressId: string): HTMLElement {
+    const user = getUser();
+    if (user === null || !user.billingAddressIds) {
+      throw new Error('No user found');
+    }
+    const currentAddress = user.addresses.filter((address) => address.id === billingAddressId)[0];
+    return el(`.block-billing#${billingAddressId}`, [
+      el('span.billing', `Address ${billingAddressId} (billing)`),
+      el('.input-block', [
+        el('span.addresses-subtitle', 'Street'),
+        el('input.street-billing-input.input.input-billing', {
+          type: 'text',
+          value: currentAddress.streetName,
+          placeholder: 'street',
+          data: 'streetName',
+          disabled: true,
+        }),
+        el('.show-validation-street-input show-validation'),
+      ]),
+      el('.input-block', [
+        el('span.addresses-subtitle', 'City'),
+        el('input.city-input.input.input-billing', {
+          type: 'text',
+          value: currentAddress.city,
+          placeholder: 'city',
+          data: 'city',
+          disabled: true,
+        }),
+        el('.show-validation-city-input show-validation'),
+      ]),
+      el('.input-block', [
+        el('span.addresses-subtitle', 'Country'),
+        el('input.country-code-input-billing.input.input-billing.active', {
+          type: 'text',
+          value: getFullCountryName(currentAddress.country),
+          placeholder: 'country',
+          data: 'country',
+          disabled: true,
+        }),
+        el('.show-validation-country-code-input show-validation'),
+      ]),
+      el('.input-block', [
+        el('span.addresses-subtitle', 'Postal code'),
+        el('input.postal-code-input-billing.input.input-billing.active', {
+          type: 'text',
+          value: currentAddress.postalCode,
+          placeholder: 'postal code',
+          data: 'postalCode',
+          disabled: true,
+        }),
+        el('.show-validation-postal-code-input  show-validation'),
+      ]),
+      this.createRemoveAddressButton(billingAddressId),
+    ]);
   }
 
   private isFormValid(): boolean {
@@ -236,7 +274,11 @@ class UserPage extends Page {
       if (!(input instanceof HTMLInputElement)) {
         return;
       }
-      if (input.classList.contains('gender-input')) {
+      if (
+        input.classList.contains('gender-input') ||
+        input.classList.contains('country-code-input-billing') ||
+        input.classList.contains('postal-code-input-billing')
+      ) {
         return validInputs++;
       }
       this.validation.checkChangeInput(input);
@@ -264,6 +306,32 @@ class UserPage extends Page {
       }
     });
     return button;
+  }
+
+  private createAddAddressButton(): HTMLButtonElement {
+    const button = el('button.add-address-button', 'add address');
+    if (!(button instanceof HTMLButtonElement)) {
+      throw new Error('Button expected');
+    }
+    button.addEventListener('click', () => {
+      redirect(Route.AddAddressPage);
+    });
+    return button;
+  }
+
+  private createRemoveAddressButton(id: string): HTMLButtonElement {
+    const removeButton = el('button.remove-address-button', 'remove');
+    if (!(removeButton instanceof HTMLButtonElement)) {
+      throw new Error('Button expected');
+    }
+    removeButton.addEventListener('click', async () => {
+      const result = await updateUser([getRemoveAddressAction(id)]);
+      if (!result) {
+        throw new Error('User update failure');
+      }
+      safeQuerySelector(`#${id}`, document).remove();
+    });
+    return removeButton;
   }
 
   private createEditButton(): HTMLButtonElement {
