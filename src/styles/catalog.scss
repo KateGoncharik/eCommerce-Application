@@ -225,6 +225,7 @@ body.no-scroll {
 .catalog-sidebar {
   position: relative;
   flex: 0 1 25%;
+  border-right: 1px solid $black;
 
   @media (width <= 992px) {
     flex: 0 1 50%;
@@ -269,6 +270,7 @@ body.no-scroll {
   font-weight: 500;
   border: 1px solid $black;
   border-top: none;
+  border-right: none;
   background-color: #fff;
   transition: all 0.2s;
   cursor: pointer;
@@ -302,6 +304,7 @@ body.no-scroll {
     padding: 2% 3% 3%;
     border: 1px solid $black;
     border-top: none;
+    border-right: none;
   }
 
   @media (width <= 768px) {
