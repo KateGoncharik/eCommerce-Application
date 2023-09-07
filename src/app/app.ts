@@ -9,6 +9,7 @@ import { CatalogPage } from '@catalog/catalog-page';
 import { UserPage } from '@servicePages/user-page';
 import { Header } from '@components/header';
 import { EditPasswordPage } from '@servicePages/edit-password-page';
+import { AddAddressPage } from '@servicePages/add-address-page';
 
 const main = document.createElement('main');
 const routes: Record<Route, Page> = {
@@ -19,6 +20,7 @@ const routes: Record<Route, Page> = {
   [Route.Catalog]: new CatalogPage(),
   [Route.UserPage]: new UserPage(),
   [Route.EditPasswordPage]: new EditPasswordPage(),
+  [Route.AddAddressPage]: new AddAddressPage(),
 };
 
 class App {

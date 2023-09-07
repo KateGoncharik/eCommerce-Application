@@ -204,7 +204,6 @@ class CatalogPage extends Page {
       this.applyFilters();
     });
     resetBtn.addEventListener('click', () => {
-      console.log('click');
       if (!this.isPriceFiltersApplied() && !this.isColorFiltersApplied()) {
         return;
       }

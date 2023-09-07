@@ -1,4 +1,4 @@
-import { CustomerUpdateAction } from '@commercetools/platform-sdk';
+import { Address, CustomerUpdateAction } from '@commercetools/platform-sdk';
 import { safeQuerySelector } from './safe-query-selector';
 
 export function getFirstNameAction(newFirstName: string): CustomerUpdateAction {
@@ -26,6 +26,30 @@ export function getChangeEmailAction(newEmail: string): CustomerUpdateAction {
   const action: CustomerUpdateAction = {
     action: 'changeEmail',
     email: newEmail,
+  };
+  return action;
+}
+
+export function getRemoveAddressAction(addressId: string): CustomerUpdateAction {
+  const action: CustomerUpdateAction = {
+    action: 'removeAddress',
+    addressId,
+  };
+  return action;
+}
+
+export function getAddAddressAction(address: Address): CustomerUpdateAction {
+  const action: CustomerUpdateAction = {
+    action: 'addAddress',
+    address: address,
+  };
+  return action;
+}
+
+export function getSetDefaultShippingAddressAction(addressId: string): CustomerUpdateAction {
+  const action: CustomerUpdateAction = {
+    action: 'setDefaultShippingAddress',
+    addressId,
   };
   return action;
 }
