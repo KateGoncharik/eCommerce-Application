@@ -53,9 +53,6 @@ class FiltersBlock {
     if (userQuery) {
       queryArgs.push(`searchKeywords.en-US.text:${userQuery}`);
     }
-    if (!queryArgs.length) {
-      return;
-    }
     if (this.catalog.categoryKey) {
       const category = await getCategoryByKey(this.catalog.categoryKey);
       queryArgs.push(`categories.id:"${category?.id}"`);
