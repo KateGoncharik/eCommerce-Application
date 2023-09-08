@@ -56,9 +56,9 @@ export class ProductPage extends Page {
   private createProductPage(key: string): HTMLElement {
     const blockCloseModal = el('.block-exit-modal');
     const closeModal = el('.exit-modal');
-    const blockout = el('.blockout');
 
     const blockProductPage = el('.block-product-page', [
+      el('.blackout'),
       getProduct(key)
         .then((productData) => {
           const slider = this.createSlider(productData!);
@@ -73,7 +73,6 @@ export class ProductPage extends Page {
             ]),
           ]);
 
-          mount(document.body, blockout);
           mount(blockCloseModal, closeModal);
           mount(blockProductPage, productPage);
           mount(slider, blockCloseModal);
