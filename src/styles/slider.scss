@@ -34,16 +34,14 @@
   z-index: 4;
 }
 
-.modal-active img{
+.modal-active img {
   position: absolute;
   max-width: 90%;
   height: auto;
-  top:50%;
-  left:50%;
-  transform:translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
-
-
 
 .modal-active .swiper-button-next:hover::after,
 .modal-active .swiper-button-prev:hover::after {
@@ -82,7 +80,7 @@
 
 .block-exit-modal:hover {
   .exit-modal,
-  .exit-modal::before{
+  .exit-modal::before {
     background-color: $white;
   }
 }
@@ -98,9 +96,7 @@
     font-size: 35px;
   }
 
-  .modal-active img{
+  .modal-active img {
     max-width: 80%;
   }
 }
-
-
