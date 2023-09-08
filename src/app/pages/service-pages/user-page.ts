@@ -1,6 +1,6 @@
 import { Page } from '@templates/page';
 import { el, mount } from 'redom';
-import { getUserGender, getUser } from '@app/state';
+import { getUserGender, getUser, rememberUserGender } from '@app/state';
 import { getUserOrError } from '@helpers/get-user-or-error ';
 import girlAvatar from '@icons/avatar-girl.png';
 import boyAvatar from '@icons/avatar-boy.png';
@@ -22,13 +22,9 @@ class UserPage extends Page {
   private validation = new ValidationForm();
 
   private createAvatar(): HTMLElement {
-    const userAvatarWrapper = el('.user-avatar-wrapper');
     const userGender = getUserGender();
-
     const src = this.getAvatarByGender(userGender);
-    const userAvatar = el('.avatar-wrapper', [el('img.avatar', { src: src, alt: 'girl' })]);
-    mount(userAvatarWrapper, userAvatar);
-    return userAvatarWrapper;
+    return el('img.avatar', { src: src, alt: 'girl' });
   }
 
   private getAvatarByGender(gender: string): HTMLImageElement {
@@ -53,7 +49,7 @@ class UserPage extends Page {
     });
     const infoBlock = el('.user-info-wrapper', [
       el('span.user-info-title', 'User information'),
-      this.createAvatar(),
+      el('.avatar-wrapper', [this.createAvatar()]),
       el('.user-info-block', [
         el('.user-name-block', [
           el('.input-block', [
@@ -296,12 +292,16 @@ class UserPage extends Page {
     }
     button.disabled = true;
     button.addEventListener('click', async () => {
-      const actions = collectAllInputsActions();
-      if (this.isFormValid()) {
-        const result = await updateUser(actions);
+      const genderInput = safeQuerySelector<HTMLInputElement>('.gender-input', document);
+      if (this.isFormValid() && genderInput.classList.contains('input-valid')) {
+        const result = await updateUser(collectAllInputsActions());
         if (!result) {
           throw new Error('User update failure');
         }
+        rememberUserGender(genderInput.value);
+        const avatarWrapper = safeQuerySelector('.avatar-wrapper');
+        avatarWrapper.innerHTML = '';
+        mount(avatarWrapper, this.createAvatar());
       }
     });
     return button;
