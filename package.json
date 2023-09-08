@@ -11,7 +11,8 @@
     "test": "jest",
     "prepare": "husky install",
     "stylelint": "stylelint src/**/*.scss",
-    "prettier": "prettier --check ."
+    "prettier": "prettier --check .",
+    "prettier:write": "prettier --write ."
   },
   "repository": {
     "type": "git",
@@ -63,6 +64,7 @@
     "lottie-web": "^5.12.2",
     "navigo": "^8.11.1",
     "redom": "^3.29.1",
+    "swiper": "^10.2.0",
     "zod": "^3.21.4"
   }
 }

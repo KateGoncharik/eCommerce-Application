@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
-import { Country } from '@app/types/enums';
+import { Country, Gender } from '@app/types/enums';
 
 function checkValidationPostCode(element: HTMLInputElement, val: string, ctx: z.RefinementCtx): void {
   if (element.value === 'United States') {
@@ -101,14 +101,22 @@ export const Schemas = z.object({
   country: z
     .enum([Country.UnitedStates, Country.Germany, Country.Spain, Country.Australia], {
       errorMap: () => ({
-        message: `Enter the correct country from this list: 
-        ${Country.UnitedStates} | 
-        ${Country.Germany} | 
-        ${Country.Spain} | 
+        message: `Enter the correct country from this list:
+        ${Country.UnitedStates} |
+        ${Country.Germany} |
+        ${Country.Spain} |
         ${Country.Australia}`,
       }),
     })
     .optional(),
+});
+
+export const GenderSchema = z.enum([Gender.Male, Gender.Female], {
+  errorMap: () => ({
+    message: `Enter the correct gender:
+        ${Gender.Male} |
+        ${Gender.Female}`,
+  }),
 });
 
 export type Schemas = z.infer<typeof Schemas>;

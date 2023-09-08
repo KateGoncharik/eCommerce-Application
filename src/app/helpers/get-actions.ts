@@ -1,0 +1,70 @@
+import { Address, CustomerUpdateAction } from '@commercetools/platform-sdk';
+import { safeQuerySelector } from './safe-query-selector';
+
+export function getFirstNameAction(newFirstName: string): CustomerUpdateAction {
+  return {
+    action: 'setFirstName',
+    firstName: newFirstName,
+  };
+}
+export function getLastNameAction(newLastName: string): CustomerUpdateAction {
+  return {
+    action: 'setLastName',
+    lastName: newLastName,
+  };
+}
+export function getDateOfBirthAction(newDateOfBirth: string): CustomerUpdateAction {
+  return {
+    action: 'setDateOfBirth',
+    dateOfBirth: newDateOfBirth,
+  };
+}
+export function getChangeEmailAction(newEmail: string): CustomerUpdateAction {
+  return {
+    action: 'changeEmail',
+    email: newEmail,
+  };
+}
+
+export function getRemoveAddressAction(addressId: string): CustomerUpdateAction {
+  return {
+    action: 'removeAddress',
+    addressId,
+  };
+}
+
+export function getAddAddressAction(address: Address): CustomerUpdateAction {
+  return {
+    action: 'addAddress',
+    address: address,
+  };
+}
+
+export function getSetDefaultShippingAddressAction(addressId: string): CustomerUpdateAction {
+  return {
+    action: 'setDefaultShippingAddress',
+    addressId,
+  };
+}
+
+export function collectAllInputsActions(): CustomerUpdateAction[] {
+  const firstNameInput = safeQuerySelector('.first-name-input', document);
+  const lastNameInput = safeQuerySelector('.last-name-input', document);
+  const dateInput = safeQuerySelector('.date-input', document);
+  const emailInput = safeQuerySelector('.email-input', document);
+
+  if (
+    !(firstNameInput instanceof HTMLInputElement) ||
+    !(lastNameInput instanceof HTMLInputElement) ||
+    !(dateInput instanceof HTMLInputElement) ||
+    !(emailInput instanceof HTMLInputElement)
+  ) {
+    throw new Error('Input expected');
+  }
+  return [
+    getFirstNameAction(firstNameInput.value),
+    getLastNameAction(lastNameInput.value),
+    getDateOfBirthAction(dateInput.value),
+    getChangeEmailAction(emailInput.value),
+  ];
+}

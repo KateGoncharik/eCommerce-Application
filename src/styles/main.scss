@@ -1,4 +1,7 @@
+$white: #fff;
 $black: #121212;
+$light-grey: #ccc;
+$grey: #808080;
 $hover-color: #777;
 
 @import 'fonts';
@@ -9,3 +12,7 @@ $hover-color: #777;
 @import 'login-form';
 @import 'validation-registration-form';
 @import '404-page';
+@import 'catalog';
+@import 'product';
+@import 'slider';
+@import 'user-page';
