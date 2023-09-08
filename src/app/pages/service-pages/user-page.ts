@@ -143,10 +143,11 @@ class UserPage extends Page {
     if (user === null || !user.shippingAddressIds || !user.billingAddressIds) {
       throw new Error('User with addresses expected');
     }
+    addressesBlock.innerHTML = '';
     const userShippingAddressesIds = user.shippingAddressIds;
     const userBillingAddressesIds = user.billingAddressIds;
-    userShippingAddressesIds.forEach((shippindAddressId) => {
-      mount(addressesBlock, this.createBlockShipping(shippindAddressId));
+    userShippingAddressesIds.forEach((shippingAddressId) => {
+      mount(addressesBlock, this.createBlockShipping(shippingAddressId));
     });
     userBillingAddressesIds.forEach((billingAddressId) => {
       mount(addressesBlock, this.createBlockBilling(billingAddressId));
@@ -159,7 +160,7 @@ class UserPage extends Page {
       throw new Error('No user found');
     }
     const currentAddress = user.addresses.filter((address) => address.id === shippingAddressId)[0];
-    return el(`.block-shipping#${shippingAddressId}`, [
+    return el(`.block-shipping`, [
       el('span.shipping', `Address ${shippingAddressId} (shipping)`),
       el('.input-block', [
         el('span.addresses-subtitle', 'Street'),
@@ -215,7 +216,7 @@ class UserPage extends Page {
       throw new Error('No user found');
     }
     const currentAddress = user.addresses.filter((address) => address.id === billingAddressId)[0];
-    return el(`.block-billing#${billingAddressId}`, [
+    return el(`.block-billing`, [
       el('span.billing', `Address ${billingAddressId} (billing)`),
       el('.input-block', [
         el('span.addresses-subtitle', 'Street'),
@@ -327,7 +328,8 @@ class UserPage extends Page {
       if (!result) {
         throw new Error('User update failure');
       }
-      safeQuerySelector(`#${id}`, document).remove();
+      const userAddressesBlock = safeQuerySelector('.user-addresses-block', document);
+      this.fillUserAddressesBlock(userAddressesBlock);
     });
     return removeButton;
   }

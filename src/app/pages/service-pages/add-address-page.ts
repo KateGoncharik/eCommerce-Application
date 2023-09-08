@@ -98,8 +98,6 @@ class AddAddressPage extends Page {
         }
         const setDefaultResponse = await updateUser([getSetDefaultShippingAddressAction(newAddressId)]);
         redirect(Route.UserPage);
-        const userAddressesBlock = safeQuerySelector('.user-addresses-block', document);
-        this.userPage.fillUserAddressesBlock(userAddressesBlock);
         if (!setDefaultResponse) {
           throw new Error('User update failure');
         }
