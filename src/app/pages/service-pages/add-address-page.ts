@@ -1,7 +1,6 @@
 import { ValidationForm } from '@validation/validation-registration-form';
 import { Page } from '@templates/page';
 import { el } from 'redom';
-import { getUser } from '@app/state';
 import { updateUser } from '@sdk/requests';
 import { Address } from '@commercetools/platform-sdk';
 import { getAddAddressAction, getSetDefaultShippingAddressAction } from '@helpers/get-actions';
@@ -88,10 +87,6 @@ class AddAddressPage extends Page {
       const isAllInputsValid = Array.from(inputs).every((input) => input.classList.contains('input-valid'));
 
       if (isAllInputsValid) {
-        const user = getUser();
-        if (user === null) {
-          throw new Error('User expected');
-        }
         const newUser = await updateUser([getAddAddressAction(this.collectNewAddressData())]);
         if (!newUser) {
           throw new Error('User update failure');
