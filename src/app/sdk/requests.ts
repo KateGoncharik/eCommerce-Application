@@ -11,7 +11,8 @@ import {
   Category,
   CustomerChangePassword,
 } from '@commercetools/platform-sdk';
-import { rememberAuthorizedUser, getUser } from '@app/state';
+import { rememberAuthorizedUser } from '@app/state';
+import { getUserOrError } from '@helpers/get-user-or-error ';
 import { DataUser } from '@customTypes/datauser';
 import { ProductData } from '@customTypes/data-product';
 
@@ -67,10 +68,7 @@ export async function authorizeUser(email: string, password: string): Promise<vo
 
 export async function updateUser(actions: CustomerUpdateAction[]): Promise<ClientResponse<Customer> | null> {
   try {
-    const user = getUser();
-    if (user === null) {
-      throw new Error('No user found');
-    }
+    const user = getUserOrError();
     const request = await getApiRoot()
       .customers()
       .withId({ ID: user.id })
@@ -88,10 +86,6 @@ export async function updateUser(actions: CustomerUpdateAction[]): Promise<Clien
 
 export async function editUserPassword(body: CustomerChangePassword): Promise<ClientResponse<Customer> | null> {
   try {
-    const user = getUser();
-    if (user === null) {
-      throw new Error('No user found');
-    }
     const request = await getApiRoot().customers().password().post({ body: body }).execute();
     rememberAuthorizedUser(request.body);
     alert('Your password was successfully updated');

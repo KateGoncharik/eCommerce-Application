@@ -2,56 +2,49 @@ import { Address, CustomerUpdateAction } from '@commercetools/platform-sdk';
 import { safeQuerySelector } from './safe-query-selector';
 
 export function getFirstNameAction(newFirstName: string): CustomerUpdateAction {
-  const action: CustomerUpdateAction = {
+  return {
     action: 'setFirstName',
     firstName: newFirstName,
   };
-  return action;
 }
 export function getLastNameAction(newLastName: string): CustomerUpdateAction {
-  const action: CustomerUpdateAction = {
+  return {
     action: 'setLastName',
     lastName: newLastName,
   };
-  return action;
 }
 export function getDateOfBirthAction(newDateOfBirth: string): CustomerUpdateAction {
-  const action: CustomerUpdateAction = {
+  return {
     action: 'setDateOfBirth',
     dateOfBirth: newDateOfBirth,
   };
-  return action;
 }
 export function getChangeEmailAction(newEmail: string): CustomerUpdateAction {
-  const action: CustomerUpdateAction = {
+  return {
     action: 'changeEmail',
     email: newEmail,
   };
-  return action;
 }
 
 export function getRemoveAddressAction(addressId: string): CustomerUpdateAction {
-  const action: CustomerUpdateAction = {
+  return {
     action: 'removeAddress',
     addressId,
   };
-  return action;
 }
 
 export function getAddAddressAction(address: Address): CustomerUpdateAction {
-  const action: CustomerUpdateAction = {
+  return {
     action: 'addAddress',
     address: address,
   };
-  return action;
 }
 
 export function getSetDefaultShippingAddressAction(addressId: string): CustomerUpdateAction {
-  const action: CustomerUpdateAction = {
+  return {
     action: 'setDefaultShippingAddress',
     addressId,
   };
-  return action;
 }
 
 export function collectAllInputsActions(): CustomerUpdateAction[] {
