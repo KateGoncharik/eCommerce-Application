@@ -10,6 +10,7 @@ import { extractProductData, buildCategoriesObject } from '@helpers/catalog';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
 import { router } from '@app/router';
 import magnifier from '@icons/magnifying-glass.svg';
+import notFoundIcon from '@icons/nothing-found.png';
 
 class CatalogPage extends Page {
   constructor(public categoryKey?: string) {
@@ -75,11 +76,21 @@ class CatalogPage extends Page {
 
   public fillProductsContainer(products: ProductMainData[]): void {
     this.productsContainer.innerHTML = '';
-    products.forEach((product) => {
-      const card = new ProductCard(product).create();
-      mount(this.productsContainer, card);
-    });
-    router.updatePageLinks();
+
+    if (!products.length) {
+      this.productsContainer.classList.add('not-found');
+      const notFoundMessage = el('.catalog-not-found-message', 'No products found', el('img', { src: notFoundIcon }));
+      mount(this.productsContainer, notFoundMessage);
+      return;
+    } else {
+      this.productsContainer.classList.remove('not-found');
+
+      products.forEach((product) => {
+        const card = new ProductCard(product).create();
+        mount(this.productsContainer, card);
+      });
+      router.updatePageLinks();
+    }
   }
 
   private async getProductData(): Promise<ProductMainData[]> {

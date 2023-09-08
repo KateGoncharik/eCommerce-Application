@@ -5,6 +5,10 @@ body.no-scroll {
 .catalog {
   display: flex;
   overflow: hidden;
+
+  @media (width <= 768px) {
+    border-left: 1px solid $black;
+  }
 }
 
 .catalog-mask {
@@ -92,9 +96,25 @@ body.no-scroll {
   }
 }
 
+.catalog-not-found-message {
+  grid-column: span 3;
+  display: flex;
+  gap: 1%;
+  align-items: center;
+  justify-content: center;
+  padding: 3% 0 10%;
+  color: $grey;
+  font-size: 30px;
+}
+
 .products {
   display: grid;
   grid-template-columns: 1fr 1.003fr 0.997fr;
+
+  &.not-found {
+    border-right: 1px solid $black;
+    border-bottom: 1px solid $black;
+  }
 
   @media (width <= 992px) {
     grid-template-columns: 1.003fr 0.997fr;
