@@ -1,6 +1,7 @@
 import { Page } from '@templates/page';
 import { el, mount } from 'redom';
 import { getUserGender, getUser } from '@app/state';
+import { getUserOrError } from '@helpers/get-user-or-error ';
 import girlAvatar from '@icons/avatar-girl.png';
 import boyAvatar from '@icons/avatar-boy.png';
 import { getFullCountryName } from '@helpers/get-full-country-name';
@@ -35,10 +36,7 @@ class UserPage extends Page {
   }
 
   private createUserInfoBlock(): HTMLElement {
-    const user = getUser();
-    if (user === null) {
-      throw new Error('No user found');
-    }
+    const user = getUserOrError();
     const userAddressesBlock = el('.user-addresses-block');
     const genderInput = el('input.gender-input.input', {
       type: 'text',

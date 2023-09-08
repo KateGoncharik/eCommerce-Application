@@ -3,7 +3,7 @@ import { Page } from '@templates/page';
 import { el } from 'redom';
 import { togglePasswordVisibility } from '@helpers/toggle-password-visibility';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
-import { getUser } from '@app/state';
+import { getUserOrError } from '@helpers/get-user-or-error ';
 import { editUserPassword } from '@sdk/requests';
 
 class EditPasswordPage extends Page {
@@ -69,10 +69,7 @@ class EditPasswordPage extends Page {
       );
 
       if (isAllInputsValid) {
-        const user = getUser();
-        if (user === null) {
-          throw new Error('User expected');
-        }
+        const user = getUserOrError();
         editUserPassword({
           id: user.id,
           version: user.version,

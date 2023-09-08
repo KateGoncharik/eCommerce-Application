@@ -1,4 +1,5 @@
 import { Customer } from '@commercetools/platform-sdk';
+import { getUserOrError } from '@helpers/get-user-or-error ';
 
 const userKey = 'user';
 const genderKey = 'gender';
@@ -25,10 +26,7 @@ function isUserAuthorized(): boolean {
 }
 
 function getUserGender(): string {
-  const user = getUser();
-  if (user === null) {
-    throw new Error('No user found');
-  }
+  const user = getUserOrError();
   const userGender = localStorage.getItem(user.id);
   if (!userGender) {
     return 'male';
