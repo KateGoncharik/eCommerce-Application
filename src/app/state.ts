@@ -8,6 +8,10 @@ function rememberAuthorizedUser(customer: Customer): void {
   localStorage.setItem(userKey, JSON.stringify(customer));
 }
 
+function rememberUserGender(gender: string): void {
+  localStorage.setItem(getUserOrError().id, gender);
+}
+
 function getUser(): Customer | null {
   const user = localStorage.getItem(userKey);
   if (user === null) {
@@ -34,4 +38,4 @@ function getUserGender(): string {
   return userGender;
 }
 
-export { getUser, getUserGender, isUserAuthorized, logOutUser, rememberAuthorizedUser };
+export { getUser, getUserGender, isUserAuthorized, logOutUser, rememberAuthorizedUser, rememberUserGender };

@@ -19,6 +19,8 @@ export class ValidationForm {
       genderInput.classList.add('input-valid');
       showErrorBlock.textContent = '';
     } else {
+      genderInput.classList.remove('input-valid');
+      genderInput.classList.add('input-error');
       const errors = result.error.format();
       showErrorBlock.style.display = 'flex';
       showErrorBlock.textContent = `${errors._errors[0]}`;
