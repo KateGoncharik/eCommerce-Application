@@ -1,5 +1,6 @@
 import { ProductMainData } from '@customTypes/catalog';
 import { el } from 'redom';
+import addIcon from '@icons/add.png';
 
 class ProductCard {
   constructor(private productData: ProductMainData) {
@@ -9,6 +10,7 @@ class ProductCard {
   public create(): HTMLElement {
     const { key, name, shortDescription, longDescription, image, priceFull, priceDiscounted } = this.productData;
     let price: HTMLElement;
+
     if (priceDiscounted) {
       price = el('div', [el('span.card-old-price', priceFull), el('span.card-new-price', priceDiscounted)]);
     } else {
@@ -24,7 +26,7 @@ class ProductCard {
           el('.card-description', [el('p.card-short-desc', shortDescription), el('p.card-long-desc', longDescription)]),
         ]),
         el('p.card-name', name),
-        price,
+        el('.catalog-price-wrap', [price, el('img.card-cart', { src: addIcon, alt: '', title: 'Add to cart' })]),
       ])
     );
   }
