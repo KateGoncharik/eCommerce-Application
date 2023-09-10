@@ -10,6 +10,7 @@ import {
   ProductProjection,
   Category,
   CustomerChangePassword,
+  Cart,
 } from '@commercetools/platform-sdk';
 import { rememberAuthorizedUser } from '@app/state';
 import { getUserOrError } from '@helpers/get-user-or-error ';
@@ -97,6 +98,16 @@ export async function editUserPassword(body: CustomerChangePassword): Promise<Cl
   return null;
 }
 
+export async function getUserCart(): Promise<Cart | null> {
+  try {
+    const cart = await getApiRoot().carts().withCustomerId({ customerId: getUserOrError().id }).get().execute();
+    return cart.body;
+  } catch (err) {
+    console.error(errorMessage);
+    return null;
+  }
+}
+
 export async function getProducts(): Promise<ProductProjection[]> {
   try {
     const request = await getApiRoot().productProjections().get().execute();
@@ -108,7 +119,7 @@ export async function getProducts(): Promise<ProductProjection[]> {
   }
 }
 
-const returnProductByKey = (productKey: string): Promise<ClientResponse> => {
+export const returnProductByKey = (productKey: string): Promise<ClientResponse> => {
   return getApiRoot().products().withKey({ key: productKey }).get().execute();
 };
 

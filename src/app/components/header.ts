@@ -56,7 +56,12 @@ class Header {
             }),
           ]),
           userPageBlock,
-          el('span.header-cell', 'Cart'),
+          el('span.header-cell', [
+            el('a', this.burger.linkText.cart, {
+              href: Route.BasketPage,
+              'data-navigo': '',
+            }),
+          ]),
         ]),
       ]),
       el('.header-small', [

@@ -62,6 +62,10 @@ function bindRoutes(routes: Record<Route, Page>): void {
         router.navigate(Route.Login);
       }
     })
+    .on(Route.BasketPage, () => {
+      const page = routes[Route.BasketPage]; //do we need it to work like that?
+      page.render();
+    })
     .on(/catalog\/.*product\/.+/, (path) => {
       const productKey = path?.url.split('/').pop() || '';
       const page = new ProductPage(productKey);
