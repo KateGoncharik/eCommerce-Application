@@ -10,6 +10,7 @@ import { UserPage } from '@servicePages/user-page';
 import { Header } from '@components/header';
 import { EditPasswordPage } from '@servicePages/edit-password-page';
 import { AddAddressPage } from '@servicePages/add-address-page';
+import { BasketPage } from '@servicePages/basket-page';
 
 const main = document.createElement('main');
 const routes: Record<Route, Page> = {
@@ -21,6 +22,7 @@ const routes: Record<Route, Page> = {
   [Route.UserPage]: new UserPage(),
   [Route.EditPasswordPage]: new EditPasswordPage(),
   [Route.AddAddressPage]: new AddAddressPage(),
+  [Route.BasketPage]: new BasketPage(),
 };
 
 class App {

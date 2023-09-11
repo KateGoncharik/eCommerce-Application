@@ -13,6 +13,7 @@ class Burger {
     toLogOut: 'Log out',
     toJoin: 'Join',
     userPage: 'User page',
+    cart: 'Cart',
   };
 
   public mask = el('.header-mask');
