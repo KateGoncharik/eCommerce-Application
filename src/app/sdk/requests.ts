@@ -98,16 +98,6 @@ export async function editUserPassword(body: CustomerChangePassword): Promise<Cl
   return null;
 }
 
-export async function getUserCart(): Promise<Cart | null> {
-  try {
-    const cart = await getApiRoot().carts().withCustomerId({ customerId: getUserOrError().id }).get().execute();
-    return cart.body;
-  } catch (err) {
-    console.error(errorMessage);
-    return null;
-  }
-}
-
 export async function getProducts(): Promise<ProductProjection[]> {
   try {
     const request = await getApiRoot().productProjections().get().execute();
@@ -203,12 +193,75 @@ export async function createCart(): Promise<ClientResponse<Cart> | void> {
   }
 }
 
-export async function getCart(): Promise<unknown> {
+export async function getCart(): Promise<Cart | null> {
   try {
     const cart = await getApiRootForCartRequests().me().activeCart().get().execute();
-    return cart;
+    return cart.body;
   } catch (err) {
     console.error(errorMessage);
-    return [];
+    return null;
+  }
+}
+
+export async function addLineItemToCart(productId: string): Promise<ClientResponse<Cart> | void> {
+  try {
+    const userCart = await getCart();
+    if (!userCart) {
+      throw new Error('No cart found');
+    }
+    const response = await getApiRootForCartRequests()
+      .me()
+      .carts()
+      .withId({ ID: userCart.id })
+      .post({
+        body: {
+          version: userCart.version,
+          actions: [
+            {
+              action: 'addLineItem',
+              productId: productId,
+              variantId: 1,
+            },
+          ],
+        },
+      })
+      .execute();
+    return response;
+  } catch (err) {
+    console.error('Error');
+    return;
+  }
+}
+
+export async function changeLineItemQuantity(
+  itemId: string,
+  newQuantity: number
+): Promise<ClientResponse<Cart> | void> {
+  try {
+    const userCart = await getCart();
+    if (!userCart) {
+      throw new Error('No cart found');
+    }
+    const response = await getApiRootForCartRequests()
+      .me()
+      .carts()
+      .withId({ ID: userCart.id })
+      .post({
+        body: {
+          version: userCart.version,
+          actions: [
+            {
+              action: 'changeLineItemQuantity',
+              lineItemId: itemId,
+              quantity: newQuantity,
+            },
+          ],
+        },
+      })
+      .execute();
+    return response;
+  } catch (err) {
+    console.error('Error');
+    return;
   }
 }
