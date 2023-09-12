@@ -67,9 +67,18 @@ class Header {
       el('.header-small', [
         el('.header-small-cell', [this.burger.burgerIcon]),
         el('.header-cart.header-small-cell', [
-          el('img', {
-            src: cart,
-          }),
+          el(
+            'a',
+            {
+              href: Route.BasketPage,
+              'data-navigo': '',
+            },
+            [
+              el('img', {
+                src: cart,
+              }),
+            ]
+          ),
         ]),
       ]),
       this.burger.burgerMenu,

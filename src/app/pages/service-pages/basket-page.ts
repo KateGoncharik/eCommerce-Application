@@ -1,13 +1,16 @@
+import { Burger } from '@components/burger';
 import { Page } from '@templates/page';
 import { el, mount } from 'redom';
 import { getUserCart } from '@sdk/requests';
 import { Cart, LineItem } from '@commercetools/platform-sdk';
+import { Route } from '@app/types/route';
 
 class BasketPage extends Page {
   protected textObject = {
     title: 'Basket page',
   };
 
+  private burger = new Burger();
   private createCart(cartContainer: HTMLElement): HTMLElement {
     return el('.cart', [el('h2.cart-title', 'Cart'), cartContainer]);
   }
@@ -16,7 +19,14 @@ class BasketPage extends Page {
     const cartContainer = el('.cart-container');
     getUserCart().then((userCart) => {
       if (userCart === null) {
-        cartContainer.innerHTML = 'No products added to cart';
+        const noProductsWrapper = el('.no-items-wrapper', [
+          el('p.no-items-message', 'No products added to cart. Take a look at our products here.'),
+          el('a.no-items-link', this.burger.linkText.toCatalog, {
+            href: Route.Catalog,
+            'data-navigo': '',
+          }),
+        ]);
+        mount(cartContainer, noProductsWrapper);
       } else {
         this.fillCartInfoBlock(userCart, cartContainer);
       }
@@ -51,7 +61,6 @@ class BasketPage extends Page {
         el('.item-content', [
           el('.item-name', `${item.name['en-US']}`),
           el('.item-price', ` price: ${item.price.value.centAmount}`),
-
           el('.items-amount', `${item.quantity}`),
         ]),
         el('.item-total', [el('.total-price', ` total: ${item.totalPrice.centAmount}`)]),
