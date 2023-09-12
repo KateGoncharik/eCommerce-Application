@@ -9,6 +9,7 @@ class ProductCard {
 
   public create(): HTMLElement {
     const { key, name, shortDescription, longDescription, image, priceFull, priceDiscounted } = this.productData;
+    const addToCartBtn = el('img.card-cart', { src: addIcon, alt: '', title: 'Add to cart' });
     let price: HTMLElement;
 
     if (priceDiscounted) {
@@ -26,7 +27,7 @@ class ProductCard {
           el('.card-description', [el('p.card-short-desc', shortDescription), el('p.card-long-desc', longDescription)]),
         ]),
         el('p.card-name', name),
-        el('.catalog-price-wrap', [price, el('img.card-cart', { src: addIcon, alt: '', title: 'Add to cart' })]),
+        el('.catalog-price-wrap', [price, addToCartBtn]),
       ])
     );
   }

@@ -1,4 +1,4 @@
-import { getApiRoot } from '@sdk/build-client';
+import { getApiRoot, getApiRootForCartRequests } from '@sdk/build-client';
 import { withPasswordFlowClient } from '@sdk/login-api';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
 import { markInputAsInvalid } from '@helpers/toggle-validation-state';
@@ -186,5 +186,29 @@ export async function getCategoryByKey(key: string): Promise<Category | void> {
     return categories.body;
   } catch (err) {
     console.error(errorMessage);
+  }
+}
+
+export async function createCart(): Promise<ClientResponse<Cart> | void> {
+  try {
+    const cart = await getApiRootForCartRequests()
+      .me()
+      .carts()
+      .post({ body: { currency: 'USD' } })
+      .execute();
+    return cart;
+  } catch (err) {
+    console.error(errorMessage);
+    return;
+  }
+}
+
+export async function getCart(): Promise<unknown> {
+  try {
+    const cart = await getApiRootForCartRequests().me().activeCart().get().execute();
+    return cart;
+  } catch (err) {
+    console.error(errorMessage);
+    return [];
   }
 }
