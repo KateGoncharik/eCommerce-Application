@@ -1,18 +1,40 @@
 import { ClientBuilder } from '@commercetools/sdk-client-v2';
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
-import { projectKey } from '@sdk/params';
-import { authMiddlewareOptions, httpMiddlewareOptions } from '@sdk/middlewares';
+import { projectKey, myTokenCache } from '@sdk/params';
+import {
+  authMiddlewareOptions,
+  httpMiddlewareOptions,
+  refreshAuthMiddlewareOptions,
+  anonymousAuthMiddlewareOptions,
+} from '@sdk/middlewares';
 
-// Export the ClientBuilder
-const ctpClient = new ClientBuilder()
+const defaultClient = new ClientBuilder()
   .withClientCredentialsFlow(authMiddlewareOptions)
   .withHttpMiddleware(httpMiddlewareOptions)
-  .withLoggerMiddleware() // Include middleware for logging
+  .withLoggerMiddleware()
   .build();
 
-const getApiRoot: () => ByProjectKeyRequestBuilder = () => {
-  return createApiBuilderFromCtpClient(ctpClient).withProjectKey({ projectKey });
+const anonymousClient = new ClientBuilder()
+  .withAnonymousSessionFlow(anonymousAuthMiddlewareOptions)
+  .withHttpMiddleware(httpMiddlewareOptions)
+  .withLoggerMiddleware()
+  .build();
+
+const clientWithRefreshTokenFlow = new ClientBuilder()
+  .withRefreshTokenFlow(refreshAuthMiddlewareOptions)
+  .withHttpMiddleware(httpMiddlewareOptions)
+  .withLoggerMiddleware()
+  .build();
+
+const getApiRoot = (client = defaultClient): ByProjectKeyRequestBuilder => {
+  return createApiBuilderFromCtpClient(client).withProjectKey({ projectKey });
 };
 
-export { ctpClient, getApiRoot };
+const getApiRootForCartRequests = (): ByProjectKeyRequestBuilder => {
+  const IsTokenInCache = myTokenCache.get().token !== '';
+  const client = IsTokenInCache ? clientWithRefreshTokenFlow : anonymousClient;
+  return getApiRoot(client);
+};
+
+export { getApiRoot, getApiRootForCartRequests };

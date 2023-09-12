@@ -1,5 +1,6 @@
 import { Customer } from '@commercetools/platform-sdk';
 import { getUserOrError } from '@helpers/get-user-or-error ';
+import { myTokenCache } from '@sdk/params';
 
 const userKey = 'user';
 const genderKey = 'gender';
@@ -19,6 +20,7 @@ function getUser(): Customer | null {
 function logOutUser(): void {
   localStorage.removeItem(userKey);
   localStorage.removeItem(genderKey);
+  myTokenCache.set({ token: '', expirationTime: 0, refreshToken: '' });
 }
 
 function isUserAuthorized(): boolean {

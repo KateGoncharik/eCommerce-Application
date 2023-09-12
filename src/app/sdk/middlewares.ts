@@ -1,8 +1,10 @@
-import { projectKey, scopes, oauthUri, clientId, clientSecret, apiHost } from '@sdk/params';
+import { projectKey, scopes, oauthUri, clientId, clientSecret, apiHost, myTokenCache } from '@sdk/params';
 import {
   PasswordAuthMiddlewareOptions,
   HttpMiddlewareOptions,
   AuthMiddlewareOptions,
+  RefreshAuthMiddlewareOptions,
+  AnonymousAuthMiddlewareOptions,
 } from '@commercetools/sdk-client-v2';
 
 const authMiddlewareOptions: AuthMiddlewareOptions = {
@@ -32,10 +34,41 @@ const passwordAuthMiddlewareOptions = (email: string, password: string): Passwor
         password: password,
       },
     },
+    tokenCache: myTokenCache,
     scopes: scopes,
     fetch,
   };
   return options;
 };
 
-export { authMiddlewareOptions, httpMiddlewareOptions, passwordAuthMiddlewareOptions };
+const refreshAuthMiddlewareOptions: RefreshAuthMiddlewareOptions = {
+  host: oauthUri,
+  projectKey: projectKey,
+  credentials: {
+    clientId: clientId,
+    clientSecret: clientSecret,
+  },
+  refreshToken: myTokenCache.get().token,
+  tokenCache: myTokenCache,
+  fetch,
+};
+
+const anonymousAuthMiddlewareOptions: AnonymousAuthMiddlewareOptions = {
+  host: oauthUri,
+  projectKey: projectKey,
+  credentials: {
+    clientId: clientId,
+    clientSecret: clientSecret,
+  },
+  tokenCache: myTokenCache,
+  scopes,
+  fetch,
+};
+
+export {
+  authMiddlewareOptions,
+  httpMiddlewareOptions,
+  passwordAuthMiddlewareOptions,
+  refreshAuthMiddlewareOptions,
+  anonymousAuthMiddlewareOptions,
+};
