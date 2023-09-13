@@ -93,11 +93,46 @@
   flex-direction: column;
 }
 
+.items-amount-wrapper {
+  margin-left: -1em;
+  display: flex;
+  justify-content: space-around;
+}
+
 .items-amount {
-  width: 15%;
+  width: 30%;
   background-color: $light-grey;
   display: flex;
   justify-content: center;
+}
+
+.edit-item-quantity {
+  width: 65%;
+  display: flex;
+  align-items: center;
+}
+
+.remove-item-button {
+  width: 25%;
+  background-color: $white;
+}
+
+.add-item-button {
+  width: 25%;
+  background-color: $white;
+}
+
+img.remove-item {
+  width: 53%;
+}
+
+img.add-item {
+  width: 45%;
+}
+
+.remove-item:hover,
+.add-item:hover {
+  cursor: pointer;
 }
 
 .item-image {

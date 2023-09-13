@@ -58,7 +58,7 @@ class Header {
           userPageBlock,
           el('span.header-cell', [
             el('a', this.burger.linkText.cart, {
-              href: Route.BasketPage,
+              href: Route.CartPage,
               'data-navigo': '',
             }),
           ]),
@@ -70,7 +70,7 @@ class Header {
           el(
             'a',
             {
-              href: Route.BasketPage,
+              href: Route.CartPage,
               'data-navigo': '',
             },
             [
