@@ -121,7 +121,7 @@ export const getProduct = async (key: string): Promise<ProductData | void> => {
       const productData = {
         name: current.name['en-US'],
         img: current.masterVariant.images,
-        description: current.metaDescription['en-US'],
+        description: current.description['en-US'],
         price: price.value.centAmount,
         discount: price.discounted && price.discounted.value.centAmount,
       };
@@ -179,17 +179,17 @@ export async function getCategoryByKey(key: string): Promise<Category | void> {
   }
 }
 
-export async function createCart(): Promise<ClientResponse<Cart> | void> {
+export async function createCart(): Promise<Cart | null> {
   try {
     const cart = await getApiRootForCartRequests()
       .me()
       .carts()
       .post({ body: { currency: 'USD' } })
       .execute();
-    return cart;
+    return cart.body;
   } catch (err) {
     console.error(errorMessage);
-    return;
+    return null;
   }
 }
 
@@ -198,7 +198,9 @@ export async function getCart(): Promise<Cart | null> {
     const cart = await getApiRootForCartRequests().me().activeCart().get().execute();
     return cart.body;
   } catch (err) {
-    console.error(errorMessage);
+    if (err instanceof Error && err.name !== 'NotFound') {
+      console.error(errorMessage);
+    }
     return null;
   }
 }
@@ -256,6 +258,33 @@ export async function recalculateCartCost(): Promise<Cart | null> {
       })
       .execute();
     return response.body;
+  } catch (err) {
+    console.error(errorMessage);
+    return null;
+  }
+}
+
+export async function addLineItemToCart(cart: Cart, product: ProductProjection): Promise<Cart | null> {
+  try {
+    const updatedCart = await getApiRootForCartRequests()
+      .me()
+      .carts()
+      .withId({ ID: cart.id })
+      .post({
+        body: {
+          version: cart.version,
+          actions: [
+            {
+              action: 'addLineItem',
+              productId: product.id,
+              variantId: product.masterVariant.id,
+              quantity: 1,
+            },
+          ],
+        },
+      })
+      .execute();
+    return updatedCart.body;
   } catch (err) {
     console.error(errorMessage);
     return null;

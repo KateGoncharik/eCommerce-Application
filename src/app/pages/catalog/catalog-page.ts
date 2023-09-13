@@ -1,12 +1,11 @@
 import { Page } from '@templates/page';
 import { NotFoundPage } from '@servicePages/404-page';
 import { el, mount, setChildren } from 'redom';
-import { getProducts, getCategories, getProductsOfCategory, getCategoryByKey } from '@sdk/requests';
+import { getProducts, getCategories, getProductsOfCategory, getCategoryByKey, getCart } from '@sdk/requests';
 import { ProductProjection } from '@commercetools/platform-sdk';
-import { ProductMainData } from '@customTypes/catalog';
 import { ProductCard } from '@components/product-card';
 import { FiltersBlock } from '@components/filters-block';
-import { extractProductData, buildCategoriesObject } from '@helpers/catalog';
+import { buildCategoriesObject } from '@helpers/catalog';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
 import { router } from '@app/router';
 import magnifier from '@icons/magnifying-glass.svg';
@@ -31,7 +30,7 @@ class CatalogPage extends Page {
   private filtersBlock = new FiltersBlock(this);
 
   public createProductContainer(): HTMLElement {
-    this.getProductData().then((products) => {
+    this.getRelevantProducts().then((products) => {
       if (!products) {
         new NotFoundPage().render();
       }
@@ -74,7 +73,7 @@ class CatalogPage extends Page {
     this.closeCategoryNavOnBurgerClick(title, mask);
   }
 
-  public fillProductsContainer(products: ProductMainData[]): void {
+  public fillProductsContainer(products: ProductProjection[]): void {
     this.productsContainer.innerHTML = '';
 
     if (!products.length) {
@@ -85,15 +84,21 @@ class CatalogPage extends Page {
     } else {
       this.productsContainer.classList.remove('not-found');
 
-      products.forEach((product) => {
-        const card = new ProductCard(product).create();
-        mount(this.productsContainer, card);
+      getCart().then((cart) => {
+        products.forEach((product) => {
+          const card = new ProductCard(product).create();
+          const isProductInCart = cart?.lineItems.some((item) => item.productId === product.id);
+          if (isProductInCart) {
+            card.classList.add('in-cart');
+          }
+          mount(this.productsContainer, card);
+        });
+        router.updatePageLinks();
       });
-      router.updatePageLinks();
     }
   }
 
-  private async getProductData(): Promise<ProductMainData[]> {
+  private async getRelevantProducts(): Promise<ProductProjection[]> {
     let products: Promise<ProductProjection[]>;
 
     if (this.categoryKey) {
@@ -105,8 +110,9 @@ class CatalogPage extends Page {
     } else {
       products = getProducts();
     }
-    return extractProductData(products);
+    return products;
   }
+
   private createBreadcrumbs(): HTMLElement {
     const container = el('.breadcrumbs');
     setTimeout(() => {

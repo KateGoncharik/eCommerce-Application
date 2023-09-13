@@ -1,6 +1,7 @@
 import { CatalogPage } from '@app/pages/catalog/catalog-page';
 
 type ProductMainData = {
+  id: string;
   key: string;
   name: string;
   image: string;
