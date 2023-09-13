@@ -203,40 +203,7 @@ export async function getCart(): Promise<Cart | null> {
   }
 }
 
-export async function addLineItemToCart(productId: string): Promise<ClientResponse<Cart> | void> {
-  try {
-    const userCart = await getCart();
-    if (!userCart) {
-      throw new Error('No cart found');
-    }
-    const response = await getApiRootForCartRequests()
-      .me()
-      .carts()
-      .withId({ ID: userCart.id })
-      .post({
-        body: {
-          version: userCart.version,
-          actions: [
-            {
-              action: 'addLineItem',
-              productId: productId,
-              variantId: 1,
-            },
-          ],
-        },
-      })
-      .execute();
-    return response;
-  } catch (err) {
-    console.error('Error');
-    return;
-  }
-}
-
-export async function changeLineItemQuantity(
-  itemId: string,
-  newQuantity: number
-): Promise<ClientResponse<Cart> | void> {
+export async function updateLineItemQuantity(itemId: string, newQuantity: number): Promise<Cart | null> {
   try {
     const userCart = await getCart();
     if (!userCart) {
@@ -259,9 +226,38 @@ export async function changeLineItemQuantity(
         },
       })
       .execute();
-    return response;
+    return response.body;
   } catch (err) {
-    console.error('Error');
-    return;
+    console.error(errorMessage);
+    return null;
+  }
+}
+
+export async function recalculateCartCost(): Promise<Cart | null> {
+  try {
+    const userCart = await getCart();
+    if (!userCart) {
+      throw new Error('No cart found');
+    }
+    const response = await getApiRootForCartRequests()
+      .me()
+      .carts()
+      .withId({ ID: userCart.id })
+      .post({
+        body: {
+          version: userCart.version,
+          actions: [
+            {
+              action: 'recalculate',
+              updateProductData: false,
+            },
+          ],
+        },
+      })
+      .execute();
+    return response.body;
+  } catch (err) {
+    console.error(errorMessage);
+    return null;
   }
 }

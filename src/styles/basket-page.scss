@@ -100,7 +100,7 @@
 }
 
 .items-amount {
-  width: 40%;
+  width: 30%;
   background-color: $light-grey;
   display: flex;
   justify-content: center;
@@ -112,12 +112,22 @@
   align-items: center;
 }
 
-.remove-item {
-  width: 30%;
+.remove-item-button {
+  width: 25%;
+  background-color: $white;
 }
 
-.add-item {
-  width: 24%;
+.add-item-button {
+  width: 25%;
+  background-color: $white;
+}
+
+img.remove-item {
+  width: 53%;
+}
+
+img.add-item {
+  width: 45%;
 }
 
 .remove-item:hover,
