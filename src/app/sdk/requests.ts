@@ -11,6 +11,7 @@ import {
   Category,
   CustomerChangePassword,
   Cart,
+  CartPagedQueryResponse,
 } from '@commercetools/platform-sdk';
 import { rememberAuthorizedUser } from '@app/state';
 import { getUserOrError } from '@helpers/get-user-or-error ';
@@ -129,6 +130,7 @@ export const getProduct = async (key: string): Promise<ProductData | void> => {
       const { current } = body.masterData;
       const price = current.masterVariant.prices[0];
       const productData = {
+        id: body.id,
         name: current.name['en-US'],
         img: current.masterVariant.images,
         description: current.metaDescription['en-US'],
@@ -189,17 +191,18 @@ export async function getCategoryByKey(key: string): Promise<Category | void> {
   }
 }
 
-export async function createCart(): Promise<ClientResponse<Cart> | void> {
+export async function createCart(): Promise<ClientResponse<Cart> | null> {
   try {
     const cart = await getApiRootForCartRequests()
       .me()
       .carts()
       .post({ body: { currency: 'USD' } })
       .execute();
+    console.log('Create card');
     return cart;
   } catch (err) {
     console.error(errorMessage);
-    return;
+    return null;
   }
 }
 
@@ -210,5 +213,44 @@ export async function getCart(): Promise<unknown> {
   } catch (err) {
     console.error(errorMessage);
     return [];
+  }
+}
+
+////////delete
+
+export async function getCartTest(): Promise<ClientResponse<CartPagedQueryResponse> | null> {
+  try {
+    const cart = await getApiRootForCartRequests().me().carts().get().execute();
+    return cart;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+}
+
+export async function addCartTest(prodcutId: string, cartID: string): Promise<ClientResponse<Cart> | null> {
+  try {
+    const cart = await getApiRootForCartRequests()
+      .carts()
+      .withId({
+        ID: cartID,
+      })
+      .post({
+        body: {
+          version: 1,
+          actions: [
+            {
+              action: 'addLineItem',
+              productId: prodcutId,
+              quantity: 1,
+            },
+          ],
+        },
+      })
+      .execute();
+    return cart;
+  } catch (err) {
+    console.error(errorMessage);
+    return null;
   }
 }

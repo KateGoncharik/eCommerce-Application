@@ -66,6 +66,13 @@
   display: inline-block;
 }
 
+.btn-product {
+  width: 50%;
+  height: 30px;
+  background-color: $black;
+  color: white;
+}
+
 .price-none {
   text-decoration: line-through;
   color: $grey;

@@ -1,9 +1,8 @@
 import { Page } from '@templates/page';
-import { getProduct } from '@sdk/requests';
-import { el, mount } from 'redom';
+import { getProduct, getCartTest, createCart, addCartTest } from '@sdk/requests';
+import { el, mount, setAttr } from 'redom';
 import { ProductData } from '@app/types/data-product';
 import { connectSlider } from '@helpers/slider';
-
 import { eventModal } from '@helpers/modal-img';
 
 export class ProductPage extends Page {
@@ -56,7 +55,10 @@ export class ProductPage extends Page {
   private createProductPage(key: string): HTMLElement {
     const blockCloseModal = el('.block-exit-modal');
     const closeModal = el('.exit-modal');
+    const btnAdd = el('button.btn-product');
 
+    setAttr(btnAdd, { style: { color: 'red' } });
+    const addBlock = el('.block-add', [btnAdd]);
     const blockProductPage = el('.block-product-page', [
       el('.blackout'),
       getProduct(key)
@@ -70,6 +72,7 @@ export class ProductPage extends Page {
               el('.product-name', `${productData!.name}`),
               this.addPrice(productData!),
               el('p.product-description', productData!.description),
+              addBlock,
             ]),
           ]);
 
@@ -78,6 +81,19 @@ export class ProductPage extends Page {
           mount(slider, blockCloseModal);
           connectSlider();
           eventModal(slider, blockCloseModal);
+
+          btnAdd.addEventListener('click', () => {
+            console.log('click');
+            getCartTest().then(async (data) => {
+              // creates a bucket if it is not
+              console.log('getCart', data);
+              console.log(data!.body.results.length === 0);
+              data!.body.results.length === 0 && createCart();
+              getProduct(key).then((dataProd) => {
+                addCartTest(dataProd!.id, data!.body.results[0].id);
+              });
+            });
+          });
         })
         .catch((err) => console.error(err)),
     ]);
