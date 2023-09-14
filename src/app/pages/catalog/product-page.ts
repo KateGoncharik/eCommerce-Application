@@ -1,5 +1,5 @@
 import { Page } from '@templates/page';
-import { getProduct, getCartTest, createCart, addCartTest } from '@sdk/requests';
+import { getProduct, createCart, getCart, addProductToCartTest } from '@sdk/requests';
 import { el, mount, setAttr } from 'redom';
 import { ProductData } from '@app/types/data-product';
 import { connectSlider } from '@helpers/slider';
@@ -55,8 +55,8 @@ export class ProductPage extends Page {
   private createProductPage(key: string): HTMLElement {
     const blockCloseModal = el('.block-exit-modal');
     const closeModal = el('.exit-modal');
-    const btnAdd = el('button.btn-product', { disabled: true });
-    const addBlock = el('.block-add', [btnAdd]);
+    const btnAddToCart = el('button.btn-product', { disabled: true });
+    const addBlock = el('.block-add', [btnAddToCart]);
     const blockProductPage = el('.block-product-page', [
       el('.blackout'),
       getProduct(key)
@@ -64,7 +64,7 @@ export class ProductPage extends Page {
           const productId = productData!.id;
           const slider = this.createSlider(productData!);
           const blockImg = el('.block-product-img', [slider]);
-          this.changeBtn(productId, btnAdd);
+          this.changeBtn(productId, btnAddToCart);
 
           const productPage = el('.product-page', [
             blockImg,
@@ -82,9 +82,9 @@ export class ProductPage extends Page {
           connectSlider();
           eventModal(slider, blockCloseModal);
 
-          btnAdd.addEventListener('click', async () => {
-            setAttr(btnAdd, { disabled: true });
-            this.addProduct(productId, btnAdd);
+          btnAddToCart.addEventListener('click', async () => {
+            setAttr(btnAddToCart, { disabled: true });
+            this.addProduct(productId, btnAddToCart);
           });
         })
         .catch((err) => console.error(err)),
@@ -94,12 +94,10 @@ export class ProductPage extends Page {
   }
 
   private changeBtn(productId: string, btn: HTMLElement): void {
-    getCartTest().then((data) => {
-      const { results } = data!.body!;
-      const result =
-        results.length === 0
-          ? false
-          : results[0]!.lineItems.map((el: { productId: string }) => el.productId).includes(productId);
+    getCart().then((data) => {
+      const result = !data
+        ? false
+        : data!.lineItems.map((el: { productId: string }) => el.productId).includes(productId);
 
       if (result) {
         btn.textContent = 'Remove from Cart';
@@ -114,22 +112,22 @@ export class ProductPage extends Page {
   }
 
   private addProduct(productId: string, btn: HTMLElement): void {
-    getCartTest().then((data) => {
+    getCart().then((getCartData) => {
       let cartId, cartversion;
 
-      if (data!.body.results.length === 0 || data === null) {
+      if (!getCartData) {
         createCart().then((data) => {
           cartId = data!.id;
           cartversion = data!.version;
 
-          addCartTest(productId, cartId, cartversion).then(() => this.changeBtn(productId, btn));
+          addProductToCartTest(productId, cartId!, cartversion).then(() => this.changeBtn(productId, btn));
         });
       } else {
         if (!btn.classList.contains('bnt-remove')) {
-          cartId = data!.body.results[0].id;
-          cartversion = data!.body.results[0].version;
+          cartId = getCartData.id;
+          cartversion = getCartData.version;
 
-          addCartTest(productId, cartId, cartversion).then(() => this.changeBtn(productId, btn));
+          addProductToCartTest(productId, cartId, cartversion).then(() => this.changeBtn(productId, btn));
         }
       }
     });

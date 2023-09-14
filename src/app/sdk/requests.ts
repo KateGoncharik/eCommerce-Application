@@ -11,7 +11,6 @@ import {
   Category,
   CustomerChangePassword,
   Cart,
-  CartPagedQueryResponse,
 } from '@commercetools/platform-sdk';
 import { rememberAuthorizedUser } from '@app/state';
 import { getUserOrError } from '@helpers/get-user-or-error ';
@@ -293,23 +292,11 @@ export async function addLineItemToCart(cart: Cart, product: ProductProjection):
   }
 }
 
-////////delete
-
-export async function getCartTest(): Promise<ClientResponse<CartPagedQueryResponse> | null> {
-  try {
-    const cart = await getApiRootForCartRequests().me().carts().get().execute();
-    return cart;
-  } catch (err) {
-    console.error(err);
-    return null;
-  }
-}
-
-export async function addCartTest(
+export async function addProductToCartTest(
   prodcutId: string,
   cartID: string,
   versionCart: number
-): Promise<ClientResponse<Cart> | null> {
+): Promise<Cart | null> {
   try {
     const cart = await getApiRootForCartRequests()
       .carts()
@@ -329,7 +316,7 @@ export async function addCartTest(
         },
       })
       .execute();
-    return cart;
+    return cart.body;
   } catch (err) {
     console.error(errorMessage);
     return null;
