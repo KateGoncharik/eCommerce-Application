@@ -119,8 +119,8 @@ export class ProductPage extends Page {
 
       if (data!.body.results.length === 0 || data === null) {
         createCart().then((data) => {
-          cartId = data!.body.id;
-          cartversion = data!.body.version;
+          cartId = data!.id;
+          cartversion = data!.version;
 
           addCartTest(productId, cartId, cartversion).then(() => this.changeBtn(productId, btn));
         });

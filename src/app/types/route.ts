@@ -7,7 +7,7 @@ enum Route {
   UserPage = '/user',
   EditPasswordPage = '/edit-password-page',
   AddAddressPage = '/add-address-page',
-  BasketPage = '/basket',
+  CartPage = '/cart',
 }
 
 export { Route };

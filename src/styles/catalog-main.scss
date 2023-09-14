@@ -198,18 +198,17 @@ body.no-scroll {
   font-weight: 700;
 }
 
-.card-cart {
+.card-add-btn {
   width: 23px;
   transition: all 0.2s;
 
-  &.inactive {
-    opacity: 0.5;
-    cursor: default;
-  }
-
-  &:hover:not(.inactive) {
+  &:hover {
     transform: scale(1.2);
   }
+}
+
+.catalog-load-anim {
+  height: 25px;
 }
 
 @media (768px < width <= 1180px) or (width <= 640px) {
@@ -238,6 +237,12 @@ body.no-scroll {
     content: '';
     padding-top: 100%;
     display: block;
+  }
+
+  &.in-cart .card-add-btn {
+    opacity: 0.5;
+    cursor: default;
+    transform: none;
   }
 
   &:hover {
