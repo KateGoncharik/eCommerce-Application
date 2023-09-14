@@ -2,7 +2,6 @@ import { Button } from '@components/button';
 import { el, mount, unmount, setChildren } from 'redom';
 import { router } from '@app/router';
 import { getCategoryByKey, getFilteredProducts } from '@sdk/requests';
-import { extractProductData } from '@helpers/catalog';
 import { CatalogPageType } from '@customTypes/catalog';
 import { Colors } from '@customTypes/enums';
 
@@ -57,7 +56,7 @@ class FiltersBlock {
       const category = await getCategoryByKey(this.catalog.categoryKey);
       queryArgs.push(`categories.id:"${category?.id}"`);
     }
-    const products = await extractProductData(getFilteredProducts(queryArgs));
+    const products = await getFilteredProducts(queryArgs);
     this.catalog.fillProductsContainer(products);
   }
 
