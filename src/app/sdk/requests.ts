@@ -228,7 +228,11 @@ export async function getCartTest(): Promise<ClientResponse<CartPagedQueryRespon
   }
 }
 
-export async function addCartTest(prodcutId: string, cartID: string): Promise<ClientResponse<Cart> | null> {
+export async function addCartTest(
+  prodcutId: string,
+  cartID: string,
+  versionCart: number
+): Promise<ClientResponse<Cart> | null> {
   try {
     const cart = await getApiRootForCartRequests()
       .carts()
@@ -237,7 +241,7 @@ export async function addCartTest(prodcutId: string, cartID: string): Promise<Cl
       })
       .post({
         body: {
-          version: 1,
+          version: versionCart,
           actions: [
             {
               action: 'addLineItem',

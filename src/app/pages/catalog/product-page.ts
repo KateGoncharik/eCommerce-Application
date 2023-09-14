@@ -55,16 +55,16 @@ export class ProductPage extends Page {
   private createProductPage(key: string): HTMLElement {
     const blockCloseModal = el('.block-exit-modal');
     const closeModal = el('.exit-modal');
-    const btnAdd = el('button.btn-product');
-
-    setAttr(btnAdd, { style: { color: 'red' } });
+    const btnAdd = el('button.btn-product', { disabled: true });
     const addBlock = el('.block-add', [btnAdd]);
     const blockProductPage = el('.block-product-page', [
       el('.blackout'),
       getProduct(key)
         .then((productData) => {
+          const productId = productData!.id;
           const slider = this.createSlider(productData!);
           const blockImg = el('.block-product-img', [slider]);
+          this.changeBtn(productId, btnAdd);
 
           const productPage = el('.product-page', [
             blockImg,
@@ -82,23 +82,66 @@ export class ProductPage extends Page {
           connectSlider();
           eventModal(slider, blockCloseModal);
 
-          btnAdd.addEventListener('click', () => {
-            console.log('click');
-            getCartTest().then(async (data) => {
-              // creates a bucket if it is not
-              console.log('getCart', data);
-              console.log(data!.body.results.length === 0);
-              data!.body.results.length === 0 && createCart();
-              getProduct(key).then((dataProd) => {
-                addCartTest(dataProd!.id, data!.body.results[0].id);
-              });
-            });
+          btnAdd.addEventListener('click', async () => {
+            setAttr(btnAdd, { disabled: true });
+            this.addProduct(productId, btnAdd);
           });
         })
         .catch((err) => console.error(err)),
     ]);
 
     return blockProductPage;
+  }
+
+  private changeBtn(productId: string, btn: HTMLElement): void {
+    getCartTest().then(async (data) => {
+      const { results } = data!.body;
+
+      const result =
+        results.length === 0
+          ? false
+          : results[0]!.lineItems.map((el: { productId: string }) => el.productId).includes(productId);
+
+      if (result) {
+        btn.textContent = 'Remove from Cart';
+        btn.classList.add('bnt-remove');
+      } else {
+        btn.textContent = 'Add to Cart';
+        btn.classList.remove('bnt-remove');
+      }
+
+      setAttr(btn, { disabled: false });
+    });
+  }
+
+  private addProduct(productId: string, btn: HTMLElement): void {
+    getCartTest().then(async (data) => {
+      let cartId, cartversion;
+
+      console.log('getCart', data);
+      console.log(data!.body.results.length === 0);
+      if (data!.body.results.length === 0 || data === null) {
+        createCart().then((data) => {
+          cartId = data!.body.id;
+          cartversion = data!.body.version;
+          console.log('cartData создание новой корзины', data);
+          addCartTest(productId, cartId, cartversion).then(() => this.changeBtn(productId, btn));
+          getCartTest().then((dataTest) => {
+            console.log('testDataBefore', dataTest);
+          });
+        });
+      } else {
+        if (!btn.classList.contains('bnt-remove')) {
+          console.log('cartData корзина существует', data);
+          cartId = data!.body.results[0].id;
+          cartversion = data!.body.results[0].version;
+          await addCartTest(productId, cartId, cartversion).then(() => this.changeBtn(productId, btn));
+          getCartTest().then((dataTest) => {
+            console.log('testDataBefore', dataTest);
+          });
+        }
+      }
+    });
   }
 
   protected build(): HTMLElement {

@@ -68,9 +68,16 @@
 
 .btn-product {
   width: 50%;
-  height: 30px;
+  height: 40px;
   background-color: $black;
-  color: white;
+  font-family: Gilroy, serif;
+  font-size: 1rem;
+  color: $white;
+}
+
+.bnt-remove {
+  background-color: $grey;
+  color: $white;
 }
 
 .price-none {
