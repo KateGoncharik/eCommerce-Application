@@ -5,6 +5,7 @@ import lottie from 'lottie-web';
 import loadIndicator from '@animation/load-indicator.json';
 import { addLineItemToCart, getCart, createCart } from '@sdk/requests';
 import { ProductProjection } from '@commercetools/platform-sdk';
+import { getPriceInUsd } from '@helpers/get-price-in-usd';
 
 class ProductCard {
   private productData: ProductMainData;
@@ -79,7 +80,6 @@ class ProductCard {
     const price = product.masterVariant.prices?.[0];
     const priceDiscounted = price?.discounted;
     const description = product.description?.['en-US'] || '';
-    const getPriceInUsd = (price: number | undefined): string => `$${(Number(price) / 100).toFixed(2)}`;
 
     return {
       id: product.id,

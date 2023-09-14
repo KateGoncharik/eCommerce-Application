@@ -5,8 +5,10 @@ import { getCart, updateLineItemQuantity, recalculateCartCost } from '@sdk/reque
 import { Cart, LineItem } from '@commercetools/platform-sdk';
 import { Route } from '@app/types/route';
 import { toggleIconsState } from '@helpers/toggle-icons-state';
+import { getPriceInUsd } from '@helpers/get-price-in-usd';
 import minus from '@icons/minus.png';
 import addIcon from '@icons/add.png';
+import { safeQuerySelector } from '@helpers/safe-query-selector';
 
 class CartPage extends Page {
   protected textObject = {
@@ -39,13 +41,13 @@ class CartPage extends Page {
         ]);
         mount(cartContainer, noProductsWrapper);
       } else {
-        this.fillCartInfoBlock(userCart, cartContainer);
+        this.fillCartContainer(userCart, cartContainer);
       }
     });
     return cartContainer;
   }
 
-  private fillCartInfoBlock(cart: Cart, cartContainer: HTMLElement): void {
+  private fillCartContainer(cart: Cart, cartContainer: HTMLElement): void {
     const cartItems = el('.cart-items');
     cartContainer.innerHTML = '';
     cart.lineItems.forEach((item) => {
@@ -53,7 +55,7 @@ class CartPage extends Page {
     });
     const checkout = el('.checkout', [
       el('span.checkout-title', 'Order details'),
-      el('.checkout-total-price', `Total price: ${cart.totalPrice.centAmount} cents`),
+      el('.checkout-total-price', `Total price: ${getPriceInUsd(cart.totalPrice.centAmount)}`),
       el('.checkout-items-amount', `Products in cart: ${cart.lineItems.length}`),
     ]);
     mount(cartContainer, cartItems);
@@ -67,7 +69,9 @@ class CartPage extends Page {
     }
 
     const itemsAmountBlock = el('.items-amount', `${item.quantity}`);
-    const itemTotalCostBlock = el('.item-total', [el('.total-price', ` total: ${item.totalPrice.centAmount}`)]);
+    const itemTotalCostBlock = el('.item-total', [
+      el('.total-price', ` total: ${getPriceInUsd(item.totalPrice.centAmount)}`),
+    ]);
     const removeItemButton = el('button.remove-item-button', [el('img.remove-item', { src: minus, alt: 'remove' })]);
     if (!(removeItemButton instanceof HTMLButtonElement)) {
       throw new Error('Button expected');
@@ -96,7 +100,7 @@ class CartPage extends Page {
         el('.item-image-wrapper', [el('img.item-image', { src: images[0].url, alt: '' })]),
         el('.item-content', [
           el('.item-name', `${item.name['en-US']}`),
-          el('.item-price', ` price: ${item.price.value.centAmount}`),
+          el('.item-price', ` price: ${getPriceInUsd(item.price.value.centAmount)}`),
           el('.items-amount-wrapper', [el('.edit-item-quantity', [removeItemButton, itemsAmountBlock, addItemButton])]),
         ]),
         itemTotalCostBlock,
@@ -150,7 +154,8 @@ class CartPage extends Page {
           if (!item) {
             throw new Error('No such product found in cart');
           }
-          this.renderTotalItemCost(item.totalPrice.centAmount, itemTotalCostBlock);
+          this.renderTotalCartCost(updatedCart.totalPrice.centAmount, updatedCart.lineItems.length);
+          itemTotalCostBlock.innerHTML = `total: ${getPriceInUsd(item.totalPrice.centAmount)}`;
         })
         .finally(() => {
           toggleIconsState([removeIcon, addIcon]);
@@ -169,8 +174,9 @@ class CartPage extends Page {
     return (itemsAmount -= 1);
   }
 
-  private renderTotalItemCost(updatedCost: number, itemTotalCostBlock: HTMLElement): void {
-    itemTotalCostBlock.innerHTML = `total: ${updatedCost}`;
+  private renderTotalCartCost(updatedCost: number, updatedAmount: number): void {
+    safeQuerySelector('.checkout-total-price', document).innerHTML = `Total price: ${getPriceInUsd(updatedCost)}`;
+    safeQuerySelector('.checkout-items-amount', document).innerHTML = `Products in cart: ${updatedAmount}`;
   }
 
   protected build(): HTMLElement {
