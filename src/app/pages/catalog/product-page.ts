@@ -94,9 +94,8 @@ export class ProductPage extends Page {
   }
 
   private changeBtn(productId: string, btn: HTMLElement): void {
-    getCartTest().then(async (data) => {
-      const { results } = data!.body;
-
+    getCartTest().then((data) => {
+      const { results } = data!.body!;
       const result =
         results.length === 0
           ? false
@@ -115,30 +114,22 @@ export class ProductPage extends Page {
   }
 
   private addProduct(productId: string, btn: HTMLElement): void {
-    getCartTest().then(async (data) => {
+    getCartTest().then((data) => {
       let cartId, cartversion;
 
-      console.log('getCart', data);
-      console.log(data!.body.results.length === 0);
       if (data!.body.results.length === 0 || data === null) {
         createCart().then((data) => {
           cartId = data!.body.id;
           cartversion = data!.body.version;
-          console.log('cartData создание новой корзины', data);
+
           addCartTest(productId, cartId, cartversion).then(() => this.changeBtn(productId, btn));
-          getCartTest().then((dataTest) => {
-            console.log('testDataBefore', dataTest);
-          });
         });
       } else {
         if (!btn.classList.contains('bnt-remove')) {
-          console.log('cartData корзина существует', data);
           cartId = data!.body.results[0].id;
           cartversion = data!.body.results[0].version;
-          await addCartTest(productId, cartId, cartversion).then(() => this.changeBtn(productId, btn));
-          getCartTest().then((dataTest) => {
-            console.log('testDataBefore', dataTest);
-          });
+
+          addCartTest(productId, cartId, cartversion).then(() => this.changeBtn(productId, btn));
         }
       }
     });
