@@ -20,7 +20,7 @@ class CartPage extends Page {
 
   static getItemsQuantity(itemsAmountBlock: HTMLElement): number {
     const itemsAmount = Number(itemsAmountBlock.innerHTML);
-    if (itemsAmount >= 0) {
+    if (itemsAmount >= 1) {
       return itemsAmount;
     }
     throw new Error('Positive items amount expected');
@@ -78,11 +78,17 @@ class CartPage extends Page {
     }
     removeItemButton.addEventListener('click', () => {
       this.removeFromCart(item.id, itemsAmountBlock, itemTotalCostBlock, removeItemButton, addItemButton);
-      itemsAmountBlock.innerHTML = `${this.decreaseItemsAmount(CartPage.getItemsQuantity(itemsAmountBlock))}`;
+      const itemsAmount = CartPage.getItemsQuantity(itemsAmountBlock);
+      if (itemsAmount === 1) {
+        return;
+      }
+      const newAmount = this.decreaseItemsAmount(itemsAmount);
+      itemsAmountBlock.innerHTML = `${newAmount}`;
     });
     addItemButton.addEventListener('click', () => {
       this.addToCart(item.id, itemsAmountBlock, itemTotalCostBlock, addItemButton, removeItemButton);
-      itemsAmountBlock.innerHTML = `${this.increaseItemsAmount(CartPage.getItemsQuantity(itemsAmountBlock))}`;
+      const newAmount = this.increaseItemsAmount(CartPage.getItemsQuantity(itemsAmountBlock));
+      itemsAmountBlock.innerHTML = `${newAmount}`; //TODO refactor - remove duplication
     });
     mount(
       productWrapper,
@@ -119,6 +125,9 @@ class CartPage extends Page {
     addIcon: HTMLButtonElement
   ): void {
     let itemsAmount = CartPage.getItemsQuantity(itemsAmountBlock);
+    if (itemsAmount === 1) {
+      return;
+    }
     itemsAmount--;
     toggleIconsState([removeIcon, addIcon]);
     this.updateQuantityAndCost(itemId, itemsAmount, itemTotalCostBlock, removeIcon, addIcon);
@@ -137,7 +146,10 @@ class CartPage extends Page {
           if (updatedCart === null) {
             throw new Error('Recalculate failure');
           }
-          const item = updatedCart.lineItems.filter((item) => item.id === itemId)[0];
+          const item = updatedCart.lineItems.find((item) => item.id === itemId);
+          if (!item) {
+            throw new Error('No such product found in cart');
+          }
           this.renderTotalItemCost(item.totalPrice.centAmount, itemTotalCostBlock);
         })
         .finally(() => {
@@ -151,6 +163,9 @@ class CartPage extends Page {
   }
 
   private decreaseItemsAmount(itemsAmount: number): number {
+    if (itemsAmount <= 1) {
+      throw new Error('Item expected');
+    }
     return (itemsAmount -= 1);
   }
 
