@@ -4,6 +4,7 @@ import logo from '@icons/logo-mini.png';
 import cart from '@icons/cart.svg';
 import { Burger } from '@components/burger';
 import { isUserAuthorized } from '@app/state';
+import { getCart } from '@app/sdk/requests';
 class Header {
   private burger = new Burger();
 
@@ -17,7 +18,21 @@ class Header {
       throw new Error('Link expected');
     }
     const userPageBlock = el('.header-cell.user-page-link-block', [userPageLink]);
-    this.burger.changeUserPageBlockVisability(userPageBlock, userPageLink);
+    this.burger.changeUserPageBlockVisibility(userPageBlock, userPageLink);
+    const itemsInCartBlock = el('.header-items-amount', `${0}`);
+    const itemsInCartBlockCopy = el('.header-items-amount', `${0}`);
+    const cartLink = el('a', this.burger.linkText.cart, {
+      href: Route.CartPage,
+      'data-navigo': '',
+    });
+    getCart().then((cart) => {
+      if (cart === null) {
+        return;
+      }
+      itemsInCartBlock.innerHTML = `${cart.lineItems.length}`;
+      itemsInCartBlockCopy.innerHTML = `${cart.lineItems.length}`;
+    });
+
     return el('header.header', [
       this.burger.mask,
       el('.header-big', [
@@ -56,17 +71,12 @@ class Header {
             }),
           ]),
           userPageBlock,
-          el('span.header-cell', [
-            el('a', this.burger.linkText.cart, {
-              href: Route.CartPage,
-              'data-navigo': '',
-            }),
-          ]),
+          el('.header-cell', [cartLink, itemsInCartBlock]),
         ]),
       ]),
       el('.header-small', [
         el('.header-small-cell', [this.burger.burgerIcon]),
-        el('.header-cart.header-small-cell', [
+        el('.header-cart.header-small-cell.top', [
           el(
             'a',
             {
@@ -77,6 +87,7 @@ class Header {
               el('img', {
                 src: cart,
               }),
+              itemsInCartBlockCopy,
             ]
           ),
         ]),

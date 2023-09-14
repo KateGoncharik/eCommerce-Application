@@ -26,6 +26,10 @@
   height: 85px;
 }
 
+.top {
+  z-index: 3;
+}
+
 .header-column,
 .header-cell {
   display: flex;

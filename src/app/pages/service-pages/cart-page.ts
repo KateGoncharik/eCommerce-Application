@@ -156,6 +156,8 @@ class CartPage extends Page {
           }
           this.renderTotalCartCost(updatedCart.totalPrice.centAmount, updatedCart.lineItems.length);
           itemTotalCostBlock.innerHTML = `total: ${getPriceInUsd(item.totalPrice.centAmount)}`;
+          const itemsInCartBlock = safeQuerySelector('.header-items-amount', document);
+          itemsInCartBlock.innerHTML = `${updatedCart.lineItems.length}`;
         })
         .finally(() => {
           toggleIconsState([removeIcon, addIcon]);
