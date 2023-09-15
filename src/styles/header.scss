@@ -35,6 +35,13 @@
   display: flex;
 }
 
+.header-items-amount,
+.header-items-amount-mobile {
+  margin: 0.4em;
+  color: $pink;
+  font-weight: 700;
+}
+
 .logo-column,
 .header-cell,
 .header-small-cell {

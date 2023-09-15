@@ -65,8 +65,7 @@ class ProductCard {
       cart = await createCart();
     }
     if (cart) {
-      const updatedCart = await addLineItemToCart(cart, this.product);
-      return updatedCart;
+      return await addLineItemToCart(cart, this.product);
     }
     return null;
   }

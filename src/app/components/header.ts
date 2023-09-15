@@ -20,8 +20,8 @@ class Header {
     }
     const userPageBlock = el('.header-cell.user-page-link-block', [userPageLink]);
     this.burger.changeUserPageBlockVisibility(userPageBlock, userPageLink);
-    const itemsInCartBlock = el('.header-items-amount', `${0}`);
-    const itemsInCartBlockCopy = el('.header-items-amount-copy', `${0}`);
+    const itemsInCart = el('.header-items-amount', `0`);
+    const itemsInCartForMobile = el('.header-items-amount-mobile', `0`);
     const cartLink = el('a', this.burger.linkText.cart, {
       href: Route.CartPage,
       'data-navigo': '',
@@ -71,7 +71,7 @@ class Header {
             }),
           ]),
           userPageBlock,
-          el('.header-cell', [cartLink, itemsInCartBlock]),
+          el('.header-cell', [cartLink, itemsInCart]),
         ]),
       ]),
       el('.header-small', [
@@ -87,7 +87,7 @@ class Header {
               el('img', {
                 src: cart,
               }),
-              itemsInCartBlockCopy,
+              itemsInCartForMobile,
             ]
           ),
         ]),
