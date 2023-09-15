@@ -290,3 +290,35 @@ export async function addLineItemToCart(cart: Cart, product: ProductProjection):
     return null;
   }
 }
+
+export async function deleteProductFromCart(
+  lineItemId: string,
+  cartID: string,
+  cartVersion: number,
+  quantity: number
+): Promise<Cart | null> {
+  try {
+    const cart = await getApiRootForCartRequests()
+      .carts()
+      .withId({
+        ID: cartID,
+      })
+      .post({
+        body: {
+          version: cartVersion,
+          actions: [
+            {
+              action: 'removeLineItem',
+              lineItemId: lineItemId,
+              quantity: quantity,
+            },
+          ],
+        },
+      })
+      .execute();
+    return cart.body;
+  } catch (err) {
+    console.error(errorMessage);
+    return null;
+  }
+}

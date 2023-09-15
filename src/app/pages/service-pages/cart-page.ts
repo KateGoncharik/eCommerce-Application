@@ -1,13 +1,14 @@
 import { Burger } from '@components/burger';
 import { Page } from '@templates/page';
 import { el, mount } from 'redom';
-import { getCart, updateLineItemQuantity, recalculateCartCost } from '@sdk/requests';
+import { getCart, updateLineItemQuantity, recalculateCartCost, deleteProductFromCart } from '@sdk/requests';
 import { Cart, LineItem } from '@commercetools/platform-sdk';
 import { Route } from '@app/types/route';
 import { toggleIconsState } from '@helpers/toggle-icons-state';
 import { getPriceInUsd } from '@helpers/get-price-in-usd';
 import minus from '@icons/minus.png';
 import addIcon from '@icons/add.png';
+import trashCan from '@icons/trash-can.png';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
 
 class CartPage extends Page {
@@ -67,7 +68,6 @@ class CartPage extends Page {
     if (!images) {
       throw new Error('Images expected');
     }
-
     const itemsAmountBlock = el('.items-amount', `${item.quantity}`);
     const itemTotalCostBlock = el('.item-total', [
       el('.total-price', ` total: ${getPriceInUsd(item.totalPrice.centAmount)}`),
@@ -94,18 +94,29 @@ class CartPage extends Page {
       const newAmount = this.increaseItemsAmount(CartPage.getItemsQuantity(itemsAmountBlock));
       itemsAmountBlock.innerHTML = `${newAmount}`; //TODO refactor - remove duplication
     });
-    mount(
-      productWrapper,
-      el('.item', [
-        el('.item-image-wrapper', [el('img.item-image', { src: images[0].url, alt: '' })]),
-        el('.item-content', [
-          el('.item-name', `${item.name['en-US']}`),
-          el('.item-price', ` price: ${getPriceInUsd(item.price.value.centAmount)}`),
-          el('.items-amount-wrapper', [el('.edit-item-quantity', [removeItemButton, itemsAmountBlock, addItemButton])]),
-        ]),
-        itemTotalCostBlock,
-      ])
-    );
+    const deleteItem = el('button.delete-item', [el('img.delete-item-icon', { src: trashCan, alt: 'delete' })]);
+    if (!(deleteItem instanceof HTMLButtonElement)) {
+      throw new Error('Button expected');
+    }
+    const itemContainer = el('.item', [
+      el('.item-image-wrapper', [el('img.item-image', { src: images[0].url, alt: '' })]),
+      el('.item-content', [
+        el('.item-name', `${item.name['en-US']}`),
+        el('.item-price', ` price: ${getPriceInUsd(item.price.value.centAmount)}`),
+        el('.items-amount-wrapper', [el('.edit-item-quantity', [removeItemButton, itemsAmountBlock, addItemButton])]),
+      ]),
+      itemTotalCostBlock,
+      deleteItem,
+    ]);
+    deleteItem.addEventListener('click', async () => {
+      const cart = await getCart();
+      if (cart === null) {
+        throw new Error('Cart expected');
+      }
+      deleteProductFromCart(item.id, cart.id, cart.version, item.quantity);
+      itemContainer.remove();
+    });
+    mount(productWrapper, itemContainer);
   }
 
   private async addToCart(
