@@ -57,7 +57,7 @@ class CartPage extends Page {
     const checkout = el('.checkout', [
       el('span.checkout-title', 'Order details'),
       el('.checkout-total-price', `Total price: ${getPriceInUsd(cart.totalPrice.centAmount)}`),
-      el('.checkout-items-amount', `Products in cart: ${cart.lineItems.length}`),
+      el('.checkout-items-amount', `Products in cart: ${cart.totalLineItemQuantity}`),
     ]);
     mount(cartContainer, cartItems);
     mount(cartContainer, checkout);
@@ -155,7 +155,11 @@ class CartPage extends Page {
           if (!item) {
             throw new Error('No such product found in cart');
           }
-          this.renderTotalCartCost(updatedCart.totalPrice.centAmount, updatedCart.lineItems.length);
+
+          this.renderTotalCartCost(
+            updatedCart.totalPrice.centAmount,
+            updatedCart.totalLineItemQuantity ? updatedCart.totalLineItemQuantity : 0
+          );
           itemTotalCostBlock.innerHTML = `total: ${getPriceInUsd(item.totalPrice.centAmount)}`;
           updateItemsAmount(updatedCart);
         })
