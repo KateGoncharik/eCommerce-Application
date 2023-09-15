@@ -95,7 +95,8 @@ export class ProductPage extends Page {
 
   private changeBtn(productId: string, btn: HTMLElement): void {
     getCart().then((data) => {
-      const result = !data
+      const result = 
+        !data
         ? false
         : data!.lineItems.map((el: { productId: string }) => el.productId).includes(productId);
 
@@ -112,24 +113,24 @@ export class ProductPage extends Page {
   }
 
   private addProduct(productId: string, btn: HTMLElement): void {
-    getCart().then((getCartData) => {
+    getCart().then((cartData) => {
       let cartId, cartVersion;
 
-      if (!getCartData) {
+      if (!cartData ) {
         createCart().then((data) => {
           cartId = data!.id;
           cartVersion = data!.version;
 
-          addProductToCart(productId, cartId!, cartVersion).then(() => this.changeBtn(productId, btn));
+          addProductToCart(productId, cartId!, cartVersion)
+          .then(() => this.changeBtn(productId, btn));
         });
-      } else {
-        if (!btn.classList.contains('bnt-remove')) {
-          cartId = getCartData.id;
-          cartVersion = getCartData.version;
+      } else if (!btn.classList.contains('bnt-remove')) {
+          cartId = cartData .id;
+          cartVersion = cartData .version;
 
-          addProductToCart(productId, cartId, cartVersion).then(() => this.changeBtn(productId, btn));
+          addProductToCart(productId, cartId, cartVersion)
+          .then(() => this.changeBtn(productId, btn));
         }
-      }
     });
   }
 
