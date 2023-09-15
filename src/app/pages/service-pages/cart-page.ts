@@ -9,6 +9,7 @@ import { getPriceInUsd } from '@helpers/get-price-in-usd';
 import minus from '@icons/minus.png';
 import addIcon from '@icons/add.png';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
+import { updateItemsAmount } from '@helpers/update-items-amount';
 
 class CartPage extends Page {
   protected textObject = {
@@ -156,8 +157,7 @@ class CartPage extends Page {
           }
           this.renderTotalCartCost(updatedCart.totalPrice.centAmount, updatedCart.lineItems.length);
           itemTotalCostBlock.innerHTML = `total: ${getPriceInUsd(item.totalPrice.centAmount)}`;
-          const itemsInCartBlock = safeQuerySelector('.header-items-amount', document);
-          itemsInCartBlock.innerHTML = `${updatedCart.lineItems.length}`;
+          updateItemsAmount(updatedCart);
         })
         .finally(() => {
           toggleIconsState([removeIcon, addIcon]);

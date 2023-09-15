@@ -5,6 +5,7 @@ import cart from '@icons/cart.svg';
 import { Burger } from '@components/burger';
 import { isUserAuthorized } from '@app/state';
 import { getCart } from '@app/sdk/requests';
+import { updateItemsAmount } from '@helpers/update-items-amount';
 class Header {
   private burger = new Burger();
 
@@ -20,7 +21,7 @@ class Header {
     const userPageBlock = el('.header-cell.user-page-link-block', [userPageLink]);
     this.burger.changeUserPageBlockVisibility(userPageBlock, userPageLink);
     const itemsInCartBlock = el('.header-items-amount', `${0}`);
-    const itemsInCartBlockCopy = el('.header-items-amount', `${0}`);
+    const itemsInCartBlockCopy = el('.header-items-amount-copy', `${0}`);
     const cartLink = el('a', this.burger.linkText.cart, {
       href: Route.CartPage,
       'data-navigo': '',
@@ -29,8 +30,7 @@ class Header {
       if (cart === null) {
         return;
       }
-      itemsInCartBlock.innerHTML = `${cart.lineItems.length}`;
-      itemsInCartBlockCopy.innerHTML = `${cart.lineItems.length}`;
+      updateItemsAmount(cart);
     });
 
     return el('header.header', [

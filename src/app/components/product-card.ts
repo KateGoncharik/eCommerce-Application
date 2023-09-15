@@ -4,8 +4,9 @@ import addIcon from '@icons/add.png';
 import lottie from 'lottie-web';
 import loadIndicator from '@animation/load-indicator.json';
 import { addLineItemToCart, getCart, createCart } from '@sdk/requests';
-import { ProductProjection } from '@commercetools/platform-sdk';
+import { Cart, ProductProjection } from '@commercetools/platform-sdk';
 import { getPriceInUsd } from '@helpers/get-price-in-usd';
+import { updateItemsAmount } from '@helpers/update-items-amount';
 
 class ProductCard {
   private productData: ProductMainData;
@@ -29,8 +30,12 @@ class ProductCard {
         return;
       }
       setChildren(priceWrapper, [price, this.createLoadAnimItem()]);
-      await this.addToCart();
+      const updatedCart = await this.addToCart();
+      if (updatedCart === null) {
+        throw new Error('Cart update failure');
+      }
       setChildren(priceWrapper, [price, addToCartBtn]);
+      updateItemsAmount(updatedCart);
       card.classList.add('in-cart');
     });
 
@@ -54,14 +59,16 @@ class ProductCard {
     return card;
   }
 
-  private async addToCart(): Promise<void> {
+  private async addToCart(): Promise<Cart | null> {
     let cart = await getCart();
     if (!cart) {
       cart = await createCart();
     }
     if (cart) {
-      await addLineItemToCart(cart, this.product);
+      const updatedCart = await addLineItemToCart(cart, this.product);
+      return updatedCart;
     }
+    return null;
   }
 
   protected createLoadAnimItem(): HTMLElement {
