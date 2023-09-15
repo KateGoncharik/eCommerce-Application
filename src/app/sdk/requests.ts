@@ -265,38 +265,7 @@ export async function recalculateCartCost(): Promise<Cart | null> {
   }
 }
 
-export async function addLineItemToCart(cart: Cart, product: ProductProjection): Promise<Cart | null> {
-  try {
-    const updatedCart = await getApiRootForCartRequests()
-      .me()
-      .carts()
-      .withId({ ID: cart.id })
-      .post({
-        body: {
-          version: cart.version,
-          actions: [
-            {
-              action: 'addLineItem',
-              productId: product.id,
-              variantId: product.masterVariant.id,
-              quantity: 1,
-            },
-          ],
-        },
-      })
-      .execute();
-    return updatedCart.body;
-  } catch (err) {
-    console.error(errorMessage);
-    return null;
-  }
-}
-
-export async function addProductToCart(
-  productId: string,
-  cartID: string,
-  versionCart: number
-): Promise<Cart | null> {
+export async function addProductToCart(productId: string, cartID: string, versionCart: number): Promise<Cart | null> {
   try {
     const cart = await getApiRootForCartRequests()
       .carts()

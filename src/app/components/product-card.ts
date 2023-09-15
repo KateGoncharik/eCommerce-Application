@@ -3,7 +3,7 @@ import { el, mount, setChildren } from 'redom';
 import addIcon from '@icons/add.png';
 import lottie from 'lottie-web';
 import loadIndicator from '@animation/load-indicator.json';
-import { addLineItemToCart, getCart, createCart } from '@sdk/requests';
+import { addProductToCart, getCart, createCart } from '@sdk/requests';
 import { ProductProjection } from '@commercetools/platform-sdk';
 import { getPriceInUsd } from '@helpers/get-price-in-usd';
 
@@ -60,7 +60,7 @@ class ProductCard {
       cart = await createCart();
     }
     if (cart) {
-      await addLineItemToCart(cart, this.product);
+      await addProductToCart(this.product.id, cart.id, cart.version);
     }
   }
 
