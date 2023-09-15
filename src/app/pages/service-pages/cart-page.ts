@@ -154,7 +154,7 @@ class CartPage extends Page {
           if (!item) {
             throw new Error('No such product found in cart');
           }
-          this.renderTotalCartCost(updatedCart.totalPrice.centAmount, updatedCart.lineItems.length);
+          this.updateOrderDetails(updatedCart.totalPrice.centAmount, updatedCart.lineItems.length);
           itemTotalCostBlock.innerHTML = `total: ${getPriceInUsd(item.totalPrice.centAmount)}`;
         })
         .finally(() => {
@@ -174,7 +174,7 @@ class CartPage extends Page {
     return (itemsAmount -= 1);
   }
 
-  private renderTotalCartCost(updatedCost: number, updatedAmount: number): void {
+  private updateOrderDetails(updatedCost: number, updatedAmount: number): void {
     safeQuerySelector('.checkout-total-price', document).innerHTML = `Total price: ${getPriceInUsd(updatedCost)}`;
     safeQuerySelector('.checkout-items-amount', document).innerHTML = `Products in cart: ${updatedAmount}`;
   }
