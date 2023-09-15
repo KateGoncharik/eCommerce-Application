@@ -293,7 +293,7 @@ export async function addLineItemToCart(cart: Cart, product: ProductProjection):
 }
 
 export async function addProductToCart(
-  producutId: string,
+  productId: string,
   cartID: string,
   versionCart: number
 ): Promise<Cart | null> {
@@ -309,7 +309,7 @@ export async function addProductToCart(
           actions: [
             {
               action: 'addLineItem',
-              productId: producutId,
+              productId: productId,
               quantity: 1,
             },
           ],
