@@ -323,10 +323,10 @@ export async function addProductToCart(
   }
 }
 
-export async function deleteProductToCart(
+export async function deleteProductFromCart(
   lineItemId: string,
   cartID: string,
-  versionCart: number,
+  cartVersion: number,
   quantity: number
 ): Promise<Cart | null> {
   try {
@@ -337,7 +337,7 @@ export async function deleteProductToCart(
       })
       .post({
         body: {
-          version: versionCart,
+          version: cartVersion,
           actions: [
             {
               action : "removeLineItem",

@@ -1,5 +1,5 @@
 import { Page } from '@templates/page';
-import { getProduct, createCart, getCart, addProductToCart, deleteProductToCart } from '@sdk/requests';
+import { getProduct, createCart, getCart, addProductToCart, deleteProductFromCart } from '@sdk/requests';
 import { el, mount, setAttr } from 'redom';
 import { ProductData } from '@app/types/data-product';
 import { connectSlider } from '@helpers/slider';
@@ -82,11 +82,10 @@ export class ProductPage extends Page {
           connectSlider();
           eventModal(slider, blockCloseModal);
 
-          btnAddToCart.addEventListener('click', async (e: Event) => {
-            const target = e.target as Element;
+          btnAddToCart.addEventListener('click', async () => {
             setAttr(btnAddToCart, { disabled: true });
 
-            target.classList.contains('btn-remove') ? 
+            btnAddToCart.classList.contains('btn-remove') ? 
             this.deleteProduct(productId, btnAddToCart):
             this.addProduct(productId, btnAddToCart);
           });
@@ -144,7 +143,7 @@ export class ProductPage extends Page {
       cartData!.lineItems.find((el: { productId: string; id: string; quantity: number}) => { 
 
         el.productId === productId && 
-        deleteProductToCart(el.id, cartData!.id, cartData!.version, el.quantity)
+        deleteProductFromCart(el.id, cartData!.id, cartData!.version, el.quantity)
         .then(() => this.changeBtn(productId, btn))
       })
     });
