@@ -292,7 +292,7 @@ export async function addLineItemToCart(cart: Cart, product: ProductProjection):
   }
 }
 
-export async function addProductToCartTest(
+export async function addProductToCart(
   prodcutId: string,
   cartID: string,
   versionCart: number
