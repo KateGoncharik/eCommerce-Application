@@ -1,5 +1,5 @@
 import { Page } from '@templates/page';
-import { getProduct, createCart, getCart, addProductToCart } from '@sdk/requests';
+import { getProduct, createCart, getCart, addProductToCart, deleteProductToCart } from '@sdk/requests';
 import { el, mount, setAttr } from 'redom';
 import { ProductData } from '@app/types/data-product';
 import { connectSlider } from '@helpers/slider';
@@ -82,8 +82,12 @@ export class ProductPage extends Page {
           connectSlider();
           eventModal(slider, blockCloseModal);
 
-          btnAddToCart.addEventListener('click', async () => {
+          btnAddToCart.addEventListener('click', async (e: Event) => {
+            const target = e.target as Element;
             setAttr(btnAddToCart, { disabled: true });
+
+            target.classList.contains('btn-remove') ? 
+            this.deleteProduct(productId, btnAddToCart):
             this.addProduct(productId, btnAddToCart);
           });
         })
@@ -95,8 +99,7 @@ export class ProductPage extends Page {
 
   private changeBtn(productId: string, btn: HTMLElement): void {
     getCart().then((data) => {
-      const result = 
-        !data
+      const result = !data
         ? false
         : data!.lineItems.map((el: { productId: string }) => el.productId).includes(productId);
 
@@ -131,6 +134,20 @@ export class ProductPage extends Page {
           addProductToCart(productId, cartId, cartVersion)
           .then(() => this.changeBtn(productId, btn));
         }
+    });
+  }
+
+  private deleteProduct(productId: string, btn: HTMLElement): void {
+    getCart().then(cartData => {
+      const 
+      cartId = cartData!.id,
+      versionCart = cartData!.version;
+
+      cartData!.lineItems.find((el: { productId: string; id: string; }) => { 
+        el.productId === productId && 
+        deleteProductToCart(el.id, cartId, versionCart)
+        .then(() => this.changeBtn(productId, btn))
+      })
     });
   }
 

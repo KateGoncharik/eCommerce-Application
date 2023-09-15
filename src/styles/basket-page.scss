@@ -56,31 +56,21 @@
 .checkout-title {
   font-size: 24px;
   margin-top: 1%;
-  font-weight: 700;
+  font-weight: 500;
   line-height: 120%;
   align-self: start;
 }
 
-.checkout-total-price {
-  font-size: 22px;
-  font-weight: 500;
-  margin: 0.4em auto;
-}
-
+.checkout-total-price,
 .checkout-items-amount {
   margin: 0.4em auto;
 }
 
+.item-total,
 .item-name,
 .items-amount,
-.item-price {
-  margin: 0.2em auto;
-}
-
-.total-price,
-.item-total {
-  font-size: 18px;
-  font-weight: 500;
+.item-price,
+.total-price {
   margin: 0.2em auto;
 }
 
