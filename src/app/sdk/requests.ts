@@ -119,6 +119,7 @@ export const getProduct = async (key: string): Promise<ProductData | void> => {
       const { current } = body.masterData;
       const price = current.masterVariant.prices[0];
       const productData = {
+        id: body.id,
         name: current.name['en-US'],
         img: current.masterVariant.images,
         description: current.description['en-US'],
@@ -285,6 +286,37 @@ export async function addLineItemToCart(cart: Cart, product: ProductProjection):
       })
       .execute();
     return updatedCart.body;
+  } catch (err) {
+    console.error(errorMessage);
+    return null;
+  }
+}
+
+export async function addProductToCart(
+  productId: string,
+  cartID: string,
+  versionCart: number
+): Promise<Cart | null> {
+  try {
+    const cart = await getApiRootForCartRequests()
+      .carts()
+      .withId({
+        ID: cartID,
+      })
+      .post({
+        body: {
+          version: versionCart,
+          actions: [
+            {
+              action: 'addLineItem',
+              productId: productId,
+              quantity: 1,
+            },
+          ],
+        },
+      })
+      .execute();
+    return cart.body;
   } catch (err) {
     console.error(errorMessage);
     return null;
