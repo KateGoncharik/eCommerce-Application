@@ -326,7 +326,8 @@ export async function addProductToCart(
 export async function deleteProductToCart(
   lineItemId: string,
   cartID: string,
-  versionCart: number
+  versionCart: number,
+  quantity: number
 ): Promise<Cart | null> {
   try {
     const cart = await getApiRootForCartRequests()
@@ -341,7 +342,7 @@ export async function deleteProductToCart(
             {
               action : "removeLineItem",
               lineItemId : lineItemId,
-              quantity : 1,
+              quantity : quantity,
             }
           ]
         }

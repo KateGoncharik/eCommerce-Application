@@ -99,7 +99,9 @@ export class ProductPage extends Page {
 
   private changeBtn(productId: string, btn: HTMLElement): void {
     getCart().then((data) => {
-      const result = !data
+
+      const result = 
+        !data
         ? false
         : data!.lineItems.map((el: { productId: string }) => el.productId).includes(productId);
 
@@ -127,7 +129,7 @@ export class ProductPage extends Page {
           addProductToCart(productId, cartId!, cartVersion)
           .then(() => this.changeBtn(productId, btn));
         });
-      } else if (!btn.classList.contains('bnt-remove')) {
+      } else {
           cartId = cartData .id;
           cartVersion = cartData .version;
 
@@ -139,13 +141,10 @@ export class ProductPage extends Page {
 
   private deleteProduct(productId: string, btn: HTMLElement): void {
     getCart().then(cartData => {
-      const 
-      cartId = cartData!.id,
-      versionCart = cartData!.version;
+      cartData!.lineItems.find((el: { productId: string; id: string; quantity: number}) => { 
 
-      cartData!.lineItems.find((el: { productId: string; id: string; }) => { 
         el.productId === productId && 
-        deleteProductToCart(el.id, cartId, versionCart)
+        deleteProductToCart(el.id, cartData!.id, cartData!.version, el.quantity)
         .then(() => this.changeBtn(productId, btn))
       })
     });
