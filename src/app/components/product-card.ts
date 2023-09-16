@@ -65,7 +65,7 @@ class ProductCard {
       cart = await createCart();
     }
     if (cart) {
-      await addProductToCart(this.product.id, cart.id, cart.version);
+      return await addProductToCart(this.product.id, cart.id, cart.version);
     }
     return null;
   }
