@@ -266,3 +266,46 @@ body.no-scroll {
     line-height: 100%;
   }
 }
+
+.catalog-pagination {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  padding: 3% 0;
+  border-right: 1px solid $black;
+  border-bottom: 1px solid $black;
+}
+
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 52px;
+  height: 52px;
+  border: 2px solid $black;
+  font-size: 22px;
+  line-height: 115%;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: all 0.3s;
+
+  &.inactive {
+    color: $grey;
+    border-color: $grey;
+    cursor: default;
+  }
+
+  @media (hover: hover) {
+    &:hover:not(.inactive, .pagination-page-num) {
+      color: $white;
+      background: $black;
+      border-color: $black;
+    }
+  }
+}
+
+.pagination-page-num {
+  cursor: default;
+  color: $white;
+  background-color: $black;
+}

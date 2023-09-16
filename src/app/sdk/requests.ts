@@ -11,6 +11,7 @@ import {
   Category,
   CustomerChangePassword,
   Cart,
+  ProductProjectionPagedQueryResponse,
 } from '@commercetools/platform-sdk';
 import { rememberAuthorizedUser } from '@app/state';
 import { getUserOrError } from '@helpers/get-user-or-error ';
@@ -18,6 +19,7 @@ import { DataUser } from '@customTypes/datauser';
 import { ProductData } from '@customTypes/data-product';
 
 const errorMessage = 'Error: no connection to server';
+export const productsPerPage = 12;
 
 export async function createUser(form: DataUser): Promise<number | undefined> {
   try {
@@ -98,14 +100,18 @@ export async function editUserPassword(body: CustomerChangePassword): Promise<Cl
   return null;
 }
 
-export async function getProducts(): Promise<ProductProjection[]> {
+export async function getProducts(offset = 0): Promise<ProductProjectionPagedQueryResponse | null> {
+  const queryArgs = {
+    limit: productsPerPage,
+    offset,
+  };
   try {
-    const request = await getApiRoot().productProjections().get().execute();
-    const products = request.body.results;
+    const request = await getApiRoot().productProjections().get({ queryArgs }).execute();
+    const products = request.body;
     return products;
   } catch (err) {
     console.error(errorMessage);
-    return [];
+    return null;
   }
 }
 
@@ -132,12 +138,14 @@ export const getProduct = async (key: string): Promise<ProductData | void> => {
     .catch(() => console.error(errorMessage));
 };
 
-export async function getProductsOfCategory(id: string): Promise<ProductProjection[]> {
+export async function getProductsOfCategory(id: string, offset = 0): Promise<ProductProjection[]> {
+  const queryArgs = {
+    where: `categories(id="${id}")`,
+    limit: productsPerPage,
+    offset,
+  };
   try {
-    const request = await getApiRoot()
-      .productProjections()
-      .get({ queryArgs: { where: `categories(id="${id}")` } })
-      .execute();
+    const request = await getApiRoot().productProjections().get({ queryArgs }).execute();
     const products = request.body.results;
     return products;
   } catch (err) {
@@ -146,15 +154,15 @@ export async function getProductsOfCategory(id: string): Promise<ProductProjecti
   }
 }
 
-export async function getFilteredProducts(queryString: string | string[]): Promise<ProductProjection[]> {
+export async function getFilteredProducts(filterQuery: string | string[], offset = 0): Promise<ProductProjection[]> {
+  const queryArgs = {
+    filter: filterQuery,
+    limit: productsPerPage,
+    offset,
+  };
   try {
-    const request = await getApiRoot()
-      .productProjections()
-      .search()
-      .get({ queryArgs: { filter: queryString } })
-      .execute();
-    const products = request.body.results;
-    return products;
+    const request = await getApiRoot().productProjections().search().get({ queryArgs }).execute();
+    return request.body.results;
   } catch (err) {
     console.error(errorMessage);
     return [];

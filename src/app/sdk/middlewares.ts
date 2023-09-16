@@ -49,6 +49,7 @@ const refreshAuthMiddlewareOptions: RefreshAuthMiddlewareOptions = {
     clientSecret: clientSecret,
   },
   refreshToken: myTokenCache.get().refreshToken || '',
+  tokenCache: myTokenCache,
   fetch,
 };
 

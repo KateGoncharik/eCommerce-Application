@@ -5,6 +5,7 @@ import { getProducts, getCategories, getProductsOfCategory, getCategoryByKey, ge
 import { ProductProjection } from '@commercetools/platform-sdk';
 import { ProductCard } from '@components/product-card';
 import { FiltersBlock } from '@components/filters-block';
+import { Pagination } from '@components/pagination';
 import { buildCategoriesObject } from '@helpers/catalog';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
 import { router } from '@app/router';
@@ -16,6 +17,8 @@ class CatalogPage extends Page {
     super();
   }
 
+  public filtersBlock = new FiltersBlock(this);
+  public pagination = new Pagination(this);
   public sideBar = el('.catalog-sidebar');
   public searchInput = el('input.catalog-search-input', {
     placeholder: 'Search...',
@@ -27,7 +30,6 @@ class CatalogPage extends Page {
 
   private productsContainer = el('.products');
   private mask = el('.catalog-mask');
-  private filtersBlock = new FiltersBlock(this);
 
   public createProductContainer(): HTMLElement {
     this.getRelevantProducts().then((products) => {
@@ -99,16 +101,19 @@ class CatalogPage extends Page {
   }
 
   private async getRelevantProducts(): Promise<ProductProjection[]> {
-    let products: Promise<ProductProjection[]>;
+    const offset = this.pagination.calculateOffset();
+    let products: ProductProjection[];
 
     if (this.categoryKey) {
       const category = await getCategoryByKey(this.categoryKey);
       if (!category) {
         return [];
       }
-      products = getProductsOfCategory(category.id);
+      products = await getProductsOfCategory(category.id, offset);
     } else {
-      products = getProducts();
+      const request = await getProducts(offset);
+      this.pagination.productCount = request?.total || 0;
+      products = request?.results || [];
     }
     return products;
   }
@@ -225,6 +230,7 @@ class CatalogPage extends Page {
       el('.products-wrapper', [
         el('.breadcrumbs-search-wrap', [this.createBreadcrumbs(), this.createSearch()]),
         this.createProductContainer(),
+        this.pagination.create(),
       ]),
     ]);
   }

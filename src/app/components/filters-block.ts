@@ -1,7 +1,8 @@
 import { Button } from '@components/button';
 import { el, mount, unmount, setChildren } from 'redom';
 import { router } from '@app/router';
-import { getCategoryByKey, getFilteredProducts } from '@sdk/requests';
+import { ProductProjection } from '@commercetools/platform-sdk';
+import { getCategoryByKey, getFilteredProducts, getProducts } from '@sdk/requests';
 import { CatalogPageType } from '@customTypes/catalog';
 import { Colors } from '@customTypes/enums';
 
@@ -46,8 +47,9 @@ class FiltersBlock {
     return container;
   }
 
-  public async applyFilters(userQuery?: string): Promise<void> {
+  public async applyFilters(userQuery?: string | null, offset = 0): Promise<void> {
     const queryArgs = this.assembleQueryArgs();
+    let products: ProductProjection[];
 
     if (userQuery) {
       queryArgs.push(`searchKeywords.en-US.text:${userQuery}`);
@@ -56,7 +58,12 @@ class FiltersBlock {
       const category = await getCategoryByKey(this.catalog.categoryKey);
       queryArgs.push(`categories.id:"${category?.id}"`);
     }
-    const products = await getFilteredProducts(queryArgs);
+    if (queryArgs.length) {
+      products = await getFilteredProducts(queryArgs, offset);
+    } else {
+      const request = await getProducts(offset);
+      products = request?.results || [];
+    }
     this.catalog.fillProductsContainer(products);
   }
 
