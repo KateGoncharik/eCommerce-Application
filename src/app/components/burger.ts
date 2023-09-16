@@ -78,7 +78,7 @@ class Burger {
     'data-navigo': '',
   });
 
-  public changeUserPageBlockVisability(userPageBlock: HTMLElement, userPageLink: HTMLAnchorElement): void {
+  public changeUserPageBlockVisibility(userPageBlock: HTMLElement, userPageLink: HTMLAnchorElement): void {
     if (isUserAuthorized()) {
       userPageBlock.style.display = 'flex';
       userPageLink.style.display = 'flex';
@@ -113,7 +113,7 @@ class Burger {
     if (!(this.userPageLink instanceof HTMLAnchorElement)) {
       throw new Error('Link expected');
     }
-    this.changeUserPageBlockVisability(this.userPageLink, this.userPageLink);
+    this.changeUserPageBlockVisibility(this.userPageLink, this.userPageLink);
     return burgerMenu;
   }
 

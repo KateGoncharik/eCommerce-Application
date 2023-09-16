@@ -4,6 +4,8 @@ import logo from '@icons/logo-mini.png';
 import cart from '@icons/cart.svg';
 import { Burger } from '@components/burger';
 import { isUserAuthorized } from '@app/state';
+import { getCart } from '@app/sdk/requests';
+import { updateItemsAmount } from '@helpers/update-items-amount';
 class Header {
   private burger = new Burger();
 
@@ -17,7 +19,20 @@ class Header {
       throw new Error('Link expected');
     }
     const userPageBlock = el('.header-cell.user-page-link-block', [userPageLink]);
-    this.burger.changeUserPageBlockVisability(userPageBlock, userPageLink);
+    this.burger.changeUserPageBlockVisibility(userPageBlock, userPageLink);
+    const itemsInCart = el('.header-items-amount', `0`);
+    const itemsInCartForMobile = el('.header-items-amount-mobile', `0`);
+    const cartLink = el('a', this.burger.linkText.cart, {
+      href: Route.CartPage,
+      'data-navigo': '',
+    });
+    getCart().then((cart) => {
+      if (cart === null) {
+        return;
+      }
+      updateItemsAmount(cart);
+    });
+
     return el('header.header', [
       this.burger.mask,
       el('.header-big', [
@@ -56,17 +71,12 @@ class Header {
             }),
           ]),
           userPageBlock,
-          el('span.header-cell', [
-            el('a', this.burger.linkText.cart, {
-              href: Route.CartPage,
-              'data-navigo': '',
-            }),
-          ]),
+          el('.header-cell', [cartLink, itemsInCart]),
         ]),
       ]),
       el('.header-small', [
         el('.header-small-cell', [this.burger.burgerIcon]),
-        el('.header-cart.header-small-cell', [
+        el('.header-cart.header-small-cell.top', [
           el(
             'a',
             {
@@ -77,6 +87,7 @@ class Header {
               el('img', {
                 src: cart,
               }),
+              itemsInCartForMobile,
             ]
           ),
         ]),

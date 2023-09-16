@@ -26,9 +26,20 @@
   height: 85px;
 }
 
+.top {
+  z-index: 3;
+}
+
 .header-column,
 .header-cell {
   display: flex;
+}
+
+.header-items-amount,
+.header-items-amount-mobile {
+  margin: 0.4em;
+  color: $pink;
+  font-weight: 700;
 }
 
 .logo-column,

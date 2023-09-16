@@ -9,6 +9,7 @@ import { getPriceInUsd } from '@helpers/get-price-in-usd';
 import minus from '@icons/minus.png';
 import addIcon from '@icons/add.png';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
+import { updateItemsAmount } from '@helpers/update-items-amount';
 
 class CartPage extends Page {
   protected textObject = {
@@ -56,7 +57,7 @@ class CartPage extends Page {
     const checkout = el('.checkout', [
       el('span.checkout-title', 'Order details'),
       el('.checkout-total-price', `Total price: ${getPriceInUsd(cart.totalPrice.centAmount)}`),
-      el('.checkout-items-amount', `Products in cart: ${cart.lineItems.length}`),
+      el('.checkout-items-amount', `Products in cart: ${cart.totalLineItemQuantity}`),
     ]);
     mount(cartContainer, cartItems);
     mount(cartContainer, checkout);
@@ -154,8 +155,10 @@ class CartPage extends Page {
           if (!item) {
             throw new Error('No such product found in cart');
           }
+
           this.updateOrderDetails(updatedCart.totalPrice.centAmount, updatedCart.lineItems.length);
           itemTotalCostBlock.innerHTML = `total: ${getPriceInUsd(item.totalPrice.centAmount)}`;
+          updateItemsAmount(updatedCart);
         })
         .finally(() => {
           toggleIconsState([removeIcon, addIcon]);

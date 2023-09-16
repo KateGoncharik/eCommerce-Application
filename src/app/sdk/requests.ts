@@ -309,12 +309,12 @@ export async function deleteProductFromCart(
           version: cartVersion,
           actions: [
             {
-              action : "removeLineItem",
-              lineItemId : lineItemId,
-              quantity : quantity,
-            }
-          ]
-        }
+              action: 'removeLineItem',
+              lineItemId: lineItemId,
+              quantity: quantity,
+            },
+          ],
+        },
       })
       .execute();
     return cart.body;
