@@ -1,6 +1,6 @@
 import { Burger } from '@components/burger';
 import { Page } from '@templates/page';
-import { el, mount } from 'redom';
+import { el, mount, unmount } from 'redom';
 import { getCart, updateLineItemQuantity, recalculateCartCost, deleteProductFromCart } from '@sdk/requests';
 import { Cart, LineItem } from '@commercetools/platform-sdk';
 import { Route } from '@app/types/route';
@@ -114,7 +114,7 @@ class CartPage extends Page {
         throw new Error('Cart expected');
       }
       deleteProductFromCart(item.id, cart.id, cart.version, item.quantity);
-      itemContainer.remove();
+      unmount(productWrapper, itemContainer);
     });
     mount(productWrapper, itemContainer);
   }
