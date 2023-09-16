@@ -66,6 +66,20 @@
   display: inline-block;
 }
 
+.btn-product {
+  width: 50%;
+  height: 40px;
+  background-color: $black;
+  font-family: Gilroy, serif;
+  font-size: 1rem;
+  color: $white;
+}
+
+.btn-remove {
+  background-color: $grey;
+  color: $white;
+}
+
 .price-none {
   text-decoration: line-through;
   color: $grey;

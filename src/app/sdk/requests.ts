@@ -119,6 +119,7 @@ export const getProduct = async (key: string): Promise<ProductData | void> => {
       const { current } = body.masterData;
       const price = current.masterVariant.prices[0];
       const productData = {
+        id: body.id,
         name: current.name['en-US'],
         img: current.masterVariant.images,
         description: current.description['en-US'],
@@ -264,27 +265,59 @@ export async function recalculateCartCost(): Promise<Cart | null> {
   }
 }
 
-export async function addLineItemToCart(cart: Cart, product: ProductProjection): Promise<Cart | null> {
+export async function addProductToCart(productId: string, cartID: string, versionCart: number): Promise<Cart | null> {
   try {
-    const updatedCart = await getApiRootForCartRequests()
-      .me()
+    const cart = await getApiRootForCartRequests()
       .carts()
-      .withId({ ID: cart.id })
+      .withId({
+        ID: cartID,
+      })
       .post({
         body: {
-          version: cart.version,
+          version: versionCart,
           actions: [
             {
               action: 'addLineItem',
-              productId: product.id,
-              variantId: product.masterVariant.id,
+              productId: productId,
               quantity: 1,
             },
           ],
         },
       })
       .execute();
-    return updatedCart.body;
+    return cart.body;
+  } catch (err) {
+    console.error(errorMessage);
+    return null;
+  }
+}
+
+export async function deleteProductFromCart(
+  lineItemId: string,
+  cartID: string,
+  cartVersion: number,
+  quantity: number
+): Promise<Cart | null> {
+  try {
+    const cart = await getApiRootForCartRequests()
+      .carts()
+      .withId({
+        ID: cartID,
+      })
+      .post({
+        body: {
+          version: cartVersion,
+          actions: [
+            {
+              action: 'removeLineItem',
+              lineItemId: lineItemId,
+              quantity: quantity,
+            },
+          ],
+        },
+      })
+      .execute();
+    return cart.body;
   } catch (err) {
     console.error(errorMessage);
     return null;
