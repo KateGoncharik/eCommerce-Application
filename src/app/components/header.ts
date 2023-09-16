@@ -29,7 +29,12 @@ class Header {
               'data-navigo': '',
             }),
           ]),
-          el('span.header-cell', this.burger.linkText.toAboutUs),
+          el('span.header-cell', [
+            el('a', this.burger.linkText.toAboutUs, {
+              href: Route.AboutUs,
+              'data-navigo': '',
+            }),
+          ]),
         ]),
         el(
           '.header-column.logo-column',

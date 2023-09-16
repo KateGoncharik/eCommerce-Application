@@ -1,0 +1,66 @@
+.block-about-us {
+  display: flex;
+  width: 100%;
+  gap: 4%;
+  padding: 30px;
+}
+
+.card-img {
+  width: 100%;
+  height: auto;
+}
+
+.card-name {
+  font-size: 1.2rem;
+}
+
+.card-roles {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.description-card {
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+}
+
+.card-git-link {
+  align-self: end;
+  font-weight: 700;
+  color: $black;
+  padding-bottom: 3px;
+  border-bottom: 1px $black solid;
+  cursor: pointer;
+  transition: all 0.5s ease;
+
+  &:hover {
+    background-color: black;
+    color: $white;
+  }
+}
+
+.card-links {
+  display: flex;
+  justify-content: space-between;
+}
+
+.card-cv-link {
+  align-self: end;
+  font-weight: 700;
+  color: #cc39ad;
+  padding-bottom: 3px;
+  border-bottom: 1px #cc39ad solid;
+  cursor: pointer;
+  transition: all 0.5s ease;
+
+  &:hover {
+    background-color: #cc39ad;
+    color: $white;
+  }
+}
+
+@media (width <= 769px) {
+  .block-about-us {
+    flex-wrap: wrap;
+  }
+}
