@@ -30,18 +30,22 @@ class CartPage extends Page {
     throw new Error('Positive items amount expected');
   }
 
+  private createNoProductsContainer(cartContainer: HTMLElement): void {
+    const noProductsWrapper = el('.no-items-wrapper', [
+      el('p.no-items-message', 'No products added to cart. Take a look at our products here.'),
+      el('a.no-items-link', this.burger.linkText.toCatalog, {
+        href: Route.Catalog,
+        'data-navigo': '',
+      }),
+    ]);
+    mount(cartContainer, noProductsWrapper);
+  }
+
   private createCartContainer(): HTMLElement {
     const cartContainer = el('.cart-container');
     getCart().then((userCart) => {
       if (userCart === null) {
-        const noProductsWrapper = el('.no-items-wrapper', [
-          el('p.no-items-message', 'No products added to cart. Take a look at our products here.'),
-          el('a.no-items-link', this.burger.linkText.toCatalog, {
-            href: Route.Catalog,
-            'data-navigo': '',
-          }),
-        ]);
-        mount(cartContainer, noProductsWrapper);
+        this.createNoProductsContainer(cartContainer);
       } else {
         this.fillCartContainer(userCart, cartContainer);
       }
@@ -65,6 +69,7 @@ class CartPage extends Page {
   }
 
   private createProductCard(item: LineItem, productWrapper: HTMLElement): void {
+    console.log('ITEM', item.quantity);
     const images = item.variant.images;
     if (!images) {
       throw new Error('Images expected');
@@ -114,7 +119,21 @@ class CartPage extends Page {
       if (cart === null) {
         throw new Error('Cart expected');
       }
-      deleteProductFromCart(item.id, cart.id, cart.version, item.quantity);
+      const updatedCart = await deleteProductFromCart(
+        item.id,
+        cart.id,
+        cart.version,
+        Number(itemsAmountBlock.innerHTML)
+      );
+      if (updatedCart === null) {
+        throw new Error('Cart update expected');
+      }
+      updateItemsAmount(updatedCart);
+      if (!updatedCart.totalLineItemQuantity) {
+        const cartContainer = safeQuerySelector('.cart-container', document);
+        cartContainer.innerHTML = '';
+        this.createNoProductsContainer(cartContainer);
+      }
       unmount(productWrapper, itemContainer);
     });
     mount(productWrapper, itemContainer);
