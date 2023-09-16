@@ -9,7 +9,7 @@ class FiltersBlock {
   constructor(private catalog: CatalogPageType) {}
 
   private minPrice = 0;
-  private maxPrice = 5;
+  private maxPrice = 100;
   private priceFrom = this.minPrice;
   private priceTo = this.maxPrice;
   private filtersPriceBlock = el('.filters-unit');
@@ -92,8 +92,8 @@ class FiltersBlock {
   }
 
   private createPriceRange(): HTMLElement | void {
-    const thumbFrom = el('input#from', { type: 'range', min: this.minPrice, value: '0', max: this.maxPrice });
-    const thumbTo = el('input#to', { type: 'range', min: this.minPrice, value: '5', max: this.maxPrice });
+    const thumbFrom = el('input#from', { type: 'range', min: this.minPrice, value: this.minPrice, max: this.maxPrice });
+    const thumbTo = el('input#to', { type: 'range', min: this.minPrice, value: this.maxPrice, max: this.maxPrice });
 
     if (!(thumbFrom instanceof HTMLInputElement) || !(thumbTo instanceof HTMLInputElement)) {
       return;
@@ -127,11 +127,25 @@ class FiltersBlock {
     this.colorCircles = [];
     for (const [color, hex] of Object.entries(Colors)) {
       const circle = el('.filters-color-circle', { style: `background-color: ${hex}`, 'data-color': color });
+      this.colorCircles.push(circle);
+    }
+    const gradientCircle = el('.filters-color-circle.filters-gradient-circle', {
+      'data-color': 'Gradient',
+    });
+    const rainbowCircle = el('.filters-color-circle.filters-rainbow-circle', {
+      'data-color': 'Rainbow',
+    });
+    const multicolorCircle = el('.filters-color-circle.filters-multicolor-circle', {
+      'data-color': 'Multicolor',
+    });
+    this.colorCircles.push(gradientCircle, rainbowCircle, multicolorCircle);
+
+    this.colorCircles.forEach((circle) => {
       circle.addEventListener('click', () => {
         circle.classList.toggle('active');
       });
-      this.colorCircles.push(circle);
-    }
+    });
+
     setChildren(this.filtersColorBlock, [
       el('h4.filters-colors-title.filters-unit-title', 'Colors'),
       el('.filters-colors-content', this.colorCircles),
