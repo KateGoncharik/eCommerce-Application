@@ -1,5 +1,5 @@
 import { Page } from '@templates/page';
-import { getProduct, createCart, getCart, addProductToCart } from '@sdk/requests';
+import { getProduct, createCart, getCart, addProductToCart, deleteProductFromCart } from '@sdk/requests';
 import { el, mount, setAttr } from 'redom';
 import { ProductData } from '@app/types/data-product';
 import { connectSlider } from '@helpers/slider';
@@ -84,6 +84,9 @@ export class ProductPage extends Page {
 
           btnAddToCart.addEventListener('click', async () => {
             setAttr(btnAddToCart, { disabled: true });
+
+            btnAddToCart.classList.contains('btn-remove') ? 
+            this.deleteProduct(productId, btnAddToCart):
             this.addProduct(productId, btnAddToCart);
           });
         })
@@ -95,6 +98,7 @@ export class ProductPage extends Page {
 
   private changeBtn(productId: string, btn: HTMLElement): void {
     getCart().then((data) => {
+
       const result = 
         !data
         ? false
@@ -124,13 +128,24 @@ export class ProductPage extends Page {
           addProductToCart(productId, cartId!, cartVersion)
           .then(() => this.changeBtn(productId, btn));
         });
-      } else if (!btn.classList.contains('bnt-remove')) {
+      } else {
           cartId = cartData .id;
           cartVersion = cartData .version;
 
           addProductToCart(productId, cartId, cartVersion)
           .then(() => this.changeBtn(productId, btn));
         }
+    });
+  }
+
+  private deleteProduct(productId: string, btn: HTMLElement): void {
+    getCart().then(cartData => {
+      cartData!.lineItems.find((el: { productId: string; id: string; quantity: number}) => { 
+
+        el.productId === productId && 
+        deleteProductFromCart(el.id, cartData!.id, cartData!.version, el.quantity)
+        .then(() => this.changeBtn(productId, btn))
+      })
     });
   }
 
