@@ -44,7 +44,7 @@ class CartPage extends Page {
   private createCartContainer(): HTMLElement {
     const cartContainer = el('.cart-container');
     getCart().then((userCart) => {
-      if (userCart === null) {
+      if (userCart === null || !userCart.totalLineItemQuantity) {
         this.createNoProductsContainer(cartContainer);
       } else {
         this.fillCartContainer(userCart, cartContainer);
@@ -199,8 +199,7 @@ class CartPage extends Page {
   ): void {
     updateLineItemQuantity(itemId, itemsAmount).then(() => {
       recalculateCartCost()
-        .then(async () => {
-          const updatedCart = await getCart();
+        .then((updatedCart) => {
           if (updatedCart === null) {
             throw new Error('Recalculate failure');
           }
