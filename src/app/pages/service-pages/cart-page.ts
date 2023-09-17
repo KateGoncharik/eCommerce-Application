@@ -7,10 +7,10 @@ import { Route } from '@app/types/route';
 import { toggleIconsState } from '@helpers/toggle-icons-state';
 import { getPriceInUsd } from '@helpers/get-price-in-usd';
 import minus from '@icons/minus.png';
-import addIcon from '@icons/add.png';
+import addIconSrc from '@icons/add.png';
 import trashCan from '@icons/trash-can.png';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
-import { updateItemsAmount } from '@helpers/update-items-amount';
+import { updateHeaderItemsAmount } from '@helpers/update-counter-items-amount';
 
 class CartPage extends Page {
   protected textObject = {
@@ -69,7 +69,6 @@ class CartPage extends Page {
   }
 
   private createProductCard(item: LineItem, productWrapper: HTMLElement): void {
-    console.log('ITEM', item.quantity);
     const images = item.variant.images;
     if (!images) {
       throw new Error('Images expected');
@@ -78,28 +77,15 @@ class CartPage extends Page {
     const itemTotalCostBlock = el('.item-total', [
       el('.total-price', ` total: ${getPriceInUsd(item.totalPrice.centAmount)}`),
     ]);
-    const removeItemButton = el('button.remove-item-button', [el('img.remove-item', { src: minus, alt: 'remove' })]);
-    if (!(removeItemButton instanceof HTMLButtonElement)) {
+    const removeIcon = el('button.remove-item-button', [el('img.remove-item', { src: minus, alt: 'remove' })]);
+    if (!(removeIcon instanceof HTMLButtonElement)) {
       throw new Error('Button expected');
     }
-    const addItemButton = el('button.add-item-button', [el('img.add-item', { src: addIcon, alt: 'add' })]);
-    if (!(addItemButton instanceof HTMLButtonElement)) {
+    const addIcon = el('button.add-item-button', [el('img.add-item', { src: addIconSrc, alt: 'add' })]);
+    if (!(addIcon instanceof HTMLButtonElement)) {
       throw new Error('Button expected');
     }
-    removeItemButton.addEventListener('click', () => {
-      this.removeFromCart(item.id, itemsAmountBlock, itemTotalCostBlock, removeItemButton, addItemButton);
-      const itemsAmount = CartPage.getItemsQuantity(itemsAmountBlock);
-      if (itemsAmount === 1) {
-        return;
-      }
-      const newAmount = this.decreaseItemsAmount(itemsAmount);
-      itemsAmountBlock.innerHTML = `${newAmount}`;
-    });
-    addItemButton.addEventListener('click', () => {
-      this.addToCart(item.id, itemsAmountBlock, itemTotalCostBlock, addItemButton, removeItemButton);
-      const newAmount = this.increaseItemsAmount(CartPage.getItemsQuantity(itemsAmountBlock));
-      itemsAmountBlock.innerHTML = `${newAmount}`; //TODO refactor - remove duplication
-    });
+    this.listenClickOnItemsAmountUpdateButtons(addIcon, removeIcon, item, itemsAmountBlock, itemTotalCostBlock);
     const deleteItem = el('button.delete-item', [el('img.delete-item-icon', { src: trashCan, alt: 'delete' })]);
     if (!(deleteItem instanceof HTMLButtonElement)) {
       throw new Error('Button expected');
@@ -109,11 +95,22 @@ class CartPage extends Page {
       el('.item-content', [
         el('.item-name', `${item.name['en-US']}`),
         el('.item-price', ` price: ${getPriceInUsd(item.price.value.centAmount)}`),
-        el('.items-amount-wrapper', [el('.edit-item-quantity', [removeItemButton, itemsAmountBlock, addItemButton])]),
+        el('.items-amount-wrapper', [el('.edit-item-quantity', [removeIcon, itemsAmountBlock, addIcon])]),
       ]),
       itemTotalCostBlock,
       deleteItem,
     ]);
+    this.listenClickOnDeleteItem(deleteItem, item, itemsAmountBlock, productWrapper, itemContainer);
+    mount(productWrapper, itemContainer);
+  }
+
+  private listenClickOnDeleteItem(
+    deleteItem: HTMLButtonElement,
+    item: LineItem,
+    itemsAmountBlock: HTMLElement,
+    productWrapper: HTMLElement,
+    itemContainer: HTMLElement
+  ): void {
     deleteItem.addEventListener('click', async () => {
       const cart = await getCart();
       if (cart === null) {
@@ -128,24 +125,49 @@ class CartPage extends Page {
       if (updatedCart === null) {
         throw new Error('Cart update expected');
       }
-      updateItemsAmount(updatedCart);
+      updateHeaderItemsAmount(updatedCart);
       if (!updatedCart.totalLineItemQuantity) {
         const cartContainer = safeQuerySelector('.cart-container', document);
         cartContainer.innerHTML = '';
         this.createNoProductsContainer(cartContainer);
       }
       unmount(productWrapper, itemContainer);
+      if (updatedCart.totalLineItemQuantity) {
+        this.updateOrderDetails(updatedCart.totalPrice.centAmount, updatedCart.totalLineItemQuantity);
+      }
     });
-    mount(productWrapper, itemContainer);
   }
 
-  private async addToCart(
+  private listenClickOnItemsAmountUpdateButtons(
+    addItemButton: HTMLButtonElement,
+    removeItemButton: HTMLButtonElement,
+    item: LineItem,
+    itemsAmountBlock: HTMLElement,
+    itemTotalCostBlock: HTMLElement
+  ): void {
+    removeItemButton.addEventListener('click', () => {
+      this.removeFromCart(item.id, itemsAmountBlock, itemTotalCostBlock, removeItemButton, addItemButton);
+      const itemsAmount = CartPage.getItemsQuantity(itemsAmountBlock);
+      if (itemsAmount === 1) {
+        return;
+      }
+      const newAmount = this.decreaseItemsAmount(itemsAmount);
+      itemsAmountBlock.innerHTML = `${newAmount}`;
+    });
+    addItemButton.addEventListener('click', () => {
+      this.addToCart(item.id, itemsAmountBlock, itemTotalCostBlock, addItemButton, removeItemButton);
+      const newAmount = this.increaseItemsAmount(CartPage.getItemsQuantity(itemsAmountBlock));
+      itemsAmountBlock.innerHTML = `${newAmount}`; //TODO refactor - remove duplication
+    });
+  }
+
+  private addToCart(
     itemId: string,
     itemsAmountBlock: HTMLElement,
     itemTotalCostBlock: HTMLElement,
     addIcon: HTMLButtonElement,
     removeIcon: HTMLButtonElement
-  ): Promise<void> {
+  ): void {
     let itemsAmount = CartPage.getItemsQuantity(itemsAmountBlock);
     itemsAmount++;
     toggleIconsState([removeIcon, addIcon]);
@@ -177,7 +199,8 @@ class CartPage extends Page {
   ): void {
     updateLineItemQuantity(itemId, itemsAmount).then(() => {
       recalculateCartCost()
-        .then((updatedCart) => {
+        .then(async () => {
+          const updatedCart = await getCart();
           if (updatedCart === null) {
             throw new Error('Recalculate failure');
           }
@@ -185,10 +208,12 @@ class CartPage extends Page {
           if (!item) {
             throw new Error('No such product found in cart');
           }
-
-          this.updateOrderDetails(updatedCart.totalPrice.centAmount, updatedCart.lineItems.length);
+          if (!updatedCart.totalLineItemQuantity) {
+            throw new Error('Items in cart expected');
+          }
+          this.updateOrderDetails(updatedCart.totalPrice.centAmount, updatedCart.totalLineItemQuantity);
           itemTotalCostBlock.innerHTML = `total: ${getPriceInUsd(item.totalPrice.centAmount)}`;
-          updateItemsAmount(updatedCart);
+          updateHeaderItemsAmount(updatedCart);
         })
         .finally(() => {
           toggleIconsState([removeIcon, addIcon]);

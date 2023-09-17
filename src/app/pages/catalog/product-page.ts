@@ -4,7 +4,7 @@ import { el, mount, setAttr } from 'redom';
 import { ProductData } from '@app/types/data-product';
 import { connectSlider } from '@helpers/slider';
 import { eventModal } from '@helpers/modal-img';
-import { updateItemsAmount } from '@helpers/update-items-amount';
+import { updateHeaderItemsAmount } from '@helpers/update-counter-items-amount';
 
 export class ProductPage extends Page {
   constructor(private productKey: string) {
@@ -129,7 +129,7 @@ export class ProductPage extends Page {
               throw new Error('Cart update expected');
             }
             this.changeBtn(productId, btn);
-            updateItemsAmount(cart);
+            updateHeaderItemsAmount(cart);
           });
         });
       } else {
@@ -141,7 +141,7 @@ export class ProductPage extends Page {
             throw new Error('Cart update expected');
           }
           this.changeBtn(productId, btn);
-          updateItemsAmount(cart);
+          updateHeaderItemsAmount(cart);
         });
       }
     });
@@ -156,7 +156,7 @@ export class ProductPage extends Page {
               throw new Error('Cart update expected');
             }
             this.changeBtn(productId, btn);
-            updateItemsAmount(cart);
+            updateHeaderItemsAmount(cart);
           });
       });
     });
