@@ -24,7 +24,7 @@ export class AboutUs extends Page {
           ),
           el('.card-links', [
             el('a.card-cv-link', 'More about me'),
-            el('a.card-git-link', 'Link github', { href: 'https://github.com/', target: '_blank' }),
+            el('a.card-git-link', 'Github', { href: 'https://github.com/', target: '_blank' }),
           ]),
         ]),
       ]),
