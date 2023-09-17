@@ -6,7 +6,7 @@ import { ProductProjection } from '@commercetools/platform-sdk';
 import { ProductCard } from '@components/product-card';
 import { FiltersBlock } from '@components/filters-block';
 import { Pagination } from '@components/pagination';
-import { buildCategoriesObject } from '@helpers/catalog';
+import { buildCategoriesObject, createLoadAnimItem } from '@helpers/catalog';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
 import { router } from '@app/router';
 import magnifier from '@icons/magnifying-glass.svg';
@@ -34,6 +34,8 @@ class CatalogPage extends Page {
   private mask = el('.catalog-mask');
 
   public createProductContainer(): HTMLElement {
+    this.showLoadingScreen();
+
     this.getRelevantProducts().then((products) => {
       if (!products) {
         new NotFoundPage().render();
@@ -78,18 +80,18 @@ class CatalogPage extends Page {
   }
 
   public fillProductsContainer(products: ProductProjection[]): void {
-    this.productsContainer.innerHTML = '';
     this.pagination.toggleBtnsState(this.pagination.currentPage.get());
 
     if (!products.length) {
       this.productsContainer.classList.add('not-found');
       const notFoundMessage = el('.catalog-not-found-message', 'No products found', el('img', { src: notFoundIcon }));
-      mount(this.productsContainer, notFoundMessage);
+      setChildren(this.productsContainer, [notFoundMessage]);
       return;
     } else {
       this.productsContainer.classList.remove('not-found');
 
       getCart().then((cart) => {
+        this.productsContainer.innerHTML = '';
         products.forEach((product) => {
           const card = new ProductCard(product).create();
           const isProductInCart = cart?.lineItems.some((item) => item.productId === product.id);
@@ -106,6 +108,14 @@ class CatalogPage extends Page {
   public switchToFirstPage(): void {
     this.pagination.currentPage.set(1);
     this.pagination.pageNumberItem.textContent = '1';
+  }
+
+  public showLoadingScreen(): void {
+    const loadingScreen = el('.catalog-loading-screen', [
+      createLoadAnimItem('products-load-anim'),
+      el('p', 'Loading...'),
+    ]);
+    setChildren(this.productsContainer, [loadingScreen]);
   }
 
   private async getRelevantProducts(): Promise<ProductProjection[]> {

@@ -96,6 +96,15 @@ body.no-scroll {
   }
 }
 
+.catalog-loading-screen {
+  grid-column: span 3;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+}
+
 .catalog-not-found-message {
   grid-column: span 3;
   display: flex;
@@ -207,8 +216,12 @@ body.no-scroll {
   }
 }
 
-.catalog-load-anim {
+.card-load-anim {
   height: 25px;
+}
+
+.products-load-anim {
+  height: 50px;
 }
 
 @media (768px < width <= 1180px) or (width <= 640px) {

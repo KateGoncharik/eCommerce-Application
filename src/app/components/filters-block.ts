@@ -50,6 +50,8 @@ class FiltersBlock {
   }
 
   public async applyFilters(userQuery?: string | null, offset = 0): Promise<void> {
+    this.catalog.showLoadingScreen();
+
     const queryArgs = this.assembleQueryArgs();
 
     if (userQuery) {
