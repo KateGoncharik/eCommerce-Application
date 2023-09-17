@@ -12,6 +12,7 @@ import {
   CustomerChangePassword,
   Cart,
   ProductProjectionPagedQueryResponse,
+  ProductProjectionPagedSearchResponse,
 } from '@commercetools/platform-sdk';
 import { rememberAuthorizedUser } from '@app/state';
 import { getUserOrError } from '@helpers/get-user-or-error ';
@@ -154,7 +155,10 @@ export async function getProductsOfCategory(id: string, offset = 0): Promise<Pro
   }
 }
 
-export async function getFilteredProducts(filterQuery: string | string[], offset = 0): Promise<ProductProjection[]> {
+export async function getFilteredProducts(
+  filterQuery: string | string[],
+  offset = 0
+): Promise<ProductProjectionPagedSearchResponse | null> {
   const queryArgs = {
     filter: filterQuery,
     limit: productsPerPage,
@@ -162,10 +166,10 @@ export async function getFilteredProducts(filterQuery: string | string[], offset
   };
   try {
     const request = await getApiRoot().productProjections().search().get({ queryArgs }).execute();
-    return request.body.results;
+    return request.body;
   } catch (err) {
     console.error(errorMessage);
-    return [];
+    return null;
   }
 }
 

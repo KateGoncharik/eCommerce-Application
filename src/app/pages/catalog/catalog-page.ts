@@ -16,9 +16,11 @@ class CatalogPage extends Page {
   constructor(public categoryKey?: string) {
     super();
   }
+  public productCount = 0;
 
   public filtersBlock = new FiltersBlock(this);
   public pagination = new Pagination(this);
+
   public sideBar = el('.catalog-sidebar');
   public searchInput = el('input.catalog-search-input', {
     placeholder: 'Search...',
@@ -77,6 +79,7 @@ class CatalogPage extends Page {
 
   public fillProductsContainer(products: ProductProjection[]): void {
     this.productsContainer.innerHTML = '';
+    this.pagination.toggleBtnsState(this.pagination.currentPage.get());
 
     if (!products.length) {
       this.productsContainer.classList.add('not-found');
@@ -100,6 +103,11 @@ class CatalogPage extends Page {
     }
   }
 
+  public switchToFirstPage(): void {
+    this.pagination.currentPage.set(1);
+    this.pagination.pageNumberItem.textContent = '1';
+  }
+
   private async getRelevantProducts(): Promise<ProductProjection[]> {
     const offset = this.pagination.calculateOffset();
     let products: ProductProjection[];
@@ -112,7 +120,7 @@ class CatalogPage extends Page {
       products = await getProductsOfCategory(category.id, offset);
     } else {
       const request = await getProducts(offset);
-      this.pagination.productCount = request?.total || 0;
+      this.productCount = request?.total || 0;
       products = request?.results || [];
     }
     return products;
@@ -148,6 +156,10 @@ class CatalogPage extends Page {
 
     searchInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && searchInput instanceof HTMLInputElement) {
+        if (!searchInput.value.trim().length) {
+          this.filtersBlock.applyFilters();
+          return;
+        }
         const searchQuery = searchInput.value
           .trim()
           .toLowerCase()
@@ -156,6 +168,7 @@ class CatalogPage extends Page {
           .join(',');
 
         this.filtersBlock.applyFilters(searchQuery);
+        this.switchToFirstPage();
       }
     });
 

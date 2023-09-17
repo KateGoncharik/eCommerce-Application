@@ -5,9 +5,7 @@ import { productsPerPage, getProducts } from '@sdk/requests';
 class Pagination {
   constructor(private catalog: CatalogPageType) {}
 
-  public productCount = 0;
-
-  private currentPage = {
+  public currentPage = {
     get(): number {
       return Number(localStorage.getItem('catalog-current-page')) || 1;
     },
@@ -16,9 +14,9 @@ class Pagination {
     },
   };
 
+  public pageNumberItem = el('.pagination-controls.pagination-page-num', this.currentPage.get());
   private firstPageButton = el('.pagination-controls', '<<');
   private prevPageButton = el('.pagination-controls', '<');
-  private pageNumberItem = el('.pagination-controls.pagination-page-num', this.currentPage.get());
   private nextPageButton = el('.pagination-controls', '>');
   private lastPageButton = el('.pagination-controls', '>>');
 
@@ -46,13 +44,12 @@ class Pagination {
       await this.goToPage(nextPage);
     });
     lastPageButton.addEventListener('click', async () => {
-      const lastPage = await this.getLastPage();
       if (lastPageButton.classList.contains('inactive')) {
         return;
       }
+      const lastPage = await this.getLastPage();
       await this.goToPage(lastPage);
     });
-    this.toggleBtnsState(this.currentPage.get());
     return el('.catalog-pagination', [firstPageButton, prevPageButton, pageNumberItem, nextPageButton, lastPageButton]);
   }
 
@@ -60,23 +57,7 @@ class Pagination {
     return (pageNumber - 1) * productsPerPage;
   }
 
-  private getLastPage = async (): Promise<number> => {
-    if (!this.productCount) {
-      const request = await getProducts();
-      this.productCount = request?.total || 0;
-    }
-    return Math.ceil(this.productCount / productsPerPage);
-  };
-
-  private async goToPage(pageNumber: number): Promise<void> {
-    const offset = this.calculateOffset(pageNumber);
-    await this.catalog.filtersBlock.applyFilters(null, offset);
-    this.pageNumberItem.textContent = pageNumber.toString();
-    this.currentPage.set(pageNumber);
-    this.toggleBtnsState(pageNumber);
-  }
-
-  private async toggleBtnsState(pageNumber: number): Promise<void> {
+  public async toggleBtnsState(pageNumber: number): Promise<void> {
     const { firstPageButton, prevPageButton, nextPageButton, lastPageButton } = this;
     const makeActive = (...buttons: HTMLElement[]): void => {
       buttons.forEach((button) => {
@@ -88,15 +69,33 @@ class Pagination {
         button.classList.add('inactive');
       });
     };
-    if (pageNumber === 1) {
-      makeInactive(firstPageButton, prevPageButton);
-      makeActive(nextPageButton, lastPageButton);
-    } else if (pageNumber === (await this.getLastPage())) {
-      makeInactive(nextPageButton, lastPageButton);
+    if (pageNumber > 1) {
       makeActive(firstPageButton, prevPageButton);
     } else {
-      makeActive(firstPageButton, prevPageButton, nextPageButton, lastPageButton);
+      makeInactive(firstPageButton, prevPageButton);
     }
+    if (pageNumber < (await this.getLastPage())) {
+      makeActive(nextPageButton, lastPageButton);
+    } else {
+      makeInactive(nextPageButton, lastPageButton);
+    }
+  }
+
+  private getLastPage = async (): Promise<number> => {
+    const { productCount } = this.catalog;
+    if (!productCount) {
+      const request = await getProducts();
+      this.catalog.productCount = request?.total || 0;
+    }
+    return Math.ceil(productCount / productsPerPage);
+  };
+
+  private async goToPage(pageNumber: number): Promise<void> {
+    const offset = this.calculateOffset(pageNumber);
+    await this.catalog.filtersBlock.applyFilters(null, offset);
+    this.pageNumberItem.textContent = pageNumber.toString();
+    this.currentPage.set(pageNumber);
+    this.toggleBtnsState(pageNumber);
   }
 }
 

@@ -1,7 +1,6 @@
 import { Button } from '@components/button';
 import { el, mount, unmount, setChildren } from 'redom';
 import { router } from '@app/router';
-import { ProductProjection } from '@commercetools/platform-sdk';
 import { getCategoryByKey, getFilteredProducts, getProducts } from '@sdk/requests';
 import { CatalogPageType } from '@customTypes/catalog';
 import { Colors } from '@customTypes/enums';
@@ -32,12 +31,15 @@ class FiltersBlock {
       el('.sidebar-dropdown-content', [priceFilters, colorFilters, el('.filters-buttons', [resetBtn, applyBtn])]),
     ]);
     applyBtn.addEventListener('click', () => {
+      this.catalog.switchToFirstPage();
       this.applyFilters();
     });
     resetBtn.addEventListener('click', () => {
       if (!this.isPriceFiltersApplied() && !this.isColorFiltersApplied()) {
         return;
       }
+      this.priceFrom = this.minPrice;
+      this.priceTo = this.maxPrice;
       unmount(this.catalog.sideBar, container);
       mount(this.catalog.sideBar, this.create());
       this.catalog.createProductContainer();
@@ -49,7 +51,6 @@ class FiltersBlock {
 
   public async applyFilters(userQuery?: string | null, offset = 0): Promise<void> {
     const queryArgs = this.assembleQueryArgs();
-    let products: ProductProjection[];
 
     if (userQuery) {
       queryArgs.push(`searchKeywords.en-US.text:${userQuery}`);
@@ -58,12 +59,9 @@ class FiltersBlock {
       const category = await getCategoryByKey(this.catalog.categoryKey);
       queryArgs.push(`categories.id:"${category?.id}"`);
     }
-    if (queryArgs.length) {
-      products = await getFilteredProducts(queryArgs, offset);
-    } else {
-      const request = await getProducts(offset);
-      products = request?.results || [];
-    }
+    const request = queryArgs.length ? await getFilteredProducts(queryArgs, offset) : await getProducts(offset);
+    const products = request?.results || [];
+    this.catalog.productCount = request?.total || 0;
     this.catalog.fillProductsContainer(products);
   }
 
