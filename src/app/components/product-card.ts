@@ -1,10 +1,11 @@
 import { ProductMainData } from '@customTypes/catalog';
 import { el, mount, setChildren } from 'redom';
 import addIcon from '@icons/add.png';
+import { Cart, ProductProjection } from '@commercetools/platform-sdk';
 import { addProductToCart, getCart, createCart } from '@sdk/requests';
-import { ProductProjection } from '@commercetools/platform-sdk';
 import { getPriceInUsd } from '@helpers/get-price-in-usd';
 import { createLoadAnimItem } from '@helpers/catalog';
+import { updateItemsAmount } from '@helpers/update-items-amount';
 
 class ProductCard {
   private productData: ProductMainData;
@@ -28,8 +29,12 @@ class ProductCard {
         return;
       }
       setChildren(priceWrapper, [price, createLoadAnimItem('card-load-anim')]);
-      await this.addToCart();
+      const updatedCart = await this.addToCart();
+      if (updatedCart === null) {
+        throw new Error('Cart update failure');
+      }
       setChildren(priceWrapper, [price, addToCartBtn]);
+      updateItemsAmount(updatedCart);
       card.classList.add('in-cart');
     });
 
@@ -53,14 +58,15 @@ class ProductCard {
     return card;
   }
 
-  private async addToCart(): Promise<void> {
+  private async addToCart(): Promise<Cart | null> {
     let cart = await getCart();
     if (!cart) {
       cart = await createCart();
     }
     if (cart) {
-      await addProductToCart(this.product.id, cart.id, cart.version);
+      return await addProductToCart(this.product.id, cart.id, cart.version);
     }
+    return null;
   }
 
   private extractProductData(product: ProductProjection): ProductMainData {
