@@ -1,19 +1,42 @@
 .block-about-us {
   display: flex;
+  flex-direction: column;
   max-width: 1440px;
-  gap: 4%;
-  padding: 40px;
   margin: 0 auto;
+  padding: 40px;
+}
+
+.about-us {
+  display: flex;
+  gap: 4%;
+  margin: 0 auto;
+}
+
+.card {
+  box-shadow: 0 6px 8px 0 rgba(34 60 80 / 20%);
+}
+
+.block-card-img {
+  overflow: hidden;
 }
 
 .card-img {
   width: 100%;
   height: auto;
-  border-radius: 2%;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
 }
 
-.card-name {
+.block-info {
+  padding: 10px 5px 5px;
+}
+
+.info-name {
   font-size: 1.2rem;
+  font-weight: 700;
 }
 
 .card-roles {
@@ -22,7 +45,6 @@
 }
 
 .description-card {
-  font-size: 0.9rem;
   margin-bottom: 10px;
 }
 
@@ -31,7 +53,7 @@
   align-self: end;
   font-weight: 700;
   padding-bottom: 3px;
-  transition: all 0.5s ease;
+  transition: all 0.3s ease-in-out;
   cursor: pointer;
 }
 
@@ -62,7 +84,11 @@
 
 @media (width <= 769px) {
   .block-about-us {
-    flex-wrap: wrap;
     padding: 55px;
+  }
+
+  .about-us {
+    flex-wrap: wrap;
+    gap: 30px;
   }
 }
