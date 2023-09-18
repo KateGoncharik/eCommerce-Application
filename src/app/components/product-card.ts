@@ -6,7 +6,7 @@ import loadIndicator from '@animation/load-indicator.json';
 import { Cart, ProductProjection } from '@commercetools/platform-sdk';
 import { addProductToCart, getCart, createCart } from '@sdk/requests';
 import { getPriceInUsd } from '@helpers/get-price-in-usd';
-import { updateItemsAmount } from '@helpers/update-items-amount';
+import { updateHeaderItemsAmount } from '@helpers/update-counter-items-amount';
 
 class ProductCard {
   private productData: ProductMainData;
@@ -35,7 +35,7 @@ class ProductCard {
         throw new Error('Cart update failure');
       }
       setChildren(priceWrapper, [price, addToCartBtn]);
-      updateItemsAmount(updatedCart);
+      updateHeaderItemsAmount(updatedCart);
       card.classList.add('in-cart');
     });
 

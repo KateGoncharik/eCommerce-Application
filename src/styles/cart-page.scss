@@ -77,6 +77,18 @@
   margin: 0.2em auto;
 }
 
+.delete-item {
+  width: 8%;
+  height: 20%;
+  margin: -0.6em;
+  background-color: $white;
+  display: flex;
+}
+
+.delete-item-icon {
+  width: 100%;
+}
+
 .total-price,
 .item-total {
   font-size: 18px;
@@ -158,6 +170,10 @@ img.add-item {
 
   .item-content {
     font-size: 16px;
+  }
+
+  .delete-item {
+    width: 10%;
   }
 
   .checkout {

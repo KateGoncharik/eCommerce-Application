@@ -1,6 +1,5 @@
 import { Address, CartUpdateAction, CustomerUpdateAction, LineItem } from '@commercetools/platform-sdk';
 import { safeQuerySelector } from './safe-query-selector';
-// import { deleteProductFromCart } from '@sdk/requests';
 
 export function getFirstNameAction(newFirstName: string): CustomerUpdateAction {
   return {
@@ -84,6 +83,4 @@ export function getAllItemsRemoveActions(lineItems: LineItem[]): CartUpdateActio
     actions.push(getRemoveItemAction(item.id, item.quantity));
   });
   return actions;
-
-  // deleteProductFromCart(itemId, )4 arguments - we need to get cartId + we need to do it all at once - array
 }
