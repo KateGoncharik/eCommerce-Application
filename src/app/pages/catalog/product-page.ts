@@ -4,6 +4,7 @@ import { el, mount, setAttr } from 'redom';
 import { ProductData } from '@app/types/data-product';
 import { connectSlider } from '@helpers/slider';
 import { eventModal } from '@helpers/modal-img';
+import { updateHeaderItemsAmount } from '@helpers/update-counter-items-amount';
 
 export class ProductPage extends Page {
   constructor(private productKey: string) {
@@ -123,13 +124,25 @@ export class ProductPage extends Page {
           cartId = data!.id;
           cartVersion = data!.version;
 
-          addProductToCart(productId, cartId!, cartVersion).then(() => this.changeBtn(productId, btn));
+          addProductToCart(productId, cartId!, cartVersion).then((cart) => {
+            if (cart === null) {
+              throw new Error('Cart update expected');
+            }
+            this.changeBtn(productId, btn);
+            updateHeaderItemsAmount(cart);
+          });
         });
       } else {
         cartId = cartData.id;
         cartVersion = cartData.version;
 
-        addProductToCart(productId, cartId, cartVersion).then(() => this.changeBtn(productId, btn));
+        addProductToCart(productId, cartId, cartVersion).then((cart) => {
+          if (cart === null) {
+            throw new Error('Cart update expected');
+          }
+          this.changeBtn(productId, btn);
+          updateHeaderItemsAmount(cart);
+        });
       }
     });
   }
@@ -138,9 +151,13 @@ export class ProductPage extends Page {
     getCart().then((cartData) => {
       cartData!.lineItems.find((el: { productId: string; id: string; quantity: number }) => {
         el.productId === productId &&
-          deleteProductFromCart(el.id, cartData!.id, cartData!.version, el.quantity).then(() =>
-            this.changeBtn(productId, btn)
-          );
+          deleteProductFromCart(el.id, cartData!.id, cartData!.version, el.quantity).then((cart) => {
+            if (cart === null) {
+              throw new Error('Cart update expected');
+            }
+            this.changeBtn(productId, btn);
+            updateHeaderItemsAmount(cart);
+          });
       });
     });
   }

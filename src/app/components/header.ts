@@ -5,7 +5,7 @@ import cart from '@icons/cart.svg';
 import { Burger } from '@components/burger';
 import { isUserAuthorized } from '@app/state';
 import { getCart } from '@app/sdk/requests';
-import { updateItemsAmount } from '@helpers/update-items-amount';
+import { updateHeaderItemsAmount } from '@helpers/update-counter-items-amount';
 class Header {
   private burger = new Burger();
 
@@ -30,7 +30,7 @@ class Header {
       if (cart === null) {
         return;
       }
-      updateItemsAmount(cart);
+      updateHeaderItemsAmount(cart);
     });
 
     return el('header.header', [
