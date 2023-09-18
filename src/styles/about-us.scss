@@ -4,7 +4,7 @@
   max-width: 1000px;
   margin: 0 auto;
   padding: 40px;
-  gap: 40px
+  gap: 40px;
 }
 
 .about-us-description {
@@ -154,12 +154,11 @@
     font-size: 1.6rem;
   }
 
-  .description-card, 
+  .description-card,
   .card-git-link,
   .card-cv-link {
     font-size: 1.3rem;
   }
-
 }
 
 @media (width <= 769px) {
@@ -174,19 +173,18 @@
   .block-about-us-entry {
     flex-wrap: wrap-reverse;
   }
+
   .main-description {
-    align-self: center
+    align-self: center;
+    font-size: 1.2rem;
   }
+
   .icon-rs {
     width: 80px;
   }
 
   .wonderland-description {
     font-size: 1.5rem;
-  }
-
-  .main-description {
-    font-size: 1.2rem;
   }
 
   .card {
@@ -198,6 +196,7 @@
   }
 
   .card-links {
+    position: relative;
     padding: 0;
   }
 
@@ -206,17 +205,14 @@
     gap: 30px;
   }
 
-  .card-links {
-    position: relative;
-  }
-
   .info-name,
   .card-roles {
     font-size: 1.2rem;
     margin: 0;
   }
+
   .card-roles,
-  .description-card  {
+  .description-card {
     font-size: 1rem;
     margin-bottom: 5px;
   }

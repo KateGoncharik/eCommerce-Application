@@ -4,7 +4,7 @@ import iconRS from '@icons/icon_rs.svg';
 import avatarA from '@icons/avatar_a.jpg';
 import avatarI from '@icons/avatar_i.jpg';
 import avatarK from '@icons/avatar_k.jpg';
-// import gitIcon from '@icons/git_icon.png'
+
 export class AboutUs extends Page {
   constructor() {
     super();
@@ -18,19 +18,21 @@ export class AboutUs extends Page {
     const blockAboutUs = el('.block-about-us', [
       el('.about-us-description', [
         el('p.wonderland-description', [
-          el('span.bold-descriptin', 'Wonderland'), el('span', ' - online store for modern, stylish party decorations and supplies.')
+          el('span.bold-descriptin', 'Wonderland'),
+          el('span', ' - online store for modern, stylish party decorations and supplies.'),
         ]),
-        el('.main-description', `Users can browse through a vast range of products, view detailed descriptions, add their favorite items to the basket, and proceed to checkout.
-            It includes features such as user registration and login, product search, product categorization, and sorting to make the shopping experience more streamlined and convenient.
-            An important aspect of our application is that it's responsive, ensuring it looks great on various devices with a minimum resolution of 320px. This feature makes the shopping experience enjoyable, irrespective of the device users prefer.`
-        )
+        el(
+          '.main-description',
+          `Users can browse through our products, view detailed descriptions, add favorite items to the basket, and proceed to checkout. 
+        It includes features such as user registration and login, product search, product categorization, and sorting to make the shopping experience more streamlined and convenient. 
+        An important aspect of our application is that it's responsive, ensuring it looks great on various devices with a minimum resolution of 390px. 
+        This feature makes the shopping experience enjoyable, irrespective of the device users prefer.`
+        ),
       ]),
       el('.about-us-card', [
         el('.block-about-us-entry', [
           el('span.about-us-entry', 'Student team'),
-          el('a.link-rs', { href:'https://rs.school/', target: '_blank' }, [
-            el('img.icon-rs', { src: iconRS })
-          ])
+          el('a.link-rs', { href: 'https://rs.school/', target: '_blank' }, [el('img.icon-rs', { src: iconRS })]),
         ]),
         el('.card', [
           el('.block-card-img', [el('img.card-img', { src: avatarA })]),
@@ -42,7 +44,10 @@ export class AboutUs extends Page {
               'fjakfjawfjwa ifjawkfja lfkjafk lsja ksfljaklaafjajwfji3j 39qjfafja fajfiajfaw faijfaf fla,f a f,alfaf fla;f alfkalf aflakfa fkalf; kaf;l ka;f ka;f akf ;afk al;f '
             ),
             el('.card-links', [
-              el('a.card-cv-link', 'More about me', { href: 'https://laleks6.github.io/rsschool-cv/cv', target: '_blank' }),
+              el('a.card-cv-link', 'More about me', {
+                href: 'https://laleks6.github.io/rsschool-cv/cv',
+                target: '_blank',
+              }),
               el('a.card-git-link', 'Github', { href: 'https://github.com/laleks6', target: '_blank' }),
             ]),
           ]),
@@ -72,7 +77,10 @@ export class AboutUs extends Page {
               'fjakfjawfjwa ifjawkfja lfkjafk lsja ksfljaklaafjajwfji3j 39qjfafja fajfiajfaw faijfaf fla,f a f,alfaf fla;f alfkalf aflakfa fkalf; kaf;l ka;f ka;f akf ;afk al;f '
             ),
             el('.card-links', [
-              el('a.card-cv-link', 'More about me', { href: 'https://kategoncharik.github.io/rsschool-cv/cv', target: '_blank' }),
+              el('a.card-cv-link', 'More about me', {
+                href: 'https://kategoncharik.github.io/rsschool-cv/cv',
+                target: '_blank',
+              }),
               el('a.card-git-link', 'Github', { href: 'https://github.com/KateGoncharik', target: '_blank' }),
             ]),
           ]),
