@@ -39,10 +39,8 @@ export class AboutUs extends Page {
           el('.block-info', [
             el('h4.info-name', 'ALEKSANDR'),
             el('p.card-roles', 'STUDENT DEVELOPER'),
-            el(
-              'p.description-card',
-              'fjakfjawfjwa ifjawkfja lfkjafk lsja ksfljaklaafjajwfji3j 39qjfafja fajfiajfaw faijfaf fla,f a f,alfaf fla;f alfkalf aflakfa fkalf; kaf;l ka;f ka;f akf ;afk al;f '
-            ),
+            el('p.tags-card', '✘ Registration Form ✘ Product Page ✘ About Us Page'),
+            el('p.description-card', ''),
             el('.card-links', [
               el('a.card-cv-link', 'More about me', {
                 href: 'https://laleks6.github.io/rsschool-cv/cv',
@@ -57,12 +55,21 @@ export class AboutUs extends Page {
           el('.block-info', [
             el('h4.info-name', 'IRINA'),
             el('p.card-roles', 'STUDENT DEVELOPER'),
+            el('p.tags-card', '✘ Main Page Enhancements ✘ Routing ✘ Catalog Page ✘ Header ✘ Footer'),
             el(
               'p.description-card',
-              'fjakfjawfjwa ifjawkfja lfkjafk lsja ksfljaklaafjajwfji3j 39qjfafja fajfiajfaw faijfaf fla,f a f,alfaf fla;f alfkalf aflakfa fkalf; kaf;l ka;f ka;f akf ;afk al;f '
+              `Hello! My name is Irina.
+             I've been studying frontend development for a year now. 
+             I have experience in developing web projects, single-page applications, and multi-page websites. 
+             The scope of  my expertise includes knowledge of HTML, CSS (SASS/SCSS, BEM), JavaScript, TypeScript, Webpack, Commercetools, Git, GitHub, REST API, Async coding, Figma. 
+             I am a self-motivated programmer with a strong drive to succeed. I am passionate about coding and continuously strive to enhance my skills and knowledge in the field. 
+             I believe in setting high goals for myself and working diligently to achieve them.`
             ),
             el('.card-links', [
-              el('a.card-cv-link', 'More about me'),
+              el('a.card-cv-link', 'More about me', {
+                href: 'https://www.youtube.com/watch?v=eHz5v3I07zg',
+                target: '_blank',
+              }),
               el('a.card-git-link', 'Github', { href: 'https://github.com/Irina-Grebennikova', target: '_blank' }),
             ]),
           ]),
@@ -72,10 +79,8 @@ export class AboutUs extends Page {
           el('.block-info', [
             el('h4.info-name', 'KATE'),
             el('p.card-roles', 'STUDENT DEVELOPER'),
-            el(
-              'p.description-card',
-              'fjakfjawfjwa ifjawkfja lfkjafk lsja ksfljaklaafjajwfji3j 39qjfafja fajfiajfaw faijfaf fla,f a f,alfaf fla;f alfkalf aflakfa fkalf; kaf;l ka;f ka;f akf ;afk al;f '
-            ),
+            el('p.tags-card', '✘ Team Management ✘ Login Form ✘ User Profile Page ✘ Basket Page'),
+            el('p.description-card', ''),
             el('.card-links', [
               el('a.card-cv-link', 'More about me', {
                 href: 'https://kategoncharik.github.io/rsschool-cv/cv',
