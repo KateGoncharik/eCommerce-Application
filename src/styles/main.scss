@@ -4,11 +4,13 @@ $light-grey: #ccc;
 $grey: #808080;
 $hover-color: #777;
 $peach: #da7260;
+$pink: #ca489a;
 
 @import 'fonts';
 @import 'null';
 @import 'general';
 @import 'header';
+@import 'footer';
 @import 'registration-form';
 @import 'login-form';
 @import 'validation-registration-form';
@@ -20,3 +22,5 @@ $peach: #da7260;
 @import 'user-page';
 @import 'basket-page';
 @import 'about-us';
+@import 'cart-page';
+

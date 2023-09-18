@@ -18,4 +18,5 @@ export enum Colors {
   Orange = '#ffa500',
   Gold = '#ffd700',
   Grey = '#808080',
+  Black = '#000000',
 }

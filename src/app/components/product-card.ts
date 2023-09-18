@@ -1,11 +1,11 @@
 import { ProductMainData } from '@customTypes/catalog';
 import { el, mount, setChildren } from 'redom';
 import addIcon from '@icons/add.png';
-import lottie from 'lottie-web';
-import loadIndicator from '@animation/load-indicator.json';
+import { Cart, ProductProjection } from '@commercetools/platform-sdk';
 import { addProductToCart, getCart, createCart } from '@sdk/requests';
-import { ProductProjection } from '@commercetools/platform-sdk';
 import { getPriceInUsd } from '@helpers/get-price-in-usd';
+import { createLoadAnimItem } from '@helpers/catalog';
+import { updateHeaderItemsAmount } from '@helpers/update-counter-items-amount';
 
 class ProductCard {
   private productData: ProductMainData;
@@ -28,9 +28,13 @@ class ProductCard {
       if (isProductInCart) {
         return;
       }
-      setChildren(priceWrapper, [price, this.createLoadAnimItem()]);
-      await this.addToCart();
+      setChildren(priceWrapper, [price, createLoadAnimItem('card-load-anim')]);
+      const updatedCart = await this.addToCart();
+      if (updatedCart === null) {
+        throw new Error('Cart update failure');
+      }
       setChildren(priceWrapper, [price, addToCartBtn]);
+      updateHeaderItemsAmount(updatedCart);
       card.classList.add('in-cart');
     });
 
@@ -54,26 +58,15 @@ class ProductCard {
     return card;
   }
 
-  private async addToCart(): Promise<void> {
+  private async addToCart(): Promise<Cart | null> {
     let cart = await getCart();
     if (!cart) {
       cart = await createCart();
     }
     if (cart) {
-      await addProductToCart(this.product.id, cart.id, cart.version);
+      return await addProductToCart(this.product.id, cart.id, cart.version);
     }
-  }
-
-  protected createLoadAnimItem(): HTMLElement {
-    const animItem = el('div.catalog-load-anim');
-    lottie.loadAnimation({
-      container: animItem,
-      renderer: 'svg',
-      loop: true,
-      autoplay: true,
-      animationData: loadIndicator,
-    });
-    return animItem;
+    return null;
   }
 
   private extractProductData(product: ProductProjection): ProductMainData {

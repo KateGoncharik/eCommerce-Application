@@ -1,9 +1,11 @@
+import { getRemoveItemAction } from '@helpers/get-actions';
 import { Page } from '@templates/page';
 import { getProduct, createCart, getCart, addProductToCart, deleteProductFromCart } from '@sdk/requests';
 import { el, mount, setAttr } from 'redom';
 import { ProductData } from '@app/types/data-product';
 import { connectSlider } from '@helpers/slider';
 import { eventModal } from '@helpers/modal-img';
+import { updateHeaderItemsAmount } from '@helpers/update-counter-items-amount';
 
 export class ProductPage extends Page {
   constructor(private productKey: string) {
@@ -85,9 +87,9 @@ export class ProductPage extends Page {
           btnAddToCart.addEventListener('click', async () => {
             setAttr(btnAddToCart, { disabled: true });
 
-            btnAddToCart.classList.contains('btn-remove') ? 
-            this.deleteProduct(productId, btnAddToCart):
-            this.addProduct(productId, btnAddToCart);
+            btnAddToCart.classList.contains('btn-remove')
+              ? this.deleteProduct(productId, btnAddToCart)
+              : this.addProduct(productId, btnAddToCart);
           });
         })
         .catch((err) => console.error(err)),
@@ -98,9 +100,7 @@ export class ProductPage extends Page {
 
   private changeBtn(productId: string, btn: HTMLElement): void {
     getCart().then((data) => {
-
-      const result = 
-        !data
+      const result = !data
         ? false
         : data!.lineItems.map((el: { productId: string }) => el.productId).includes(productId);
 
@@ -120,32 +120,48 @@ export class ProductPage extends Page {
     getCart().then((cartData) => {
       let cartId, cartVersion;
 
-      if (!cartData ) {
+      if (!cartData) {
         createCart().then((data) => {
           cartId = data!.id;
           cartVersion = data!.version;
 
-          addProductToCart(productId, cartId!, cartVersion)
-          .then(() => this.changeBtn(productId, btn));
+          addProductToCart(productId, cartId!, cartVersion).then((cart) => {
+            if (cart === null) {
+              throw new Error('Cart update expected');
+            }
+            this.changeBtn(productId, btn);
+            updateHeaderItemsAmount(cart);
+          });
         });
       } else {
-          cartId = cartData .id;
-          cartVersion = cartData .version;
+        cartId = cartData.id;
+        cartVersion = cartData.version;
 
-          addProductToCart(productId, cartId, cartVersion)
-          .then(() => this.changeBtn(productId, btn));
-        }
+        addProductToCart(productId, cartId, cartVersion).then((cart) => {
+          if (cart === null) {
+            throw new Error('Cart update expected');
+          }
+          this.changeBtn(productId, btn);
+          updateHeaderItemsAmount(cart);
+        });
+      }
     });
   }
 
   private deleteProduct(productId: string, btn: HTMLElement): void {
-    getCart().then(cartData => {
-      cartData!.lineItems.find((el: { productId: string; id: string; quantity: number}) => { 
-
-        el.productId === productId && 
-        deleteProductFromCart(el.id, cartData!.id, cartData!.version, el.quantity)
-        .then(() => this.changeBtn(productId, btn))
-      })
+    getCart().then((cartData) => {
+      cartData!.lineItems.find((el: { productId: string; id: string; quantity: number }) => {
+        el.productId === productId &&
+          deleteProductFromCart(cartData!.id, cartData!.version, [getRemoveItemAction(el.id, el.quantity)]).then(
+            (cart) => {
+              if (cart === null) {
+                throw new Error('Cart update expected');
+              }
+              this.changeBtn(productId, btn);
+              updateHeaderItemsAmount(cart);
+            }
+          );
+      });
     });
   }
 
