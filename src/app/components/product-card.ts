@@ -1,11 +1,10 @@
 import { ProductMainData } from '@customTypes/catalog';
 import { el, mount, setChildren } from 'redom';
 import addIcon from '@icons/add.png';
-import lottie from 'lottie-web';
-import loadIndicator from '@animation/load-indicator.json';
 import { Cart, ProductProjection } from '@commercetools/platform-sdk';
 import { addProductToCart, getCart, createCart } from '@sdk/requests';
 import { getPriceInUsd } from '@helpers/get-price-in-usd';
+import { createLoadAnimItem } from '@helpers/catalog';
 import { updateHeaderItemsAmount } from '@helpers/update-counter-items-amount';
 
 class ProductCard {
@@ -29,7 +28,7 @@ class ProductCard {
       if (isProductInCart) {
         return;
       }
-      setChildren(priceWrapper, [price, this.createLoadAnimItem()]);
+      setChildren(priceWrapper, [price, createLoadAnimItem('card-load-anim')]);
       const updatedCart = await this.addToCart();
       if (updatedCart === null) {
         throw new Error('Cart update failure');
@@ -68,18 +67,6 @@ class ProductCard {
       return await addProductToCart(this.product.id, cart.id, cart.version);
     }
     return null;
-  }
-
-  protected createLoadAnimItem(): HTMLElement {
-    const animItem = el('div.catalog-load-anim');
-    lottie.loadAnimation({
-      container: animItem,
-      renderer: 'svg',
-      loop: true,
-      autoplay: true,
-      animationData: loadIndicator,
-    });
-    return animItem;
   }
 
   private extractProductData(product: ProductProjection): ProductMainData {
