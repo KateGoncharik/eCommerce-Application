@@ -10,6 +10,7 @@ import minus from '@icons/minus.png';
 import addIcon from '@icons/add.png';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
 import { updateItemsAmount } from '@helpers/update-items-amount';
+// import { getAllItemsInCartActions } from '@helpers/get-actions';
 
 class CartPage extends Page {
   protected textObject = {
@@ -50,6 +51,17 @@ class CartPage extends Page {
 
   private fillCartContainer(cart: Cart, cartContainer: HTMLElement): void {
     const cartItems = el('.cart-items');
+    const clearCartButton = el('button.clear-cart-button', 'Clear cart');
+    if (!(clearCartButton instanceof HTMLButtonElement)) {
+      throw new Error('Button expected');
+    }
+    clearCartButton.addEventListener('click', async () => {
+      const cart = await getCart();
+      if (cart === null || cart.lineItems === null) {
+        throw new Error('Cart items expected');
+      }
+      // deleteProductFromCart(cart.id, getAllItemsInCartActions(cart.lineItems));
+    });
     cartContainer.innerHTML = '';
     cart.lineItems.forEach((item) => {
       this.createProductCard(item, cartItems);
@@ -58,6 +70,7 @@ class CartPage extends Page {
       el('span.checkout-title', 'Order details'),
       el('.checkout-total-price', `Total price: ${getPriceInUsd(cart.totalPrice.centAmount)}`),
       el('.checkout-items-amount', `Products in cart: ${cart.totalLineItemQuantity}`),
+      clearCartButton,
     ]);
     mount(cartContainer, cartItems);
     mount(cartContainer, checkout);

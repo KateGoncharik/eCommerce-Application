@@ -122,11 +122,8 @@
   align-items: center;
 }
 
-.remove-item-button {
-  width: 25%;
-  background-color: $white;
-}
-
+.remove-item-button,
+.clear-cart-button,
 .add-item-button {
   width: 25%;
   background-color: $white;

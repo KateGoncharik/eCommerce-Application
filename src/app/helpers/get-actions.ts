@@ -1,5 +1,6 @@
-import { Address, CustomerUpdateAction } from '@commercetools/platform-sdk';
+import { Address, CartUpdateAction, CustomerUpdateAction, LineItem } from '@commercetools/platform-sdk';
 import { safeQuerySelector } from './safe-query-selector';
+// import { deleteProductFromCart } from '@sdk/requests';
 
 export function getFirstNameAction(newFirstName: string): CustomerUpdateAction {
   return {
@@ -67,4 +68,22 @@ export function collectAllInputsActions(): CustomerUpdateAction[] {
     getDateOfBirthAction(dateInput.value),
     getChangeEmailAction(emailInput.value),
   ];
+}
+
+export function getRemoveItemAction(itemId: string, itemQuantity: number): CartUpdateAction {
+  return {
+    action: 'removeLineItem',
+    lineItemId: itemId,
+    quantity: itemQuantity,
+  };
+}
+
+export function getAllItemsRemoveActions(lineItems: LineItem[]): CartUpdateAction[] {
+  const actions: CartUpdateAction[] = [];
+  lineItems.forEach((item) => {
+    actions.push(getRemoveItemAction(item.id, item.quantity));
+  });
+  return actions;
+
+  // deleteProductFromCart(itemId, )4 arguments - we need to get cartId + we need to do it all at once - array
 }

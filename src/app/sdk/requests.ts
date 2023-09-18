@@ -11,7 +11,9 @@ import {
   Category,
   CustomerChangePassword,
   Cart,
+  CartUpdateAction,
 } from '@commercetools/platform-sdk';
+// import { getRemoveItemAction } from '@helpers/get-actions';
 import { rememberAuthorizedUser } from '@app/state';
 import { getUserOrError } from '@helpers/get-user-or-error ';
 import { DataUser } from '@customTypes/datauser';
@@ -292,11 +294,11 @@ export async function addProductToCart(productId: string, cartID: string, versio
   }
 }
 
+//[getRemoveItemAction(lineItemId, quantity)],
 export async function deleteProductFromCart(
-  lineItemId: string,
   cartID: string,
   cartVersion: number,
-  quantity: number
+  actions: CartUpdateAction[]
 ): Promise<Cart | null> {
   try {
     const cart = await getApiRootForCartRequests()
@@ -307,13 +309,7 @@ export async function deleteProductFromCart(
       .post({
         body: {
           version: cartVersion,
-          actions: [
-            {
-              action: 'removeLineItem',
-              lineItemId: lineItemId,
-              quantity: quantity,
-            },
-          ],
+          actions: actions,
         },
       })
       .execute();
