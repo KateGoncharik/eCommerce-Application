@@ -57,10 +57,15 @@ class CartPage extends Page {
   private fillCartContainer(cart: Cart, cartContainer: HTMLElement): void {
     const cartItems = el('.cart-items');
     const clearCartButton = el('button.clear-cart-button', 'Clear cart');
+    const orderCartButton = el('button.order-button', 'Order');
     if (!(clearCartButton instanceof HTMLButtonElement)) {
       throw new Error('Button expected');
     }
     clearCartButton.addEventListener('click', async () => {
+      const isClearCart = confirm('Clear cart?');
+      if (!isClearCart) {
+        return;
+      }
       const cart = await getCart();
       if (cart === null || cart.lineItems === null) {
         throw new Error('Cart items expected');
@@ -82,6 +87,7 @@ class CartPage extends Page {
       el('.checkout-total-price', `Total price: ${getPriceInUsd(cart.totalPrice.centAmount)}`),
       el('.checkout-items-amount', `Products in cart: ${cart.totalLineItemQuantity}`),
       clearCartButton,
+      orderCartButton,
     ]);
     mount(cartContainer, cartItems);
     mount(cartContainer, checkout);
