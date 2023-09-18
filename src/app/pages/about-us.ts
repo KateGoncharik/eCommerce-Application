@@ -26,7 +26,7 @@ export class AboutUs extends Page {
           `Users can browse through our products, view detailed descriptions, add favorite items to the basket, and proceed to checkout. 
         It includes features such as user registration and login, product search, product categorization, and sorting to make the shopping experience more streamlined and convenient. 
         An important aspect of our application is that it's responsive, ensuring it looks great on various devices with a minimum resolution of 390px. 
-        This feature makes the shopping experience enjoyable, irrespective of the device users prefer.`
+        This feature makes the shopping experience enjoyable, irrespective of the device users prefer. `
         ),
       ]),
       el('.about-us-card', [
