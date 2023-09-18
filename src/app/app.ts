@@ -7,6 +7,7 @@ import { LoginPage } from '@servicePages/login-page';
 import { RegistrationPage } from '@servicePages/registration-page';
 import { NotFoundPage } from '@servicePages/404-page';
 import { CatalogPage } from '@catalog/catalog-page';
+import { AboutUs } from '@pages/about-us';
 import { UserPage } from '@servicePages/user-page';
 import { Header } from '@components/header';
 import { Footer } from '@components/footer';
@@ -21,6 +22,7 @@ const routes: Record<Route, Page> = {
   [Route.Registration]: new RegistrationPage(),
   [Route.NotFound]: new NotFoundPage(),
   [Route.Catalog]: new CatalogPage(),
+  [Route.AboutUs]: new AboutUs(),
   [Route.UserPage]: new UserPage(),
   [Route.EditPasswordPage]: new EditPasswordPage(),
   [Route.AddAddressPage]: new AddAddressPage(),

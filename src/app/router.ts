@@ -35,6 +35,10 @@ function bindRoutes(routes: Record<Route, Page>): void {
       const page = routes[Route.Catalog];
       page.render();
     })
+    .on(Route.AboutUs, () => {
+      const page = routes[Route.AboutUs];
+      page.render();
+    })
     .on(Route.UserPage, () => {
       const user = getUser();
       if (user) {
