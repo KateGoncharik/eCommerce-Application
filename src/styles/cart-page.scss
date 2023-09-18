@@ -134,14 +134,31 @@
   align-items: center;
 }
 
-.remove-item-button {
+.remove-item-button,
+.add-item-button {
   width: 25%;
   background-color: $white;
 }
 
-.add-item-button {
-  width: 25%;
-  background-color: $white;
+.order-button,
+.clear-cart-button {
+  width: 100%;
+  height: 1.8em;
+  margin: 0.1em;
+  background-color: $black;
+  color: $white;
+  font-family: Gilroy, serif;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 120%;
+  letter-spacing: 0.48px;
+  text-transform: uppercase;
+}
+
+.clear-cart-button {
+  height: 1.3em;
+  font-size: 14px;
 }
 
 img.remove-item {

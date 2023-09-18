@@ -10,6 +10,7 @@ import minus from '@icons/minus.png';
 import addIconSrc from '@icons/add.png';
 import trashCan from '@icons/trash-can.png';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
+import { getAllItemsRemoveActions, getRemoveItemAction } from '@helpers/get-actions';
 import { updateHeaderItemsAmount } from '@helpers/update-counter-items-amount';
 
 class CartPage extends Page {
@@ -55,6 +56,28 @@ class CartPage extends Page {
 
   private fillCartContainer(cart: Cart, cartContainer: HTMLElement): void {
     const cartItems = el('.cart-items');
+    const clearCartButton = el('button.clear-cart-button', 'Clear cart');
+    const orderCartButton = el('button.order-button', 'Order');
+    if (!(clearCartButton instanceof HTMLButtonElement)) {
+      throw new Error('Button expected');
+    }
+    clearCartButton.addEventListener('click', async () => {
+      const isClearCart = confirm('Clear cart?');
+      if (!isClearCart) {
+        return;
+      }
+      const cart = await getCart();
+      if (cart === null || cart.lineItems === null) {
+        throw new Error('Cart items expected');
+      }
+      const result = await deleteProductFromCart(cart.id, cart.version, getAllItemsRemoveActions(cart.lineItems));
+      if (result === null) {
+        throw new Error('Clear cart expected');
+      }
+      cartContainer.innerHTML = '';
+      updateHeaderItemsAmount(result);
+      this.createNoProductsContainer(cartContainer);
+    });
     cartContainer.innerHTML = '';
     cart.lineItems.forEach((item) => {
       this.createProductCard(item, cartItems);
@@ -63,6 +86,8 @@ class CartPage extends Page {
       el('span.checkout-title', 'Order details'),
       el('.checkout-total-price', `Total price: ${getPriceInUsd(cart.totalPrice.centAmount)}`),
       el('.checkout-items-amount', `Products in cart: ${cart.totalLineItemQuantity}`),
+      clearCartButton,
+      orderCartButton,
     ]);
     mount(cartContainer, cartItems);
     mount(cartContainer, checkout);
@@ -116,12 +141,9 @@ class CartPage extends Page {
       if (cart === null) {
         throw new Error('Cart expected');
       }
-      const updatedCart = await deleteProductFromCart(
-        item.id,
-        cart.id,
-        cart.version,
-        Number(itemsAmountBlock.innerHTML)
-      );
+      const updatedCart = await deleteProductFromCart(cart.id, cart.version, [
+        getRemoveItemAction(item.id, Number(itemsAmountBlock.innerHTML)),
+      ]);
       if (updatedCart === null) {
         throw new Error('Cart update expected');
       }

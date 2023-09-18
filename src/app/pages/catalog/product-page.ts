@@ -1,3 +1,4 @@
+import { getRemoveItemAction } from '@helpers/get-actions';
 import { Page } from '@templates/page';
 import { getProduct, createCart, getCart, addProductToCart, deleteProductFromCart } from '@sdk/requests';
 import { el, mount, setAttr } from 'redom';
@@ -151,13 +152,15 @@ export class ProductPage extends Page {
     getCart().then((cartData) => {
       cartData!.lineItems.find((el: { productId: string; id: string; quantity: number }) => {
         el.productId === productId &&
-          deleteProductFromCart(el.id, cartData!.id, cartData!.version, el.quantity).then((cart) => {
-            if (cart === null) {
-              throw new Error('Cart update expected');
+          deleteProductFromCart(cartData!.id, cartData!.version, [getRemoveItemAction(el.id, el.quantity)]).then(
+            (cart) => {
+              if (cart === null) {
+                throw new Error('Cart update expected');
+              }
+              this.changeBtn(productId, btn);
+              updateHeaderItemsAmount(cart);
             }
-            this.changeBtn(productId, btn);
-            updateHeaderItemsAmount(cart);
-          });
+          );
       });
     });
   }

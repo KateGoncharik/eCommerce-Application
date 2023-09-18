@@ -11,6 +11,7 @@ import {
   Category,
   CustomerChangePassword,
   Cart,
+  CartUpdateAction,
   ProductProjectionPagedQueryResponse,
   ProductProjectionPagedSearchResponse,
 } from '@commercetools/platform-sdk';
@@ -305,10 +306,9 @@ export async function addProductToCart(productId: string, cartID: string, versio
 }
 
 export async function deleteProductFromCart(
-  lineItemId: string,
   cartID: string,
   cartVersion: number,
-  quantity: number
+  actions: CartUpdateAction[]
 ): Promise<Cart | null> {
   try {
     const cart = await getApiRootForCartRequests()
@@ -319,13 +319,7 @@ export async function deleteProductFromCart(
       .post({
         body: {
           version: cartVersion,
-          actions: [
-            {
-              action: 'removeLineItem',
-              lineItemId: lineItemId,
-              quantity: quantity,
-            },
-          ],
+          actions: actions,
         },
       })
       .execute();
