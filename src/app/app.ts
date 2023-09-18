@@ -1,3 +1,4 @@
+import { el } from 'redom';
 import { bindRoutes } from './router';
 import { Route } from '@customTypes/route';
 import { Page } from '@templates/page';
@@ -9,11 +10,12 @@ import { CatalogPage } from '@catalog/catalog-page';
 import { AboutUs } from '@pages/about-us';
 import { UserPage } from '@servicePages/user-page';
 import { Header } from '@components/header';
+import { Footer } from '@components/footer';
 import { EditPasswordPage } from '@servicePages/edit-password-page';
 import { AddAddressPage } from '@servicePages/add-address-page';
 import { CartPage } from '@servicePages/cart-page';
 
-const main = document.createElement('main');
+const main = el('main.main');
 const routes: Record<Route, Page> = {
   [Route.Main]: new MainPage(),
   [Route.Login]: new LoginPage(),
@@ -40,8 +42,9 @@ class App {
 
   private build(): HTMLElement {
     const header = this.createHeader();
-    const wrapper = document.createElement('div');
-    wrapper.append(header, main);
+    const footer = new Footer().create();
+    const wrapper = el('.page-wrapper');
+    wrapper.append(header, main, footer);
     return wrapper;
   }
 }

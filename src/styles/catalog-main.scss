@@ -96,6 +96,15 @@ body.no-scroll {
   }
 }
 
+.catalog-loading-screen {
+  grid-column: span 3;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+}
+
 .catalog-not-found-message {
   grid-column: span 3;
   display: flex;
@@ -207,8 +216,12 @@ body.no-scroll {
   }
 }
 
-.catalog-load-anim {
+.card-load-anim {
   height: 25px;
+}
+
+.products-load-anim {
+  height: 50px;
 }
 
 @media (768px < width <= 1180px) or (width <= 640px) {
@@ -265,4 +278,46 @@ body.no-scroll {
   @media (width <= 992px) {
     line-height: 100%;
   }
+}
+
+.catalog-pagination {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  padding: 3% 0;
+  border-right: 1px solid $black;
+}
+
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 52px;
+  height: 52px;
+  border: 2px solid $black;
+  font-size: 22px;
+  line-height: 115%;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: all 0.3s;
+
+  &.inactive {
+    color: $grey;
+    border-color: $grey;
+    cursor: default;
+  }
+
+  @media (hover: hover) {
+    &:hover:not(.inactive, .pagination-page-num) {
+      color: $white;
+      background: $black;
+      border-color: $black;
+    }
+  }
+}
+
+.pagination-page-num {
+  cursor: default;
+  color: $white;
+  background-color: $black;
 }

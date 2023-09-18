@@ -204,9 +204,9 @@ $range-h: 1em;
 
 .filters-price-wrap {
   --from: 0;
-  --to: 5;
+  --to: 100;
   --min: 0;
-  --max: 5;
+  --max: 100;
   --dif: calc(var(--max) - var(--min));
 
   display: grid;
@@ -302,7 +302,7 @@ input[type='range'] {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 2%;
+  gap: 7px;
 }
 
 .filters-color-circle {
@@ -315,4 +315,22 @@ input[type='range'] {
   &.active {
     border: 3px solid $black;
   }
+
+  &[data-color='Black'].active {
+    border: 3px solid $black;
+    outline: #fff solid 1px;
+    outline-offset: -3px;
+  }
+}
+
+.filters-gradient-circle {
+  background: linear-gradient(0deg, #f0f, #ffd700);
+}
+
+.filters-rainbow-circle {
+  background: url('../assets/images/rainbow-bg.jpg') 0 0 / cover no-repeat;
+}
+
+.filters-multicolor-circle {
+  background: url('../assets/icons/multicolor.png') 0 0 / cover no-repeat;
 }

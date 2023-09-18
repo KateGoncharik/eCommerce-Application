@@ -1,5 +1,8 @@
 import { CategoriesObject } from '@customTypes/catalog';
 import { Category } from '@commercetools/platform-sdk';
+import { el } from 'redom';
+import lottie from 'lottie-web';
+import loadIndicator from '@animation/load-indicator.json';
 
 async function buildCategoriesObject(categoriesArray: Promise<Category[]>): Promise<CategoriesObject> {
   const categories = await categoriesArray;
@@ -22,4 +25,17 @@ async function buildCategoriesObject(categoriesArray: Promise<Category[]>): Prom
   return categoriesObject;
 }
 
-export { buildCategoriesObject };
+function createLoadAnimItem(className?: string): HTMLElement {
+  const animItem = el(`.${className}`);
+
+  lottie.loadAnimation({
+    container: animItem,
+    renderer: 'svg',
+    loop: true,
+    autoplay: true,
+    animationData: loadIndicator,
+  });
+  return animItem;
+}
+
+export { buildCategoriesObject, createLoadAnimItem };
