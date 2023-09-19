@@ -1,7 +1,15 @@
 import { Burger } from '@components/burger';
 import { Page } from '@templates/page';
 import { el, mount, unmount } from 'redom';
-import { getCart, updateLineItemQuantity, recalculateCartCost, deleteProductFromCart } from '@sdk/requests';
+import {
+  getCart,
+  updateLineItemQuantity,
+  recalculateCartCost,
+  deleteProductFromCart,
+  getPromocodes,
+  getCartDiscount,
+  addPromocodeToCart,
+} from '@sdk/requests';
 import { Cart, LineItem } from '@commercetools/platform-sdk';
 import { Route } from '@app/types/route';
 import { toggleIconsState } from '@helpers/toggle-icons-state';
@@ -61,6 +69,39 @@ class CartPage extends Page {
     if (!(clearCartButton instanceof HTMLButtonElement)) {
       throw new Error('Button expected');
     }
+    const totalCartPrice = el('.checkout-total-price', `Total price: ${getPriceInUsd(cart.totalPrice.centAmount)}`);
+
+    const promoInput = el('input.promo-input', { placeholder: 'promocode' });
+    if (!(promoInput instanceof HTMLInputElement)) {
+      throw new Error('Input expected');
+    }
+    const promoButton = el('button.promo-button', 'apply promo');
+    promoButton.addEventListener('click', async () => {
+      const promocodes = await getPromocodes();
+      if (promocodes === null) {
+        throw new Error('Promocodes expected');
+      }
+      const promocodeFromUser = promoInput.value;
+      const promocodeInSystemByKey = promocodes.results.find((promocode) => promocode.code === promocodeFromUser);
+      if (!promocodeInSystemByKey) {
+        throw new Error('Promocode expected');
+      }
+      const discountCodeById = await getCartDiscount(promocodeInSystemByKey.id);
+      if (discountCodeById === null) {
+        throw new Error('Promocode expected');
+      }
+      const cart = await getCart();
+      if (cart === null) {
+        throw new Error('Cart expected');
+      }
+      const cartWithPromocode = await addPromocodeToCart(cart.version, cart.id, discountCodeById.code);
+      if (cartWithPromocode === null) {
+        throw new Error('Updated cart expected');
+      }
+      totalCartPrice.innerHTML = `Total price: ${getPriceInUsd(cartWithPromocode.totalPrice.centAmount)}`;
+    });
+    const promocodeBlock = el('.promo-block', [promoInput, promoButton]);
+
     clearCartButton.addEventListener('click', async () => {
       const isClearCart = confirm('Clear cart?');
       if (!isClearCart) {
@@ -78,18 +119,21 @@ class CartPage extends Page {
       updateHeaderItemsAmount(result);
       this.createNoProductsContainer(cartContainer);
     });
+
     cartContainer.innerHTML = '';
     cart.lineItems.forEach((item) => {
       this.createProductCard(item, cartItems);
     });
+
     const checkout = el('.checkout', [
       el('span.checkout-title', 'Order details'),
-      el('.checkout-total-price', `Total price: ${getPriceInUsd(cart.totalPrice.centAmount)}`),
+      totalCartPrice,
       el('.checkout-items-amount', `Products in cart: ${cart.totalLineItemQuantity}`),
       clearCartButton,
       orderCartButton,
     ]);
     mount(cartContainer, cartItems);
+    mount(checkout, promocodeBlock);
     mount(cartContainer, checkout);
   }
 

@@ -14,6 +14,8 @@ import {
   CartUpdateAction,
   ProductProjectionPagedQueryResponse,
   ProductProjectionPagedSearchResponse,
+  DiscountCodePagedQueryResponse,
+  DiscountCode,
 } from '@commercetools/platform-sdk';
 import { rememberAuthorizedUser } from '@app/state';
 import { getUserOrError } from '@helpers/get-user-or-error ';
@@ -326,6 +328,58 @@ export async function deleteProductFromCart(
     return cart.body;
   } catch (err) {
     console.error(errorMessage);
+    return null;
+  }
+}
+
+export async function getPromocodes(): Promise<DiscountCodePagedQueryResponse | null> {
+  try {
+    const cartDiscounts = await getApiRoot().discountCodes().get().execute();
+    return cartDiscounts.body;
+  } catch (err) {
+    console.error(errorMessage);
+    return null;
+  }
+}
+
+export async function getCartDiscount(id: string): Promise<DiscountCode | null> {
+  try {
+    const cartDiscounts = await getApiRoot()
+      .discountCodes()
+      .withId({
+        ID: id,
+      })
+      .get()
+      .execute();
+    return cartDiscounts.body;
+  } catch (err) {
+    console.error(errorMessage);
+    return null;
+  }
+}
+
+export async function addPromocodeToCart(versionCart: number, cartId: string, promocode: string): Promise<Cart | null> {
+  try {
+    const updatedCart = await getApiRoot()
+      .carts()
+      .withId({
+        ID: cartId,
+      })
+      .post({
+        body: {
+          version: versionCart,
+          actions: [
+            {
+              action: 'addDiscountCode',
+              code: promocode,
+            },
+          ],
+        },
+      })
+      .execute();
+    return updatedCart.body;
+  } catch (err) {
+    console.error(err);
     return null;
   }
 }
