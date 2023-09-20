@@ -1,13 +1,13 @@
 import { Burger } from '@components/burger';
 import { Page } from '@templates/page';
-import { el, mount, unmount } from 'redom';
+import { el, mount, setChildren, unmount } from 'redom';
 import {
   getCart,
   updateLineItemQuantity,
   recalculateCartCost,
   deleteProductFromCart,
   getPromocodes,
-  getCartDiscount,
+  getPromocodeById,
   addPromocodeToCart,
 } from '@sdk/requests';
 import { Cart, LineItem } from '@commercetools/platform-sdk';
@@ -69,38 +69,7 @@ class CartPage extends Page {
     if (!(clearCartButton instanceof HTMLButtonElement)) {
       throw new Error('Button expected');
     }
-    const totalCartPrice = el('.checkout-total-price', `Total price: ${getPriceInUsd(cart.totalPrice.centAmount)}`);
-
-    const promoInput = el('input.promo-input', { placeholder: 'promocode' });
-    if (!(promoInput instanceof HTMLInputElement)) {
-      throw new Error('Input expected');
-    }
-    const promoButton = el('button.promo-button', 'apply promo');
-    promoButton.addEventListener('click', async () => {
-      const promocodes = await getPromocodes();
-      if (promocodes === null) {
-        throw new Error('Promocodes expected');
-      }
-      const promocodeFromUser = promoInput.value;
-      const promocodeInSystemByKey = promocodes.results.find((promocode) => promocode.code === promocodeFromUser);
-      if (!promocodeInSystemByKey) {
-        throw new Error('Promocode expected');
-      }
-      const discountCodeById = await getCartDiscount(promocodeInSystemByKey.id);
-      if (discountCodeById === null) {
-        throw new Error('Promocode expected');
-      }
-      const cart = await getCart();
-      if (cart === null) {
-        throw new Error('Cart expected');
-      }
-      const cartWithPromocode = await addPromocodeToCart(cart.version, cart.id, discountCodeById.code);
-      if (cartWithPromocode === null) {
-        throw new Error('Updated cart expected');
-      }
-      totalCartPrice.innerHTML = `Total price: ${getPriceInUsd(cartWithPromocode.totalPrice.centAmount)}`;
-    });
-    const promocodeBlock = el('.promo-block', [promoInput, promoButton]);
+    const totalCartPrice = el('div', this.createTotalCartPriceBlock(cart));
 
     clearCartButton.addEventListener('click', async () => {
       const isClearCart = confirm('Clear cart?');
@@ -126,15 +95,70 @@ class CartPage extends Page {
     });
 
     const checkout = el('.checkout', [
-      el('span.checkout-title', 'Order details'),
+      el('.checkout-title', 'Order details'),
       totalCartPrice,
       el('.checkout-items-amount', `Products in cart: ${cart.totalLineItemQuantity}`),
       clearCartButton,
       orderCartButton,
     ]);
     mount(cartContainer, cartItems);
-    mount(checkout, promocodeBlock);
+    mount(checkout, this.createPromocodeBlock(totalCartPrice, cart));
     mount(cartContainer, checkout);
+  }
+
+  private createTotalCartPriceBlock(cart: Cart): HTMLElement {
+    const totalPriceValue = getPriceInUsd(cart.totalPrice.centAmount);
+    const totalPriceWithoutDiscounts = getPriceInUsd(
+      cart.lineItems.reduce((acc, item) => acc + item.price.value.centAmount * item.quantity, 0)
+    );
+
+    return cart.discountCodes.length
+      ? el('.checkout-total-price', 'Total price: ', [
+          el('span.old-price', totalPriceWithoutDiscounts),
+          el('span', totalPriceValue),
+        ])
+      : el('.checkout-total-price', `Total price: ${totalPriceValue}`);
+  }
+
+  private createPromocodeBlock(totalCartPrice: HTMLElement, cart: Cart): HTMLElement {
+    const promoInput = el('input.promo-input', { placeholder: 'promo code' });
+    if (!(promoInput instanceof HTMLInputElement)) {
+      throw new Error('Input expected');
+    }
+    const promoInfo = el('.promo-info');
+    if (cart.discountCodes.length) {
+      getPromocodeById(cart.discountCodes[0].discountCode.id).then((appliedPromocode) => {
+        promoInfo.classList.add('applied');
+        promoInfo.innerHTML = `Code ${appliedPromocode?.code} applied`;
+      });
+    }
+    const promoButton = el('button.promo-button', 'apply code');
+    promoButton.addEventListener('click', async () => {
+      const promocodes = await getPromocodes();
+      const promocodeFromUser = promoInput.value.trim();
+      const promocodeInSystem = promocodes?.results.find((promocode) => promocode.code === promocodeFromUser);
+      if (!promocodeInSystem) {
+        promoInfo.classList.add('invalid');
+        promoInfo.innerHTML = 'Invalid promo code';
+        return;
+      }
+      promoInfo.classList.replace('invalid', 'applied');
+      promoInfo.innerHTML = `Code ${promocodeFromUser} applied`;
+      const cart = await getCart();
+      if (cart === null) {
+        return;
+      }
+      const cartWithPromocode = await addPromocodeToCart(cart, promocodeInSystem.code);
+      if (cartWithPromocode === null) {
+        throw new Error('Updated cart expected');
+      }
+      cartWithPromocode.lineItems.forEach((item) => {
+        const itemTotalCostBlock = safeQuerySelector(`[data-key="${item.productKey}"] .item-total`);
+        itemTotalCostBlock.innerHTML = `total: ${getPriceInUsd(item.totalPrice.centAmount)}`;
+      });
+      setChildren(totalCartPrice, [this.createTotalCartPriceBlock(cartWithPromocode)]);
+    });
+    return el('.promo-block', [promoInput, promoInfo, promoButton]);
   }
 
   private createProductCard(item: LineItem, productWrapper: HTMLElement): void {
@@ -159,7 +183,7 @@ class CartPage extends Page {
     if (!(deleteItem instanceof HTMLButtonElement)) {
       throw new Error('Button expected');
     }
-    const itemContainer = el('.item', [
+    const itemContainer = el('.item', { 'data-key': item.productKey }, [
       el('.item-image-wrapper', [el('img.item-image', { src: images[0].url, alt: '' })]),
       el('.item-content', [
         el('.item-name', `${item.name['en-US']}`),
@@ -199,7 +223,7 @@ class CartPage extends Page {
       }
       unmount(productWrapper, itemContainer);
       if (updatedCart.totalLineItemQuantity) {
-        this.updateOrderDetails(updatedCart.totalPrice.centAmount, updatedCart.totalLineItemQuantity);
+        this.updateOrderDetails(updatedCart);
       }
     });
   }
@@ -276,7 +300,7 @@ class CartPage extends Page {
           if (!updatedCart.totalLineItemQuantity) {
             throw new Error('Items in cart expected');
           }
-          this.updateOrderDetails(updatedCart.totalPrice.centAmount, updatedCart.totalLineItemQuantity);
+          this.updateOrderDetails(updatedCart);
           itemTotalCostBlock.innerHTML = `total: ${getPriceInUsd(item.totalPrice.centAmount)}`;
           updateHeaderItemsAmount(updatedCart);
         })
@@ -297,9 +321,9 @@ class CartPage extends Page {
     return (itemsAmount -= 1);
   }
 
-  private updateOrderDetails(updatedCost: number, updatedAmount: number): void {
-    safeQuerySelector('.checkout-total-price', document).innerHTML = `Total price: ${getPriceInUsd(updatedCost)}`;
-    safeQuerySelector('.checkout-items-amount', document).innerHTML = `Products in cart: ${updatedAmount}`;
+  private updateOrderDetails(cart: Cart): void {
+    setChildren(safeQuerySelector('.checkout-total-price', document), [this.createTotalCartPriceBlock(cart)]);
+    safeQuerySelector('.checkout-items-amount', document).innerHTML = `Products in cart: ${cart.totalLineItemQuantity}`;
   }
 
   protected build(): HTMLElement {

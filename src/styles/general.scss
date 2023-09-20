@@ -43,3 +43,10 @@ body {
     background-color: #fff;
   }
 }
+
+.old-price {
+  color: $grey;
+  font-size: 18px;
+  text-decoration: line-through;
+  margin-right: 2%;
+}

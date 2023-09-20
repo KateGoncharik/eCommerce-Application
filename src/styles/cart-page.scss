@@ -40,12 +40,30 @@
 }
 
 .promo-input {
-  height: 150px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid $black;
+  font-size: 16px;
+}
+
+.promo-info {
+  display: none;
+  padding: 7px 0 5px;
+
+  &.invalid {
+    display: block;
+    color: red;
+  }
+
+  &.applied {
+    display: block;
+    color: green;
+    font-weight: 500;
+  }
 }
 
 .promo-block {
   width: 100%;
-  height: 56px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -66,7 +84,7 @@
 
 .checkout-title {
   font-size: 24px;
-  margin-top: 1%;
+  margin: 1% 0;
   font-weight: 700;
   line-height: 120%;
   align-self: start;
@@ -75,7 +93,6 @@
 .checkout-total-price {
   font-size: 22px;
   font-weight: 500;
-  margin: 0.4em auto;
 }
 
 .checkout-items-amount {
@@ -155,7 +172,7 @@
 .clear-cart-button,
 .promo-button {
   width: 100%;
-  height: 1.8em;
+  padding: 12px;
   margin: 0.1em;
   background-color: $black;
   color: $white;
@@ -169,16 +186,21 @@
 }
 
 .clear-cart-button {
-  height: 1.3em;
   font-size: 14px;
   margin: 1em 0;
 }
 
+.order-button {
+  margin-bottom: 1em;
+}
+
 img.remove-item {
+  min-width: 18px;
   width: 53%;
 }
 
 img.add-item {
+  min-width: 15px;
   width: 45%;
 }
 

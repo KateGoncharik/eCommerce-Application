@@ -11,7 +11,7 @@ import {
   Category,
   CustomerChangePassword,
   Cart,
-  CartUpdateAction,
+  MyCartUpdateAction,
   ProductProjectionPagedQueryResponse,
   ProductProjectionPagedSearchResponse,
   DiscountCodePagedQueryResponse,
@@ -283,6 +283,7 @@ export async function recalculateCartCost(): Promise<Cart | null> {
 export async function addProductToCart(productId: string, cartID: string, versionCart: number): Promise<Cart | null> {
   try {
     const cart = await getApiRootForCartRequests()
+      .me()
       .carts()
       .withId({
         ID: cartID,
@@ -310,10 +311,11 @@ export async function addProductToCart(productId: string, cartID: string, versio
 export async function deleteProductFromCart(
   cartID: string,
   cartVersion: number,
-  actions: CartUpdateAction[]
+  actions: MyCartUpdateAction[]
 ): Promise<Cart | null> {
   try {
     const cart = await getApiRootForCartRequests()
+      .me()
       .carts()
       .withId({
         ID: cartID,
@@ -342,15 +344,9 @@ export async function getPromocodes(): Promise<DiscountCodePagedQueryResponse | 
   }
 }
 
-export async function getCartDiscount(id: string): Promise<DiscountCode | null> {
+export async function getPromocodeById(id: string): Promise<DiscountCode | null> {
   try {
-    const cartDiscounts = await getApiRoot()
-      .discountCodes()
-      .withId({
-        ID: id,
-      })
-      .get()
-      .execute();
+    const cartDiscounts = await getApiRoot().discountCodes().withId({ ID: id }).get().execute();
     return cartDiscounts.body;
   } catch (err) {
     console.error(errorMessage);
@@ -358,16 +354,17 @@ export async function getCartDiscount(id: string): Promise<DiscountCode | null> 
   }
 }
 
-export async function addPromocodeToCart(versionCart: number, cartId: string, promocode: string): Promise<Cart | null> {
+export async function addPromocodeToCart(cart: Cart, promocode: string): Promise<Cart | null> {
   try {
-    const updatedCart = await getApiRoot()
+    const updatedCart = await getApiRootForCartRequests()
+      .me()
       .carts()
       .withId({
-        ID: cartId,
+        ID: cart.id,
       })
       .post({
         body: {
-          version: versionCart,
+          version: cart.version,
           actions: [
             {
               action: 'addDiscountCode',
@@ -379,7 +376,7 @@ export async function addPromocodeToCart(versionCart: number, cartId: string, pr
       .execute();
     return updatedCart.body;
   } catch (err) {
-    console.error(err);
+    console.error(errorMessage);
     return null;
   }
 }
