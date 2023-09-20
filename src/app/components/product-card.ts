@@ -39,7 +39,7 @@ class ProductCard {
     });
 
     if (priceDiscounted) {
-      price = el('div', [el('span.card-old-price', priceFull), el('span.card-new-price', priceDiscounted)]);
+      price = el('div', [el('span.old-price', priceFull), el('span.card-new-price', priceDiscounted)]);
     } else {
       price = el('.card-new-price', priceFull);
     }

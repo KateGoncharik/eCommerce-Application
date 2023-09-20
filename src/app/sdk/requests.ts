@@ -11,9 +11,11 @@ import {
   Category,
   CustomerChangePassword,
   Cart,
-  CartUpdateAction,
+  MyCartUpdateAction,
   ProductProjectionPagedQueryResponse,
   ProductProjectionPagedSearchResponse,
+  DiscountCodePagedQueryResponse,
+  DiscountCode,
 } from '@commercetools/platform-sdk';
 import { rememberAuthorizedUser } from '@app/state';
 import { getUserOrError } from '@helpers/get-user-or-error ';
@@ -281,6 +283,7 @@ export async function recalculateCartCost(): Promise<Cart | null> {
 export async function addProductToCart(productId: string, cartID: string, versionCart: number): Promise<Cart | null> {
   try {
     const cart = await getApiRootForCartRequests()
+      .me()
       .carts()
       .withId({
         ID: cartID,
@@ -308,10 +311,11 @@ export async function addProductToCart(productId: string, cartID: string, versio
 export async function deleteProductFromCart(
   cartID: string,
   cartVersion: number,
-  actions: CartUpdateAction[]
+  actions: MyCartUpdateAction[]
 ): Promise<Cart | null> {
   try {
     const cart = await getApiRootForCartRequests()
+      .me()
       .carts()
       .withId({
         ID: cartID,
@@ -324,6 +328,53 @@ export async function deleteProductFromCart(
       })
       .execute();
     return cart.body;
+  } catch (err) {
+    console.error(errorMessage);
+    return null;
+  }
+}
+
+export async function getPromocodes(): Promise<DiscountCodePagedQueryResponse | null> {
+  try {
+    const cartDiscounts = await getApiRoot().discountCodes().get().execute();
+    return cartDiscounts.body;
+  } catch (err) {
+    console.error(errorMessage);
+    return null;
+  }
+}
+
+export async function getPromocodeById(id: string): Promise<DiscountCode | null> {
+  try {
+    const cartDiscounts = await getApiRoot().discountCodes().withId({ ID: id }).get().execute();
+    return cartDiscounts.body;
+  } catch (err) {
+    console.error(errorMessage);
+    return null;
+  }
+}
+
+export async function addPromocodeToCart(cart: Cart, promocode: string): Promise<Cart | null> {
+  try {
+    const updatedCart = await getApiRootForCartRequests()
+      .me()
+      .carts()
+      .withId({
+        ID: cart.id,
+      })
+      .post({
+        body: {
+          version: cart.version,
+          actions: [
+            {
+              action: 'addDiscountCode',
+              code: promocode,
+            },
+          ],
+        },
+      })
+      .execute();
+    return updatedCart.body;
   } catch (err) {
     console.error(errorMessage);
     return null;
