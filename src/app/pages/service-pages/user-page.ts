@@ -1,18 +1,18 @@
 import { Page } from '@templates/page';
 import { el, mount } from 'redom';
-import { getUserGender, getUser, rememberUserGender } from '@app/state';
-import { getUserOrError } from '@helpers/get-user-or-error ';
-import girlAvatar from '@icons/avatar-girl.png';
-import boyAvatar from '@icons/avatar-boy.png';
-import { getFullCountryName } from '@helpers/get-full-country-name';
-import { ValidationForm } from '@app/validation/validation-registration-form';
-import { updateUser } from '@app/sdk/requests';
 import { getRemoveAddressAction, collectAllInputsActions } from '@helpers/get-actions';
+import { getUserOrError } from '@helpers/get-user-or-error ';
+import { getFullCountryName } from '@helpers/get-full-country-name';
+import { safeQuerySelector } from '@helpers/safe-query-selector';
 import { toggleInputsState } from '@helpers/toggle-inputs-state';
 import { toggleSaveButtonState } from '@helpers/toggle-save-button-state';
+import { updateUser } from '@app/sdk/requests';
+import { ValidationForm } from '@app/validation/validation-registration-form';
 import { Route } from '@app/types/route';
 import { redirect } from '@app/router';
-import { safeQuerySelector } from '@helpers/safe-query-selector';
+import { getUserGender, getUser, rememberUserGender } from '@app/state';
+import girlAvatar from '@icons/avatar-girl.png';
+import boyAvatar from '@icons/avatar-boy.png';
 
 class UserPage extends Page {
   protected textObject = {

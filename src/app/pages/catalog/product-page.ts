@@ -1,11 +1,11 @@
-import { getRemoveItemAction } from '@helpers/get-actions';
 import { Page } from '@templates/page';
-import { getProduct, createCart, getCart, addProductToCart, deleteProductFromCart } from '@sdk/requests';
 import { el, mount, setAttr } from 'redom';
-import { ProductData } from '@app/types/data-product';
+import { getRemoveItemAction } from '@helpers/get-actions';
 import { connectSlider } from '@helpers/slider';
 import { eventModal } from '@helpers/modal-img';
 import { updateHeaderItemsAmount } from '@helpers/update-counter-items-amount';
+import { getProduct, createCart, getCart, addProductToCart, deleteProductFromCart } from '@sdk/requests';
+import { ProductData } from '@app/types/data-product';
 
 export class ProductPage extends Page {
   constructor(private productKey: string) {

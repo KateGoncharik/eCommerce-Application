@@ -1,11 +1,11 @@
-import { Schemas, dataValue, GenderSchema } from '@schemas/schemas-registration-form';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
+import { renderHeader } from '@helpers/render-header';
 import { createUser, isUserExist, authorizeUser } from '@sdk/requests';
+import { Schemas, dataValue, GenderSchema } from '@schemas/schemas-registration-form';
 import { DataUser } from '@app/types/datauser';
 import { Country } from '@app/types/enums';
 import { router, redirect } from '@app/router';
 import { Route } from '@customTypes/route';
-import { renderHeader } from '@helpers/render-header';
 
 export class ValidationForm {
   public validateGenderInput(genderInput: HTMLInputElement): void {

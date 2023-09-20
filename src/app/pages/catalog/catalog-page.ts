@@ -1,13 +1,13 @@
 import { Page } from '@templates/page';
 import { NotFoundPage } from '@servicePages/404-page';
 import { el, mount, setChildren } from 'redom';
-import { getProducts, getCategories, getProductsOfCategory, getCategoryByKey, getCart } from '@sdk/requests';
 import { ProductProjection } from '@commercetools/platform-sdk';
-import { ProductCard } from '@components/product-card';
 import { FiltersBlock } from '@components/filters-block';
 import { Pagination } from '@components/pagination';
+import { ProductCard } from '@components/product-card';
 import { buildCategoriesObject, createLoadAnimItem } from '@helpers/catalog';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
+import { getProducts, getCategories, getProductsOfCategory, getCategoryByKey, getCart } from '@sdk/requests';
 import { router } from '@app/router';
 import magnifier from '@icons/magnifying-glass.svg';
 import notFoundIcon from '@icons/nothing-found.png';
@@ -120,7 +120,7 @@ class CatalogPage extends Page {
 
   private async getRelevantProducts(): Promise<ProductProjection[]> {
     const offset = this.pagination.calculateOffset();
-    let products: ProductProjection[];
+    let products: ProductProjection[] | null;
 
     if (this.categoryKey) {
       const category = await getCategoryByKey(this.categoryKey);
@@ -133,7 +133,7 @@ class CatalogPage extends Page {
       this.productCount = request?.total || 0;
       products = request?.results || [];
     }
-    return products;
+    return products!;
   }
 
   private createBreadcrumbs(): HTMLElement {

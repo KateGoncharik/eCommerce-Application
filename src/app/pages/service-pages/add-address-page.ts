@@ -1,13 +1,13 @@
-import { ValidationForm } from '@validation/validation-registration-form';
 import { Page } from '@templates/page';
 import { el } from 'redom';
-import { updateUser } from '@sdk/requests';
 import { Address } from '@commercetools/platform-sdk';
 import { getAddAddressAction, getSetDefaultShippingAddressAction } from '@helpers/get-actions';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
-import { Route } from '@app/types/route';
+import { updateUser } from '@sdk/requests';
 import { redirect } from '@app/router';
+import { Route } from '@app/types/route';
 import { UserPage } from './user-page';
+import { ValidationForm } from '@validation/validation-registration-form';
 
 class AddAddressPage extends Page {
   protected textObject = {

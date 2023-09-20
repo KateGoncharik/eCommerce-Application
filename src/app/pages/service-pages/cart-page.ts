@@ -1,6 +1,7 @@
-import { Burger } from '@components/burger';
 import { Page } from '@templates/page';
+import { Burger } from '@components/burger';
 import { el, mount, setChildren, unmount } from 'redom';
+import { Cart, LineItem } from '@commercetools/platform-sdk';
 import {
   getCart,
   updateLineItemQuantity,
@@ -10,16 +11,15 @@ import {
   getPromocodeById,
   addPromocodeToCart,
 } from '@sdk/requests';
-import { Cart, LineItem } from '@commercetools/platform-sdk';
 import { Route } from '@app/types/route';
-import { toggleIconsState } from '@helpers/toggle-icons-state';
+import { getAllItemsRemoveActions, getRemoveItemAction } from '@helpers/get-actions';
 import { getPriceInUsd } from '@helpers/get-price-in-usd';
+import { safeQuerySelector } from '@helpers/safe-query-selector';
+import { toggleIconsState } from '@helpers/toggle-icons-state';
+import { updateHeaderItemsAmount } from '@helpers/update-counter-items-amount';
 import minus from '@icons/minus.png';
 import addIconSrc from '@icons/add.png';
 import trashCan from '@icons/trash-can.png';
-import { safeQuerySelector } from '@helpers/safe-query-selector';
-import { getAllItemsRemoveActions, getRemoveItemAction } from '@helpers/get-actions';
-import { updateHeaderItemsAmount } from '@helpers/update-counter-items-amount';
 
 class CartPage extends Page {
   protected textObject = {

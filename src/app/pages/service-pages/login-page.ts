@@ -1,9 +1,9 @@
 import { Page } from '@templates/page';
 import { el, mount } from 'redom';
-import { LoginFormValidator } from '@validation/login-form-validator';
-import { authorizeUser } from '@app/sdk/requests';
-import { safeQuerySelector } from '@helpers/safe-query-selector';
 import { renderHeader } from '@helpers/render-header';
+import { safeQuerySelector } from '@helpers/safe-query-selector';
+import { authorizeUser } from '@app/sdk/requests';
+import { LoginFormValidator } from '@validation/login-form-validator';
 import { router, redirect } from '@app/router';
 import { Route } from '@customTypes/route';
 

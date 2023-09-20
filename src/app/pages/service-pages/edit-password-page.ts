@@ -1,10 +1,10 @@
-import { ValidationForm } from '@validation/validation-registration-form';
 import { Page } from '@templates/page';
 import { el } from 'redom';
-import { togglePasswordVisibility } from '@helpers/toggle-password-visibility';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
 import { getUserOrError } from '@helpers/get-user-or-error ';
+import { togglePasswordVisibility } from '@helpers/toggle-password-visibility';
 import { editUserPassword } from '@sdk/requests';
+import { ValidationForm } from '@validation/validation-registration-form';
 
 class EditPasswordPage extends Page {
   protected textObject = {
