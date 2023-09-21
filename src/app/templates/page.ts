@@ -5,6 +5,7 @@ abstract class Page {
     main.innerHTML = '';
     const container = this.build();
     main.append(container);
+    window.scrollTo(0, 0);
   }
 
   protected abstract textObject: Record<string, string>;

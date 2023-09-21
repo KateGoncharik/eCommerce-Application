@@ -17,7 +17,10 @@ class Footer {
             href: Route.Catalog,
             'data-navigo': '',
           }),
-          el('.footer-nav-link', 'About Us'),
+          el('a.footer-nav-link', 'About Us', {
+            href: Route.AboutUs,
+            'data-navigo': '',
+          }),
           el('a.footer-nav-link', 'Cart', {
             href: Route.CartPage,
             'data-navigo': '',

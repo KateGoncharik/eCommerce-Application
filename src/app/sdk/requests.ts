@@ -7,7 +7,6 @@ import {
   Customer,
   CustomerUpdateAction,
   ErrorResponse,
-  ProductProjection,
   Category,
   CustomerChangePassword,
   Cart,
@@ -142,7 +141,10 @@ export const getProduct = async (key: string): Promise<ProductData | void> => {
     .catch(() => console.error(errorMessage));
 };
 
-export async function getProductsOfCategory(id: string, offset = 0): Promise<ProductProjection[]> {
+export async function getProductsOfCategory(
+  id: string,
+  offset = 0
+): Promise<ProductProjectionPagedQueryResponse | null> {
   const queryArgs = {
     where: `categories(id="${id}")`,
     limit: productsPerPage,
@@ -150,11 +152,11 @@ export async function getProductsOfCategory(id: string, offset = 0): Promise<Pro
   };
   try {
     const request = await getApiRoot().productProjections().get({ queryArgs }).execute();
-    const products = request.body.results;
+    const products = request.body;
     return products;
   } catch (err) {
     console.error(errorMessage);
-    return [];
+    return null;
   }
 }
 

@@ -2,6 +2,7 @@ import { Button } from '@components/button';
 import { el, mount, unmount, setChildren } from 'redom';
 import { router } from '@app/router';
 import { getCategoryByKey, getFilteredProducts, getProducts } from '@sdk/requests';
+import { showLoadingScreen } from '@helpers/loading';
 import { CatalogPageType } from '@customTypes/catalog';
 import { Colors } from '@customTypes/enums';
 
@@ -50,7 +51,7 @@ class FiltersBlock {
   }
 
   public async applyFilters(userQuery?: string | null, offset = 0): Promise<void> {
-    this.catalog.showLoadingScreen();
+    showLoadingScreen(this.catalog.productsContainer);
 
     const queryArgs = this.assembleQueryArgs();
 

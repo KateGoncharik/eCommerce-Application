@@ -2,12 +2,13 @@ import { Page } from '@templates/page';
 import { NotFoundPage } from '@servicePages/404-page';
 import { el, mount, setChildren } from 'redom';
 import { getProducts, getCategories, getProductsOfCategory, getCategoryByKey, getCart } from '@sdk/requests';
-import { ProductProjection } from '@commercetools/platform-sdk';
+import { ProductProjection, ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
 import { ProductCard } from '@components/product-card';
 import { FiltersBlock } from '@components/filters-block';
 import { Pagination } from '@components/pagination';
-import { buildCategoriesObject, createLoadAnimItem } from '@helpers/catalog';
+import { buildCategoriesObject } from '@helpers/build-categories-object';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
+import { showLoadingScreen } from '@helpers/loading';
 import { router } from '@app/router';
 import magnifier from '@icons/magnifying-glass.svg';
 import notFoundIcon from '@icons/nothing-found.png';
@@ -21,6 +22,7 @@ class CatalogPage extends Page {
   public filtersBlock = new FiltersBlock(this);
   public pagination = new Pagination(this);
 
+  public productsContainer = el('.products');
   public sideBar = el('.catalog-sidebar');
   public searchInput = el('input.catalog-search-input', {
     placeholder: 'Search...',
@@ -30,11 +32,11 @@ class CatalogPage extends Page {
     title: 'Catalog',
   };
 
-  private productsContainer = el('.products');
   private mask = el('.catalog-mask');
 
   public createProductContainer(): HTMLElement {
-    this.showLoadingScreen();
+    this.switchToFirstPage();
+    showLoadingScreen(this.productsContainer);
 
     this.getRelevantProducts().then((products) => {
       if (!products) {
@@ -110,30 +112,21 @@ class CatalogPage extends Page {
     this.pagination.pageNumberItem.textContent = '1';
   }
 
-  public showLoadingScreen(): void {
-    const loadingScreen = el('.catalog-loading-screen', [
-      createLoadAnimItem('products-load-anim'),
-      el('p', 'Loading...'),
-    ]);
-    setChildren(this.productsContainer, [loadingScreen]);
-  }
-
   private async getRelevantProducts(): Promise<ProductProjection[]> {
     const offset = this.pagination.calculateOffset();
-    let products: ProductProjection[];
+    let request: ProductProjectionPagedQueryResponse | null;
 
     if (this.categoryKey) {
       const category = await getCategoryByKey(this.categoryKey);
       if (!category) {
         return [];
       }
-      products = await getProductsOfCategory(category.id, offset);
+      request = await getProductsOfCategory(category.id, offset);
     } else {
-      const request = await getProducts(offset);
-      this.productCount = request?.total || 0;
-      products = request?.results || [];
+      request = await getProducts(offset);
     }
-    return products;
+    this.productCount = request?.total || 0;
+    return request?.results || [];
   }
 
   private createBreadcrumbs(): HTMLElement {
