@@ -10,13 +10,13 @@ import { UserPage } from './user-page';
 import { ValidationForm } from '@validation/validation-registration-form';
 
 class AddAddressPage extends Page {
-  protected textObject = {
-    title: 'User page',
-  };
-
   private userPage = new UserPage();
 
   private validation = new ValidationForm();
+
+  protected textObject = {
+    title: 'User page',
+  };
 
   private createAddAddressBlock(): HTMLElement {
     const addAddressBlock = el('.add-address-block', [

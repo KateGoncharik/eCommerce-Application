@@ -15,11 +15,11 @@ import girlAvatar from '@icons/avatar-girl.png';
 import boyAvatar from '@icons/avatar-boy.png';
 
 class UserPage extends Page {
+  private validation = new ValidationForm();
+  
   protected textObject = {
     title: 'User page',
   };
-
-  private validation = new ValidationForm();
 
   private createAvatar(): HTMLElement {
     const userGender = getUserGender();

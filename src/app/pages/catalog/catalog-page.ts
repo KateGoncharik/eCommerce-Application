@@ -13,9 +13,9 @@ import magnifier from '@icons/magnifying-glass.svg';
 import notFoundIcon from '@icons/nothing-found.png';
 
 class CatalogPage extends Page {
-  constructor(public categoryKey?: string) {
-    super();
-  }
+  protected textObject = {
+    title: 'Catalog',
+  };
   public productCount = 0;
 
   public filtersBlock = new FiltersBlock(this);
@@ -25,97 +25,11 @@ class CatalogPage extends Page {
   public searchInput = el('input.catalog-search-input', {
     placeholder: 'Search...',
   });
-
-  protected textObject = {
-    title: 'Catalog',
-  };
-
   private productsContainer = el('.products');
   private mask = el('.catalog-mask');
 
-  public createProductContainer(): HTMLElement {
-    this.showLoadingScreen();
-
-    this.getRelevantProducts().then((products) => {
-      if (!products) {
-        new NotFoundPage().render();
-      }
-      this.fillProductsContainer(products);
-    });
-    return this.productsContainer;
-  }
-
-  public listenTitleClick(title: HTMLElement): void {
-    const windowSize = window.matchMedia('(max-width: 768px)');
-    const mask = this.mask;
-    let isAllTitlesInactive: boolean;
-
-    title.addEventListener('click', () => {
-      title.classList.toggle('active');
-      const titles = document.querySelectorAll('.sidebar-dropdown-title');
-
-      titles.forEach((item) => {
-        if (item !== title) {
-          item.classList.remove('active');
-        } else if (item.classList.contains('active')) {
-          isAllTitlesInactive = false;
-        } else {
-          isAllTitlesInactive = true;
-        }
-      });
-      if (windowSize.matches) {
-        if (isAllTitlesInactive) {
-          mask.classList.remove('lock');
-          document.body.classList.remove('no-scroll');
-        } else {
-          mask.classList.add('lock');
-          document.body.classList.add('no-scroll');
-        }
-      }
-    });
-    windowSize.addEventListener('change', () => {
-      this.closeCategoryNav(title, mask);
-    });
-    this.closeCategoryNavOnBurgerClick(title, mask);
-  }
-
-  public fillProductsContainer(products: ProductProjection[]): void {
-    this.pagination.toggleBtnsState(this.pagination.currentPage.get());
-
-    if (!products.length) {
-      this.productsContainer.classList.add('not-found');
-      const notFoundMessage = el('.catalog-not-found-message', 'No products found', el('img', { src: notFoundIcon }));
-      setChildren(this.productsContainer, [notFoundMessage]);
-      return;
-    } else {
-      this.productsContainer.classList.remove('not-found');
-
-      getCart().then((cart) => {
-        this.productsContainer.innerHTML = '';
-        products.forEach((product) => {
-          const card = new ProductCard(product).create();
-          const isProductInCart = cart?.lineItems.some((item) => item.productId === product.id);
-          if (isProductInCart) {
-            card.classList.add('in-cart');
-          }
-          mount(this.productsContainer, card);
-        });
-        router.updatePageLinks();
-      });
-    }
-  }
-
-  public switchToFirstPage(): void {
-    this.pagination.currentPage.set(1);
-    this.pagination.pageNumberItem.textContent = '1';
-  }
-
-  public showLoadingScreen(): void {
-    const loadingScreen = el('.catalog-loading-screen', [
-      createLoadAnimItem('products-load-anim'),
-      el('p', 'Loading...'),
-    ]);
-    setChildren(this.productsContainer, [loadingScreen]);
+  constructor(public categoryKey?: string) {
+    super();
   }
 
   private async getRelevantProducts(): Promise<ProductProjection[]> {
@@ -257,6 +171,92 @@ class CatalogPage extends Page {
       ]),
     ]);
   }
+
+  public createProductContainer(): HTMLElement {
+    this.showLoadingScreen();
+
+    this.getRelevantProducts().then((products) => {
+      if (!products) {
+        new NotFoundPage().render();
+      }
+      this.fillProductsContainer(products);
+    });
+    return this.productsContainer;
+  }
+
+  public listenTitleClick(title: HTMLElement): void {
+    const windowSize = window.matchMedia('(max-width: 768px)');
+    const mask = this.mask;
+    let isAllTitlesInactive: boolean;
+
+    title.addEventListener('click', () => {
+      title.classList.toggle('active');
+      const titles = document.querySelectorAll('.sidebar-dropdown-title');
+
+      titles.forEach((item) => {
+        if (item !== title) {
+          item.classList.remove('active');
+        } else if (item.classList.contains('active')) {
+          isAllTitlesInactive = false;
+        } else {
+          isAllTitlesInactive = true;
+        }
+      });
+      if (windowSize.matches) {
+        if (isAllTitlesInactive) {
+          mask.classList.remove('lock');
+          document.body.classList.remove('no-scroll');
+        } else {
+          mask.classList.add('lock');
+          document.body.classList.add('no-scroll');
+        }
+      }
+    });
+    windowSize.addEventListener('change', () => {
+      this.closeCategoryNav(title, mask);
+    });
+    this.closeCategoryNavOnBurgerClick(title, mask);
+  }
+
+  public fillProductsContainer(products: ProductProjection[]): void {
+    this.pagination.toggleBtnsState(this.pagination.currentPage.get());
+
+    if (!products.length) {
+      this.productsContainer.classList.add('not-found');
+      const notFoundMessage = el('.catalog-not-found-message', 'No products found', el('img', { src: notFoundIcon }));
+      setChildren(this.productsContainer, [notFoundMessage]);
+      return;
+    } else {
+      this.productsContainer.classList.remove('not-found');
+
+      getCart().then((cart) => {
+        this.productsContainer.innerHTML = '';
+        products.forEach((product) => {
+          const card = new ProductCard(product).create();
+          const isProductInCart = cart?.lineItems.some((item) => item.productId === product.id);
+          if (isProductInCart) {
+            card.classList.add('in-cart');
+          }
+          mount(this.productsContainer, card);
+        });
+        router.updatePageLinks();
+      });
+    }
+  }
+
+  public switchToFirstPage(): void {
+    this.pagination.currentPage.set(1);
+    this.pagination.pageNumberItem.textContent = '1';
+  }
+
+  public showLoadingScreen(): void {
+    const loadingScreen = el('.catalog-loading-screen', [
+      createLoadAnimItem('products-load-anim'),
+      el('p', 'Loading...'),
+    ]);
+    setChildren(this.productsContainer, [loadingScreen]);
+  }
+
 }
 
 export { CatalogPage };

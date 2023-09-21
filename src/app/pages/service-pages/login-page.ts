@@ -14,15 +14,6 @@ class LoginPage extends Page {
     title: 'Login page',
   };
 
-  protected createHeader(): HTMLHeadingElement {
-    const headerBlock = el('h2.form-header');
-    if (!(headerBlock instanceof HTMLHeadingElement)) {
-      throw new Error('HTMLHeadingElement expected');
-    }
-    headerBlock.textContent = 'Sign in';
-    return headerBlock;
-  }
-
   private createInputs(): HTMLElement {
     const inputsBlock = el('.inputs-block');
     const blockEmail = el('.login-input-block');
@@ -115,6 +106,15 @@ class LoginPage extends Page {
     mount(form, inputs);
     mount(form, buttonBlock);
     return formWrapper;
+  }
+
+  protected createHeader(): HTMLHeadingElement {
+    const headerBlock = el('h2.form-header');
+    if (!(headerBlock instanceof HTMLHeadingElement)) {
+      throw new Error('HTMLHeadingElement expected');
+    }
+    headerBlock.textContent = 'Sign in';
+    return headerBlock;
   }
 
   protected build(): HTMLElement {

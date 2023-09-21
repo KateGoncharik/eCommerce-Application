@@ -8,13 +8,13 @@ import { getProduct, createCart, getCart, addProductToCart, deleteProductFromCar
 import { ProductData } from '@app/types/data-product';
 
 export class ProductPage extends Page {
-  constructor(private productKey: string) {
-    super();
-  }
-
   protected textObject = {
     title: 'Product page',
   };
+
+  constructor(private productKey: string) {
+    super();
+  }
 
   private createSlider(productData: ProductData): HTMLElement {
     const slider = el('.swiper');

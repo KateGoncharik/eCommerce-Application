@@ -16,41 +16,6 @@ class Burger {
     cart: 'Cart',
   };
 
-  public mask = el('.header-mask');
-
-  public burgerIcon = this.createBurgerIcon();
-
-  public createLogOutLink(): HTMLAnchorElement {
-    const logOutLink = el('a.logout', this.linkText.toLogOut, {
-      href: '/logout',
-      'data-navigo': '',
-    });
-
-    if (!(logOutLink instanceof HTMLAnchorElement)) {
-      throw new Error();
-    }
-
-    logOutLink.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopImmediatePropagation();
-
-      logOutUser();
-
-      redirect(Route.Login);
-      renderHeader();
-      router.updatePageLinks();
-    });
-
-    return logOutLink;
-  }
-
-  public createLogInLink(): HTMLAnchorElement {
-    return el('a', this.linkText.toLogIn, {
-      href: Route.Login,
-      'data-navigo': '',
-    });
-  }
-
   private mainPageLink = el('a.burger-link', this.linkText.toMain, {
     href: Route.Main,
     'data-navigo': '',
@@ -78,12 +43,17 @@ class Burger {
     'data-navigo': '',
   });
 
-  public changeUserPageBlockVisibility(userPageBlock: HTMLElement, userPageLink: HTMLAnchorElement): void {
-    if (isUserAuthorized()) {
-      userPageBlock.style.display = 'flex';
-      userPageLink.style.display = 'flex';
-    }
+  public createLogInLink(): HTMLAnchorElement {
+    return el('a', this.linkText.toLogIn, {
+      href: Route.Login,
+      'data-navigo': '',
+    });
   }
+  
+  public mask = el('.header-mask');
+
+  public burgerIcon = this.createBurgerIcon();
+  public burgerMenu = this.createBurgerMenu();
 
   private createBurgerMenu(): HTMLElement {
     const loginOrLogoutLink = isUserAuthorized() ? this.createLogOutLink() : this.createLogInLink();
@@ -117,8 +87,6 @@ class Burger {
     return burgerMenu;
   }
 
-  public burgerMenu = this.createBurgerMenu();
-
   private createBurgerIcon(): HTMLElement {
     const burgerIcon = el('.burger', [el('span')]);
     burgerIcon.addEventListener('click', (e) => {
@@ -133,6 +101,37 @@ class Burger {
     this.burgerMenu.classList.toggle('active');
     document.body.classList.toggle('lock');
     this.mask.classList.toggle('lock');
+  }
+
+  public createLogOutLink(): HTMLAnchorElement {
+    const logOutLink = el('a.logout', this.linkText.toLogOut, {
+      href: '/logout',
+      'data-navigo': '',
+    });
+
+    if (!(logOutLink instanceof HTMLAnchorElement)) {
+      throw new Error();
+    }
+
+    logOutLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+
+      logOutUser();
+
+      redirect(Route.Login);
+      renderHeader();
+      router.updatePageLinks();
+    });
+
+    return logOutLink;
+  }
+
+  public changeUserPageBlockVisibility(userPageBlock: HTMLElement, userPageLink: HTMLAnchorElement): void {
+    if (isUserAuthorized()) {
+      userPageBlock.style.display = 'flex';
+      userPageLink.style.display = 'flex';
+    }
   }
 }
 

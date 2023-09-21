@@ -22,21 +22,14 @@ import addIconSrc from '@icons/add.png';
 import trashCan from '@icons/trash-can.png';
 
 class CartPage extends Page {
+  private burger = new Burger();
+
   protected textObject = {
     title: 'Cart page',
   };
 
-  private burger = new Burger();
   private createCart(cartContainer: HTMLElement): HTMLElement {
     return el('.cart', [el('h2.cart-title', 'Cart'), cartContainer]);
-  }
-
-  static getItemsQuantity(itemsAmountBlock: HTMLElement): number {
-    const itemsAmount = Number(itemsAmountBlock.innerHTML);
-    if (itemsAmount >= 1) {
-      return itemsAmount;
-    }
-    throw new Error('Positive items amount expected');
   }
 
   private createNoProductsContainer(cartContainer: HTMLElement): void {
@@ -329,6 +322,15 @@ class CartPage extends Page {
   protected build(): HTMLElement {
     return this.createCart(this.createCartContainer());
   }
+
+  static getItemsQuantity(itemsAmountBlock: HTMLElement): number {
+    const itemsAmount = Number(itemsAmountBlock.innerHTML);
+    if (itemsAmount >= 1) {
+      return itemsAmount;
+    }
+    throw new Error('Positive items amount expected');
+  }
+
 }
 
 export { CartPage };

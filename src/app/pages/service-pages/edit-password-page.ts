@@ -7,11 +7,11 @@ import { editUserPassword } from '@sdk/requests';
 import { ValidationForm } from '@validation/validation-registration-form';
 
 class EditPasswordPage extends Page {
+  private validation = new ValidationForm();
+
   protected textObject = {
     title: 'User page',
   };
-
-  private validation = new ValidationForm();
 
   private createPasswordUpdateBlock(): HTMLElement {
     const currentPasswordVisibility = el('input.password-checkbox', { type: 'checkbox' });
