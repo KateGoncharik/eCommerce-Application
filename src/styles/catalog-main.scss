@@ -6,6 +6,10 @@ body.no-scroll {
   display: flex;
   overflow: hidden;
 
+  .loading-screen {
+    grid-column: span 3;
+  }
+
   @media (width <= 768px) {
     border-left: 1px solid $black;
   }
@@ -94,15 +98,6 @@ body.no-scroll {
     margin: 0;
     padding: 0 10px;
   }
-}
-
-.catalog-loading-screen {
-  grid-column: span 3;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  justify-content: center;
-  min-height: 80vh;
 }
 
 .catalog-not-found-message {

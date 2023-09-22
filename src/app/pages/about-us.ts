@@ -9,7 +9,7 @@ export class AboutUs extends Page {
   protected textObject = {
     title: 'About us',
   };
-  
+
   constructor() {
     super();
   }

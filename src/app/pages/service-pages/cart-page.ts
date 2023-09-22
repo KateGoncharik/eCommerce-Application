@@ -216,7 +216,8 @@ class CartPage extends Page {
       if (updatedCart.totalLineItemQuantity) {
         this.updateOrderDetails(updatedCart);
       }
-    });
+    }),
+      { once: true };
   }
 
   private listenClickOnItemsAmountUpdateButtons(

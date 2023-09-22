@@ -1,6 +1,13 @@
 import { main } from '../app';
 
 abstract class Page {
+  public render(): void {
+    main.innerHTML = '';
+    const container = this.build();
+    main.append(container);
+    window.scrollTo(0, 0);
+  }
+
   protected abstract textObject: Record<string, string>;
 
   protected createTitle(): HTMLHeadingElement {
@@ -14,12 +21,6 @@ abstract class Page {
     const title = this.createTitle();
     container.append(title);
     return container;
-  }
-
-  public render(): void {
-    main.innerHTML = '';
-    const container = this.build();
-    main.append(container);
   }
 }
 

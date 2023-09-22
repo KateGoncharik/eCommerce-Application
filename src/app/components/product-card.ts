@@ -4,7 +4,7 @@ import addIcon from '@icons/add.png';
 import { Cart, ProductProjection } from '@commercetools/platform-sdk';
 import { addProductToCart, getCart, createCart } from '@sdk/requests';
 import { getPriceInUsd } from '@helpers/get-price-in-usd';
-import { createLoadAnimItem } from '@helpers/catalog';
+import { createLoadAnimItem } from '@helpers/loading';
 import { updateHeaderItemsAmount } from '@helpers/update-counter-items-amount';
 
 class ProductCard {
@@ -85,7 +85,6 @@ class ProductCard {
     );
     return card;
   }
-
 }
 
 export { ProductCard };

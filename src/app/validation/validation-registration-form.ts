@@ -8,7 +8,6 @@ import { router, redirect } from '@app/router';
 import { Route } from '@customTypes/route';
 
 export class ValidationForm {
-
   private checkValidation(userData: Schemas, input: Element, showElement: Element): void {
     const showBlock = showElement as HTMLElement;
     if (!(input instanceof HTMLInputElement) || input.classList.contains('gender-input')) {

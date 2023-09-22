@@ -3,7 +3,6 @@ import {
   Customer,
   CustomerUpdateAction,
   ErrorResponse,
-  ProductProjection,
   Category,
   CustomerChangePassword,
   Cart,
@@ -57,7 +56,7 @@ export async function authorizeUser(email: string, password: string): Promise<st
       .then(
         (result) => {
           rememberAuthorizedUser(result.body.customer);
-          return null
+          return null;
         },
         (errorResponse: ClientResponse<ErrorResponse>) => {
           const emailInput = safeQuerySelector<HTMLInputElement>('.email-input', document);
@@ -149,7 +148,10 @@ export const getProduct = async (key: string): Promise<ProductData | null> => {
     });
 };
 
-export async function getProductsOfCategory(id: string, offset = 0): Promise<ProductProjection[]> {
+export async function getProductsOfCategory(
+  id: string,
+  offset = 0
+): Promise<ProductProjectionPagedQueryResponse | null> {
   const queryArgs = {
     where: `categories(id="${id}")`,
     limit: productsPerPage,
@@ -157,11 +159,11 @@ export async function getProductsOfCategory(id: string, offset = 0): Promise<Pro
   };
   try {
     const request = await getApiRoot().productProjections().get({ queryArgs }).execute();
-    const products = request.body.results;
+    const products = request.body;
     return products;
   } catch (err) {
     console.error(errorMessage);
-    return [];
+    return null;
   }
 }
 

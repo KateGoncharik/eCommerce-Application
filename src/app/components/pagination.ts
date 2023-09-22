@@ -25,7 +25,7 @@ class Pagination {
     this.pageNumberItem.textContent = pageNumber.toString();
     this.currentPage.set(pageNumber);
     this.toggleBtnsState(pageNumber);
-  };
+  }
 
   public currentPage = {
     get(): number {
@@ -98,7 +98,6 @@ class Pagination {
       makeInactive(nextPageButton, lastPageButton);
     }
   }
-
 }
 
 export { Pagination };

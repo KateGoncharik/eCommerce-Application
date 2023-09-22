@@ -2,10 +2,13 @@ import { Button } from '@components/button';
 import { el, mount, unmount, setChildren } from 'redom';
 import { router } from '@app/router';
 import { getCategoryByKey, getFilteredProducts, getProducts } from '@sdk/requests';
+import { showLoadingScreen } from '@helpers/loading';
 import { CatalogPageType } from '@customTypes/catalog';
 import { Colors } from '@customTypes/enums';
 
 class FiltersBlock {
+  constructor(private catalog: CatalogPageType) {}
+
   private minPrice = 0;
   private maxPrice = 100;
   private priceFrom = this.minPrice;
@@ -14,7 +17,56 @@ class FiltersBlock {
   private filtersColorBlock = el('.filters-unit');
   private colorCircles: HTMLElement[] = [];
 
-  constructor(private catalog: CatalogPageType) {}
+  public create(): HTMLElement {
+    const title = el('h3.filters-title.sidebar-dropdown-title', [el('span', 'Filters')]);
+    const applyBtn = new Button('Apply', 'black').render();
+    const resetBtn = new Button('Reset', 'black').render();
+    const priceFilters = this.createPriceRange();
+    const colorFilters = this.createColorFiltersBlock();
+
+    priceFilters?.classList.remove('applied');
+    colorFilters.classList.remove('applied');
+
+    const container = el('.filters', [
+      title,
+      el('.sidebar-dropdown-content', [priceFilters, colorFilters, el('.filters-buttons', [resetBtn, applyBtn])]),
+    ]);
+    applyBtn.addEventListener('click', () => {
+      this.catalog.switchToFirstPage();
+      this.applyFilters();
+    });
+    resetBtn.addEventListener('click', () => {
+      if (!this.isPriceFiltersApplied() && !this.isColorFiltersApplied()) {
+        return;
+      }
+      this.priceFrom = this.minPrice;
+      this.priceTo = this.maxPrice;
+      unmount(this.catalog.sideBar, container);
+      mount(this.catalog.sideBar, this.create());
+      this.catalog.createProductContainer();
+    });
+    this.catalog.listenTitleClick(title);
+    router.updatePageLinks();
+    return container;
+  }
+
+  public async applyFilters(userQuery?: string | null, offset = 0): Promise<void> {
+    showLoadingScreen(this.catalog.productsContainer);
+
+    const queryArgs = this.assembleQueryArgs();
+
+    if (userQuery) {
+      queryArgs.push(`searchKeywords.en-US.text:${userQuery}`);
+    }
+    if (this.catalog.categoryKey) {
+      const category = await getCategoryByKey(this.catalog.categoryKey);
+      queryArgs.push(`categories.id:"${category?.id}"`);
+    }
+    const request = queryArgs.length ? await getFilteredProducts(queryArgs, offset) : await getProducts(offset);
+    const products = request?.results || [];
+    this.catalog.productCount = request?.total || 0;
+    this.catalog.fillProductsContainer(products);
+  }
 
   private assembleQueryArgs(): string[] {
     const queryArgs: string[] = [];
@@ -108,59 +160,6 @@ class FiltersBlock {
     ]);
     return this.filtersColorBlock;
   }
-
-  
-  public create(): HTMLElement {
-    const title = el('h3.filters-title.sidebar-dropdown-title', [el('span', 'Filters')]);
-    const applyBtn = new Button('Apply', 'black').render();
-    const resetBtn = new Button('Reset', 'black').render();
-    const priceFilters = this.createPriceRange();
-    const colorFilters = this.createColorFiltersBlock();
-
-    priceFilters?.classList.remove('applied');
-    colorFilters.classList.remove('applied');
-
-    const container = el('.filters', [
-      title,
-      el('.sidebar-dropdown-content', [priceFilters, colorFilters, el('.filters-buttons', [resetBtn, applyBtn])]),
-    ]);
-    applyBtn.addEventListener('click', () => {
-      this.catalog.switchToFirstPage();
-      this.applyFilters();
-    });
-    resetBtn.addEventListener('click', () => {
-      if (!this.isPriceFiltersApplied() && !this.isColorFiltersApplied()) {
-        return;
-      }
-      this.priceFrom = this.minPrice;
-      this.priceTo = this.maxPrice;
-      unmount(this.catalog.sideBar, container);
-      mount(this.catalog.sideBar, this.create());
-      this.catalog.createProductContainer();
-    });
-    this.catalog.listenTitleClick(title);
-    router.updatePageLinks();
-    return container;
-  }
-
-  public async applyFilters(userQuery?: string | null, offset = 0): Promise<void> {
-    this.catalog.showLoadingScreen();
-
-    const queryArgs = this.assembleQueryArgs();
-
-    if (userQuery) {
-      queryArgs.push(`searchKeywords.en-US.text:${userQuery}`);
-    }
-    if (this.catalog.categoryKey) {
-      const category = await getCategoryByKey(this.catalog.categoryKey);
-      queryArgs.push(`categories.id:"${category?.id}"`);
-    }
-    const request = queryArgs.length ? await getFilteredProducts(queryArgs, offset) : await getProducts(offset);
-    const products = request?.results || [];
-    this.catalog.productCount = request?.total || 0;
-    this.catalog.fillProductsContainer(products);
-  }
-
 }
 
 export { FiltersBlock };
