@@ -1,14 +1,14 @@
 import { Page } from '@templates/page';
 import { NotFoundPage } from '@servicePages/404-page';
 import { el, mount, setChildren } from 'redom';
-import { getProducts, getCategories, getProductsOfCategory, getCategoryByKey, getCart } from '@sdk/requests';
 import { ProductProjection, ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
-import { ProductCard } from '@components/product-card';
 import { FiltersBlock } from '@components/filters-block';
 import { Pagination } from '@components/pagination';
+import { ProductCard } from '@components/product-card';
+import { showLoadingScreen } from '@helpers/loading';
 import { buildCategoriesObject } from '@helpers/build-categories-object';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
-import { showLoadingScreen } from '@helpers/loading';
+import { getProducts, getCategories, getProductsOfCategory, getCategoryByKey, getCart } from '@sdk/requests';
 import { router } from '@app/router';
 import magnifier from '@icons/magnifying-glass.svg';
 import notFoundIcon from '@icons/nothing-found.png';
@@ -27,11 +27,9 @@ class CatalogPage extends Page {
   public searchInput = el('input.catalog-search-input', {
     placeholder: 'Search...',
   });
-
   protected textObject = {
     title: 'Catalog',
   };
-
   private mask = el('.catalog-mask');
 
   public createProductContainer(): HTMLElement {
@@ -105,11 +103,6 @@ class CatalogPage extends Page {
         router.updatePageLinks();
       });
     }
-  }
-
-  public switchToFirstPage(): void {
-    this.pagination.currentPage.set(1);
-    this.pagination.pageNumberItem.textContent = '1';
   }
 
   private async getRelevantProducts(): Promise<ProductProjection[]> {
@@ -249,6 +242,11 @@ class CatalogPage extends Page {
         this.pagination.create(),
       ]),
     ]);
+  }
+
+  public switchToFirstPage(): void {
+    this.pagination.currentPage.set(1);
+    this.pagination.pageNumberItem.textContent = '1';
   }
 }
 

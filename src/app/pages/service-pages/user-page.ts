@@ -1,25 +1,24 @@
 import { Page } from '@templates/page';
 import { el, mount } from 'redom';
-import { getUserGender, getUser, rememberUserGender } from '@app/state';
-import { getUserOrError } from '@helpers/get-user-or-error ';
-import girlAvatar from '@icons/avatar-girl.png';
-import boyAvatar from '@icons/avatar-boy.png';
-import { getFullCountryName } from '@helpers/get-full-country-name';
-import { ValidationForm } from '@app/validation/validation-registration-form';
-import { updateUser } from '@app/sdk/requests';
 import { getRemoveAddressAction, collectAllInputsActions } from '@helpers/get-actions';
-import { toggleInputsState } from '@helpers/toggle-inputs-state';
-import { toggleSaveButtonState } from '@helpers/toggle-save-button-state';
+import { getUserOrError } from '@helpers/get-user-or-error ';
+import { getFullCountryName } from '@helpers/get-full-country-name';
+import { safeQuerySelector } from '@helpers/safe-query-selector';
+import { toggleInputsState, toggleSaveButtonState } from '@helpers/toggls';
+import { updateUser } from '@app/sdk/requests';
+import { ValidationForm } from '@app/validation/validation-registration-form';
 import { Route } from '@app/types/route';
 import { redirect } from '@app/router';
-import { safeQuerySelector } from '@helpers/safe-query-selector';
+import { getUserGender, getUser, rememberUserGender } from '@app/state';
+import girlAvatar from '@icons/avatar-girl.png';
+import boyAvatar from '@icons/avatar-boy.png';
 
 class UserPage extends Page {
+  private validation = new ValidationForm();
+
   protected textObject = {
     title: 'User page',
   };
-
-  private validation = new ValidationForm();
 
   private createAvatar(): HTMLElement {
     const userGender = getUserGender();
@@ -132,22 +131,6 @@ class UserPage extends Page {
     this.validation.eventInput(infoBlock);
 
     return infoBlock;
-  }
-
-  public fillUserAddressesBlock(addressesBlock: HTMLElement): void {
-    const user = getUser();
-    if (user === null || !user.shippingAddressIds || !user.billingAddressIds) {
-      throw new Error('User with addresses expected');
-    }
-    addressesBlock.innerHTML = '';
-    const userShippingAddressesIds = user.shippingAddressIds;
-    const userBillingAddressesIds = user.billingAddressIds;
-    userShippingAddressesIds.forEach((shippingAddressId) => {
-      mount(addressesBlock, this.createBlockShipping(shippingAddressId));
-    });
-    userBillingAddressesIds.forEach((billingAddressId) => {
-      mount(addressesBlock, this.createBlockBilling(billingAddressId));
-    });
   }
 
   private createBlockShipping(shippingAddressId: string): HTMLElement {
@@ -359,6 +342,22 @@ class UserPage extends Page {
 
   protected build(): HTMLElement {
     return this.createUserInfoBlock();
+  }
+
+  public fillUserAddressesBlock(addressesBlock: HTMLElement): void {
+    const user = getUser();
+    if (user === null || !user.shippingAddressIds || !user.billingAddressIds) {
+      throw new Error('User with addresses expected');
+    }
+    addressesBlock.innerHTML = '';
+    const userShippingAddressesIds = user.shippingAddressIds;
+    const userBillingAddressesIds = user.billingAddressIds;
+    userShippingAddressesIds.forEach((shippingAddressId) => {
+      mount(addressesBlock, this.createBlockShipping(shippingAddressId));
+    });
+    userBillingAddressesIds.forEach((billingAddressId) => {
+      mount(addressesBlock, this.createBlockBilling(billingAddressId));
+    });
   }
 }
 

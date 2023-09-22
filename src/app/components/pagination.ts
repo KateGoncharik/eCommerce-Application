@@ -3,7 +3,29 @@ import { CatalogPageType } from '@customTypes/catalog';
 import { productsPerPage, getProducts } from '@sdk/requests';
 
 class Pagination {
+  private firstPageButton = el('.pagination-controls', '<<');
+  private prevPageButton = el('.pagination-controls', '<');
+  private nextPageButton = el('.pagination-controls', '>');
+  private lastPageButton = el('.pagination-controls', '>>');
+
   constructor(private catalog: CatalogPageType) {}
+
+  private getLastPage = async (): Promise<number> => {
+    const { productCount } = this.catalog;
+    if (!productCount) {
+      const request = await getProducts();
+      this.catalog.productCount = request?.total || 0;
+    }
+    return Math.ceil(productCount / productsPerPage);
+  };
+
+  private async goToPage(pageNumber: number): Promise<void> {
+    const offset = this.calculateOffset(pageNumber);
+    await this.catalog.filtersBlock.applyFilters(null, offset);
+    this.pageNumberItem.textContent = pageNumber.toString();
+    this.currentPage.set(pageNumber);
+    this.toggleBtnsState(pageNumber);
+  }
 
   public currentPage = {
     get(): number {
@@ -13,12 +35,6 @@ class Pagination {
       localStorage.setItem('catalog-current-page', value.toString());
     },
   };
-
-  public pageNumberItem = el('.pagination-controls.pagination-page-num', this.currentPage.get());
-  private firstPageButton = el('.pagination-controls', '<<');
-  private prevPageButton = el('.pagination-controls', '<');
-  private nextPageButton = el('.pagination-controls', '>');
-  private lastPageButton = el('.pagination-controls', '>>');
 
   public create(): HTMLElement {
     const { firstPageButton, prevPageButton, pageNumberItem, nextPageButton, lastPageButton } = this;
@@ -53,6 +69,8 @@ class Pagination {
     return el('.catalog-pagination', [firstPageButton, prevPageButton, pageNumberItem, nextPageButton, lastPageButton]);
   }
 
+  public pageNumberItem = el('.pagination-controls.pagination-page-num', this.currentPage.get());
+
   public calculateOffset(pageNumber = this.currentPage.get()): number {
     return (pageNumber - 1) * productsPerPage;
   }
@@ -79,23 +97,6 @@ class Pagination {
     } else {
       makeInactive(nextPageButton, lastPageButton);
     }
-  }
-
-  private getLastPage = async (): Promise<number> => {
-    const { productCount } = this.catalog;
-    if (!productCount) {
-      const request = await getProducts();
-      this.catalog.productCount = request?.total || 0;
-    }
-    return Math.ceil(productCount / productsPerPage);
-  };
-
-  private async goToPage(pageNumber: number): Promise<void> {
-    const offset = this.calculateOffset(pageNumber);
-    await this.catalog.filtersBlock.applyFilters(null, offset);
-    this.pageNumberItem.textContent = pageNumber.toString();
-    this.currentPage.set(pageNumber);
-    this.toggleBtnsState(pageNumber);
   }
 }
 

@@ -1,6 +1,6 @@
-import { Burger } from '@components/burger';
 import { Page } from '@templates/page';
 import { el, mount, setChildren, unmount } from 'redom';
+import { Cart, LineItem } from '@commercetools/platform-sdk';
 import {
   getCart,
   updateLineItemQuantity,
@@ -10,39 +10,30 @@ import {
   getPromocodeById,
   addPromocodeToCart,
 } from '@sdk/requests';
-import { Cart, LineItem } from '@commercetools/platform-sdk';
 import { Route } from '@app/types/route';
-import { toggleIconsState } from '@helpers/toggle-icons-state';
+import { getAllItemsRemoveActions, getRemoveItemAction } from '@helpers/get-actions';
 import { getPriceInUsd } from '@helpers/get-price-in-usd';
+import { safeQuerySelector } from '@helpers/safe-query-selector';
+import { toggleIconsState } from '@helpers/toggls';
+import { updateHeaderItemsAmount } from '@helpers/update-counter-items-amount';
 import minus from '@icons/minus.png';
 import addIconSrc from '@icons/add.png';
 import trashCan from '@icons/trash-can.png';
-import { safeQuerySelector } from '@helpers/safe-query-selector';
-import { getAllItemsRemoveActions, getRemoveItemAction } from '@helpers/get-actions';
-import { updateHeaderItemsAmount } from '@helpers/update-counter-items-amount';
+import { LinkText } from '@app/types/enums';
 
 class CartPage extends Page {
   protected textObject = {
     title: 'Cart page',
   };
 
-  private burger = new Burger();
   private createCart(cartContainer: HTMLElement): HTMLElement {
     return el('.cart', [el('h2.cart-title', 'Cart'), cartContainer]);
-  }
-
-  static getItemsQuantity(itemsAmountBlock: HTMLElement): number {
-    const itemsAmount = Number(itemsAmountBlock.innerHTML);
-    if (itemsAmount >= 1) {
-      return itemsAmount;
-    }
-    throw new Error('Positive items amount expected');
   }
 
   private createNoProductsContainer(cartContainer: HTMLElement): void {
     const noProductsWrapper = el('.no-items-wrapper', [
       el('p.no-items-message', 'No products added to cart. Take a look at our products here.'),
-      el('a.no-items-link', this.burger.linkText.toCatalog, {
+      el('a.no-items-link', LinkText.toCatalog, {
         href: Route.Catalog,
         'data-navigo': '',
       }),
@@ -329,6 +320,14 @@ class CartPage extends Page {
 
   protected build(): HTMLElement {
     return this.createCart(this.createCartContainer());
+  }
+
+  static getItemsQuantity(itemsAmountBlock: HTMLElement): number {
+    const itemsAmount = Number(itemsAmountBlock.innerHTML);
+    if (itemsAmount >= 1) {
+      return itemsAmount;
+    }
+    throw new Error('Positive items amount expected');
   }
 }
 

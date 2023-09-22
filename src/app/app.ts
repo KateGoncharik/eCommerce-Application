@@ -30,12 +30,6 @@ const routes: Record<Route, Page> = {
 };
 
 class App {
-  public run(): void {
-    const wrapper = this.build();
-    document.body.append(wrapper);
-    bindRoutes(routes);
-  }
-
   private createHeader(): HTMLElement {
     return new Header().create();
   }
@@ -46,6 +40,12 @@ class App {
     const wrapper = el('.page-wrapper');
     wrapper.append(header, main, footer);
     return wrapper;
+  }
+
+  public run(): void {
+    const wrapper = this.build();
+    document.body.append(wrapper);
+    bindRoutes(routes);
   }
 }
 

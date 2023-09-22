@@ -14,6 +14,34 @@ class ProductCard {
     this.productData = this.extractProductData(this.product);
   }
 
+  private async addToCart(): Promise<Cart | null> {
+    let cart = await getCart();
+    if (!cart) {
+      cart = await createCart();
+    }
+    if (cart) {
+      return await addProductToCart(this.product.id, cart.id, cart.version);
+    }
+    return null;
+  }
+
+  private extractProductData(product: ProductProjection): ProductMainData {
+    const price = product.masterVariant.prices?.[0];
+    const priceDiscounted = price?.discounted;
+    const description = product.description?.['en-US'] || '';
+
+    return {
+      id: product.id,
+      key: product.key || '',
+      name: product.name['en-US'],
+      shortDescription: description.slice(0, 125) + '...',
+      longDescription: description.slice(0, 300) + '...',
+      image: product.masterVariant.images?.[0].url || '',
+      priceFull: getPriceInUsd(price?.value.centAmount),
+      priceDiscounted: priceDiscounted ? getPriceInUsd(priceDiscounted.value.centAmount) : '',
+    };
+  }
+
   public create(): HTMLElement {
     const { key, name, shortDescription, longDescription, image, priceFull, priceDiscounted } = this.productData;
     const card = el('a.product-card', { href: `${window.location}/product/${key}`, 'data-navigo': '' });
@@ -56,34 +84,6 @@ class ProductCard {
       ])
     );
     return card;
-  }
-
-  private async addToCart(): Promise<Cart | null> {
-    let cart = await getCart();
-    if (!cart) {
-      cart = await createCart();
-    }
-    if (cart) {
-      return await addProductToCart(this.product.id, cart.id, cart.version);
-    }
-    return null;
-  }
-
-  private extractProductData(product: ProductProjection): ProductMainData {
-    const price = product.masterVariant.prices?.[0];
-    const priceDiscounted = price?.discounted;
-    const description = product.description?.['en-US'] || '';
-
-    return {
-      id: product.id,
-      key: product.key || '',
-      name: product.name['en-US'],
-      shortDescription: description.slice(0, 125) + '...',
-      longDescription: description.slice(0, 300) + '...',
-      image: product.masterVariant.images?.[0].url || '',
-      priceFull: getPriceInUsd(price?.value.centAmount),
-      priceDiscounted: priceDiscounted ? getPriceInUsd(priceDiscounted.value.centAmount) : '',
-    };
   }
 }
 

@@ -172,16 +172,16 @@ class RegistrationPage extends Page {
     return SuccessfulBlock;
   }
 
-  protected title(): HTMLElement {
-    const blockTitle = el('h2.form-title.title', 'Sign up');
-    return blockTitle;
-  }
-
   private createButton(): HTMLElement {
     const button = el('button.form-btn.btn', 'Join us', { type: 'submit' });
 
     this.validation.checkValidationAllForm(button);
     return button;
+  }
+
+  protected title(): HTMLElement {
+    const blockTitle = el('h2.form-title.title', 'Sign up');
+    return blockTitle;
   }
 
   protected build(): HTMLElement {
