@@ -64,6 +64,9 @@ class MainPage extends Page {
 
     getCategories().then((categories) => {
       categoriesContainer.innerHTML = '';
+      if (!categories) {
+        return;
+      }
       categories.forEach(async (category) => {
         if (category.ancestors.length) {
           return;
