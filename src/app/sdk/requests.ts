@@ -1,7 +1,3 @@
-import { getApiRoot, getApiRootForCartRequests } from '@sdk/build-client';
-import { withPasswordFlowClient } from '@sdk/login-api';
-import { safeQuerySelector } from '@helpers/safe-query-selector';
-import { markInputAsInvalid } from '@helpers/toggle-validation-state';
 import {
   ClientResponse,
   Customer,
@@ -17,24 +13,29 @@ import {
   DiscountCodePagedQueryResponse,
   DiscountCode,
 } from '@commercetools/platform-sdk';
-import { rememberAuthorizedUser } from '@app/state';
+import { getApiRoot, getApiRootForCartRequests } from '@sdk/build-client';
+import { withPasswordFlowClient } from '@sdk/login-api';
 import { getUserOrError } from '@helpers/get-user-or-error ';
-import { DataUser } from '@customTypes/datauser';
+import { safeQuerySelector } from '@helpers/safe-query-selector';
+import { markInputAsInvalid } from '@helpers/toggls';
 import { ProductData } from '@customTypes/data-product';
+import { DataUser } from '@customTypes/datauser';
+import { rememberAuthorizedUser } from '@app/state';
 
 const errorMessage = 'Error: no connection to server';
 export const productsPerPage = 12;
 
-export async function createUser(form: DataUser): Promise<number | undefined> {
+export async function createUser(form: DataUser): Promise<number | null> {
   try {
     const request = await getApiRoot().customers().post(form).execute();
-    return request.statusCode;
+    return request.statusCode as number;
   } catch (e) {
     console.error(errorMessage);
+    return null;
   }
 }
 
-export async function isUserExist(email: string): Promise<boolean | void> {
+export async function isUserExist(email: string): Promise<boolean | null> {
   try {
     const result = await getApiRoot()
       .customers()
@@ -43,10 +44,11 @@ export async function isUserExist(email: string): Promise<boolean | void> {
     return result.body.count > 0;
   } catch (err) {
     console.error(errorMessage);
+    return null;
   }
 }
 
-export async function authorizeUser(email: string, password: string): Promise<void | string> {
+export async function authorizeUser(email: string, password: string): Promise<string | null> {
   try {
     return await withPasswordFlowClient(email, password)
       .login()
@@ -55,6 +57,7 @@ export async function authorizeUser(email: string, password: string): Promise<vo
       .then(
         (result) => {
           rememberAuthorizedUser(result.body.customer);
+          return null
         },
         (errorResponse: ClientResponse<ErrorResponse>) => {
           const emailInput = safeQuerySelector<HTMLInputElement>('.email-input', document);
@@ -69,7 +72,8 @@ export async function authorizeUser(email: string, password: string): Promise<vo
         }
       );
   } catch (err) {
-    console.error(err);
+    console.error(errorMessage);
+    return null;
   }
 }
 
@@ -123,7 +127,7 @@ export const returnProductByKey = (productKey: string): Promise<ClientResponse> 
   return getApiRoot().products().withKey({ key: productKey }).get().execute();
 };
 
-export const getProduct = async (key: string): Promise<ProductData | void> => {
+export const getProduct = async (key: string): Promise<ProductData | null> => {
   return returnProductByKey(key)
     .then(({ body }) => {
       const { current } = body.masterData;
@@ -139,7 +143,10 @@ export const getProduct = async (key: string): Promise<ProductData | void> => {
 
       return productData;
     })
-    .catch(() => console.error(errorMessage));
+    .catch(() => {
+      console.error(errorMessage);
+      return null;
+    });
 };
 
 export async function getProductsOfCategory(id: string, offset = 0): Promise<ProductProjection[]> {
@@ -176,22 +183,23 @@ export async function getFilteredProducts(
   }
 }
 
-export async function getCategories(): Promise<Category[]> {
+export async function getCategories(): Promise<Category[] | null> {
   try {
     const categories = await getApiRoot().categories().get().execute();
     return categories.body.results;
   } catch (err) {
     console.error(errorMessage);
-    return [];
+    return null;
   }
 }
 
-export async function getCategoryByKey(key: string): Promise<Category | void> {
+export async function getCategoryByKey(key: string): Promise<Category | null> {
   try {
     const categories = await getApiRoot().categories().withKey({ key }).get().execute();
     return categories.body;
   } catch (err) {
     console.error(errorMessage);
+    return null;
   }
 }
 

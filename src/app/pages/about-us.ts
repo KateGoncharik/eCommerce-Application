@@ -6,13 +6,13 @@ import avatarI from '@icons/avatar_i.jpg';
 import avatarK from '@icons/avatar_k.jpg';
 
 export class AboutUs extends Page {
-  constructor() {
-    super();
-  }
-
   protected textObject = {
     title: 'About us',
   };
+  
+  constructor() {
+    super();
+  }
 
   private createBlockAboutUs(): HTMLElement {
     const blockAboutUs = el('.block-about-us', [

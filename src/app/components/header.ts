@@ -6,12 +6,14 @@ import { Burger } from '@components/burger';
 import { isUserAuthorized } from '@app/state';
 import { getCart } from '@app/sdk/requests';
 import { updateHeaderItemsAmount } from '@helpers/update-counter-items-amount';
+import { LinkText } from '@app/types/enums';
+
 class Header {
   private burger = new Burger();
 
   public create(): HTMLElement {
     const loginOrLogoutLink = isUserAuthorized() ? this.burger.createLogOutLink() : this.burger.createLogInLink();
-    const userPageLink = el('a.user-page-link.burger-link', this.burger.linkText.userPage, {
+    const userPageLink = el('a.user-page-link.burger-link', LinkText.userPage, {
       href: Route.UserPage,
       'data-navigo': '',
     });
@@ -22,7 +24,7 @@ class Header {
     this.burger.changeUserPageBlockVisibility(userPageBlock, userPageLink);
     const itemsInCart = el('.header-items-amount', `0`);
     const itemsInCartForMobile = el('.header-items-amount-mobile', `0`);
-    const cartLink = el('a', this.burger.linkText.cart, {
+    const cartLink = el('a', LinkText.cart, {
       href: Route.CartPage,
       'data-navigo': '',
     });
@@ -39,13 +41,13 @@ class Header {
         el('.header-column', [
           el('span.header-cell', [
             // TODO: use props of Burger class for elements in order to avoid duplication
-            el('a', this.burger.linkText.toCatalog, {
+            el('a', LinkText.toCatalog, {
               href: Route.Catalog,
               'data-navigo': '',
             }),
           ]),
           el('span.header-cell', [
-            el('a', this.burger.linkText.toAboutUs, {
+            el('a', LinkText.toAboutUs, {
               href: Route.AboutUs,
               'data-navigo': '',
             }),
@@ -70,7 +72,7 @@ class Header {
           el('.header-cell.login-cell', [
             loginOrLogoutLink,
             el('span', '/'),
-            el('a', this.burger.linkText.toJoin, {
+            el('a', LinkText.toJoin, {
               href: Route.Registration,
               'data-navigo': '',
             }),

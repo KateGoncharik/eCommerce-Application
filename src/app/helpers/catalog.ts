@@ -1,15 +1,15 @@
-import { CategoriesObject } from '@customTypes/catalog';
-import { Category } from '@commercetools/platform-sdk';
 import { el } from 'redom';
 import lottie from 'lottie-web';
 import loadIndicator from '@animation/load-indicator.json';
+import { CategoriesObject } from '@customTypes/catalog';
+import { Category } from '@commercetools/platform-sdk';
 
-async function buildCategoriesObject(categoriesArray: Promise<Category[]>): Promise<CategoriesObject> {
+async function buildCategoriesObject(categoriesArray: Promise<Category[] | null>): Promise<CategoriesObject> {
   const categories = await categoriesArray;
   const categoriesObject: CategoriesObject = {};
   const subcategories: Category[] = [];
 
-  categories.forEach((category) => {
+  categories!.forEach((category) => {
     const categoryName = category.name['en-US'];
     if (!category.ancestors.length) {
       categoriesObject[category.id] = { key: category.key || '', name: categoryName, subcategories: [] };

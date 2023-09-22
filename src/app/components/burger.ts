@@ -3,87 +3,47 @@ import { Route } from '@customTypes/route';
 import { isUserAuthorized, logOutUser } from '@app/state';
 import { router, redirect } from '@app/router';
 import { renderHeader } from '@helpers/render-header';
+import { LinkText } from '@app/types/enums';
 
 class Burger {
-  public linkText: Record<string, string> = {
-    toMain: 'Home',
-    toCatalog: 'Catalog',
-    toAboutUs: 'About us',
-    toLogIn: 'Log in',
-    toLogOut: 'Log out',
-    toJoin: 'Join',
-    userPage: 'User page',
-    cart: 'Cart',
-  };
+  private mainPageLink = el('a.burger-link', LinkText.toMain, {
+    href: Route.Main,
+    'data-navigo': '',
+  });
 
-  public mask = el('.header-mask');
+  private catalogPageLink = el('a.burger-link', LinkText.toCatalog, {
+    href: Route.Catalog,
+    'data-navigo': '',
+  });
 
-  public burgerIcon = this.createBurgerIcon();
+  private aboutUsPageLink = el('span.burger-link', LinkText.toAboutUs);
 
-  public createLogOutLink(): HTMLAnchorElement {
-    const logOutLink = el('a.logout', this.linkText.toLogOut, {
-      href: '/logout',
-      'data-navigo': '',
-    });
+  private logInPageLink = el('a.burger-link', LinkText.toLogIn, {
+    href: Route.Login,
+    'data-navigo': '',
+  });
 
-    if (!(logOutLink instanceof HTMLAnchorElement)) {
-      throw new Error();
-    }
+  private joinPageLink = el('a.burger-link', LinkText.toJoin, {
+    href: Route.Registration,
+    'data-navigo': '',
+  });
 
-    logOutLink.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopImmediatePropagation();
-
-      logOutUser();
-
-      redirect(Route.Login);
-      renderHeader();
-      router.updatePageLinks();
-    });
-
-    return logOutLink;
-  }
+  private userPageLink = el('a.user-page-link.burger-link', LinkText.userPage, {
+    href: Route.UserPage,
+    'data-navigo': '',
+  });
 
   public createLogInLink(): HTMLAnchorElement {
-    return el('a', this.linkText.toLogIn, {
+    return el('a', LinkText.toLogIn, {
       href: Route.Login,
       'data-navigo': '',
     });
   }
 
-  private mainPageLink = el('a.burger-link', this.linkText.toMain, {
-    href: Route.Main,
-    'data-navigo': '',
-  });
+  public mask = el('.header-mask');
 
-  private catalogPageLink = el('a.burger-link', this.linkText.toCatalog, {
-    href: Route.Catalog,
-    'data-navigo': '',
-  });
-
-  private aboutUsPageLink = el('span.burger-link', this.linkText.toAboutUs);
-
-  private logInPageLink = el('a.burger-link', this.linkText.toLogIn, {
-    href: Route.Login,
-    'data-navigo': '',
-  });
-
-  private joinPageLink = el('a.burger-link', this.linkText.toJoin, {
-    href: Route.Registration,
-    'data-navigo': '',
-  });
-
-  private userPageLink = el('a.user-page-link.burger-link', this.linkText.userPage, {
-    href: Route.UserPage,
-    'data-navigo': '',
-  });
-
-  public changeUserPageBlockVisibility(userPageBlock: HTMLElement, userPageLink: HTMLAnchorElement): void {
-    if (isUserAuthorized()) {
-      userPageBlock.style.display = 'flex';
-      userPageLink.style.display = 'flex';
-    }
-  }
+  public burgerIcon = this.createBurgerIcon();
+  public burgerMenu = this.createBurgerMenu();
 
   private createBurgerMenu(): HTMLElement {
     const loginOrLogoutLink = isUserAuthorized() ? this.createLogOutLink() : this.createLogInLink();
@@ -117,8 +77,6 @@ class Burger {
     return burgerMenu;
   }
 
-  public burgerMenu = this.createBurgerMenu();
-
   private createBurgerIcon(): HTMLElement {
     const burgerIcon = el('.burger', [el('span')]);
     burgerIcon.addEventListener('click', (e) => {
@@ -133,6 +91,37 @@ class Burger {
     this.burgerMenu.classList.toggle('active');
     document.body.classList.toggle('lock');
     this.mask.classList.toggle('lock');
+  }
+
+  public createLogOutLink(): HTMLAnchorElement {
+    const logOutLink = el('a.logout', LinkText.toLogOut, {
+      href: '/logout',
+      'data-navigo': '',
+    });
+
+    if (!(logOutLink instanceof HTMLAnchorElement)) {
+      throw new Error();
+    }
+
+    logOutLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+
+      logOutUser();
+
+      redirect(Route.Login);
+      renderHeader();
+      router.updatePageLinks();
+    });
+
+    return logOutLink;
+  }
+
+  public changeUserPageBlockVisibility(userPageBlock: HTMLElement, userPageLink: HTMLAnchorElement): void {
+    if (isUserAuthorized()) {
+      userPageBlock.style.display = 'flex';
+      userPageLink.style.display = 'flex';
+    }
   }
 }
 
