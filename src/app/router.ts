@@ -35,6 +35,10 @@ function bindRoutes(routes: Record<Route, Page>): void {
       const page = routes[Route.Catalog];
       page.render();
     })
+    .on(Route.AboutUs, () => {
+      const page = routes[Route.AboutUs];
+      page.render();
+    })
     .on(Route.UserPage, () => {
       const user = getUser();
       if (user) {
@@ -61,6 +65,10 @@ function bindRoutes(routes: Record<Route, Page>): void {
       } else {
         router.navigate(Route.Login);
       }
+    })
+    .on(Route.CartPage, () => {
+      const page = routes[Route.CartPage]; //do we need it to work like that?
+      page.render();
     })
     .on(/catalog\/.*product\/.+/, (path) => {
       const productKey = path?.url.split('/').pop() || '';

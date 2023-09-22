@@ -1,101 +1,55 @@
 import { Page } from '@templates/page';
 import { NotFoundPage } from '@servicePages/404-page';
 import { el, mount, setChildren } from 'redom';
-import { getProducts, getCategories, getProductsOfCategory, getCategoryByKey } from '@sdk/requests';
 import { ProductProjection } from '@commercetools/platform-sdk';
-import { ProductMainData } from '@customTypes/catalog';
-import { ProductCard } from '@components/product-card';
 import { FiltersBlock } from '@components/filters-block';
-import { extractProductData, buildCategoriesObject } from '@helpers/catalog';
+import { Pagination } from '@components/pagination';
+import { ProductCard } from '@components/product-card';
+import { buildCategoriesObject, createLoadAnimItem } from '@helpers/catalog';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
+import { getProducts, getCategories, getProductsOfCategory, getCategoryByKey, getCart } from '@sdk/requests';
 import { router } from '@app/router';
 import magnifier from '@icons/magnifying-glass.svg';
+import notFoundIcon from '@icons/nothing-found.png';
 
 class CatalogPage extends Page {
-  constructor(public categoryKey?: string) {
-    super();
-  }
+  private productsContainer = el('.products');
+  private mask = el('.catalog-mask');
+  protected textObject = {
+    title: 'Catalog',
+  };
+  public productCount = 0;
+
+  public filtersBlock = new FiltersBlock(this);
+  public pagination = new Pagination(this);
 
   public sideBar = el('.catalog-sidebar');
   public searchInput = el('input.catalog-search-input', {
     placeholder: 'Search...',
   });
 
-  protected textObject = {
-    title: 'Catalog',
-  };
-
-  private productsContainer = el('.products');
-  private mask = el('.catalog-mask');
-  private filtersBlock = new FiltersBlock(this);
-
-  public createProductContainer(): HTMLElement {
-    this.getProductData().then((products) => {
-      if (!products) {
-        new NotFoundPage().render();
-      }
-      this.fillProductsContainer(products);
-    });
-    return this.productsContainer;
+  constructor(public categoryKey?: string) {
+    super();
   }
 
-  public listenTitleClick(title: HTMLElement): void {
-    const windowSize = window.matchMedia('(max-width: 768px)');
-    const mask = this.mask;
-    let isAllTitlesInactive: boolean;
-
-    title.addEventListener('click', () => {
-      title.classList.toggle('active');
-      const titles = document.querySelectorAll('.sidebar-dropdown-title');
-
-      titles.forEach((item) => {
-        if (item !== title) {
-          item.classList.remove('active');
-        } else if (item.classList.contains('active')) {
-          isAllTitlesInactive = false;
-        } else {
-          isAllTitlesInactive = true;
-        }
-      });
-      if (windowSize.matches) {
-        if (isAllTitlesInactive) {
-          mask.classList.remove('lock');
-          document.body.classList.remove('no-scroll');
-        } else {
-          mask.classList.add('lock');
-          document.body.classList.add('no-scroll');
-        }
-      }
-    });
-    windowSize.addEventListener('change', () => {
-      this.closeCategoryNav(title, mask);
-    });
-    this.closeCategoryNavOnBurgerClick(title, mask);
-  }
-
-  public fillProductsContainer(products: ProductMainData[]): void {
-    this.productsContainer.innerHTML = '';
-    products.forEach((product) => {
-      const card = new ProductCard(product).create();
-      mount(this.productsContainer, card);
-    });
-    router.updatePageLinks();
-  }
-
-  private async getProductData(): Promise<ProductMainData[]> {
-    let products: Promise<ProductProjection[]>;
+  private async getRelevantProducts(): Promise<ProductProjection[]> {
+    const offset = this.pagination.calculateOffset();
+    let products: ProductProjection[] | null;
 
     if (this.categoryKey) {
       const category = await getCategoryByKey(this.categoryKey);
       if (!category) {
         return [];
       }
-      products = getProductsOfCategory(category.id);
+      products = await getProductsOfCategory(category.id, offset);
     } else {
-      products = getProducts();
+      const request = await getProducts(offset);
+      this.productCount = request?.total || 0;
+      products = request?.results || [];
     }
-    return extractProductData(products);
+    return products!;
   }
+
   private createBreadcrumbs(): HTMLElement {
     const container = el('.breadcrumbs');
     setTimeout(() => {
@@ -126,6 +80,10 @@ class CatalogPage extends Page {
 
     searchInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && searchInput instanceof HTMLInputElement) {
+        if (!searchInput.value.trim().length) {
+          this.filtersBlock.applyFilters();
+          return;
+        }
         const searchQuery = searchInput.value
           .trim()
           .toLowerCase()
@@ -134,6 +92,7 @@ class CatalogPage extends Page {
           .join(',');
 
         this.filtersBlock.applyFilters(searchQuery);
+        this.switchToFirstPage();
       }
     });
 
@@ -208,8 +167,94 @@ class CatalogPage extends Page {
       el('.products-wrapper', [
         el('.breadcrumbs-search-wrap', [this.createBreadcrumbs(), this.createSearch()]),
         this.createProductContainer(),
+        this.pagination.create(),
       ]),
     ]);
+  }
+
+  public createProductContainer(): HTMLElement {
+    this.showLoadingScreen();
+
+    this.getRelevantProducts().then((products) => {
+      if (!products) {
+        new NotFoundPage().render();
+      }
+      this.fillProductsContainer(products);
+    });
+    return this.productsContainer;
+  }
+
+  public listenTitleClick(title: HTMLElement): void {
+    const windowSize = window.matchMedia('(max-width: 768px)');
+    const mask = this.mask;
+    let isAllTitlesInactive: boolean;
+
+    title.addEventListener('click', () => {
+      title.classList.toggle('active');
+      const titles = document.querySelectorAll('.sidebar-dropdown-title');
+
+      titles.forEach((item) => {
+        if (item !== title) {
+          item.classList.remove('active');
+        } else if (item.classList.contains('active')) {
+          isAllTitlesInactive = false;
+        } else {
+          isAllTitlesInactive = true;
+        }
+      });
+      if (windowSize.matches) {
+        if (isAllTitlesInactive) {
+          mask.classList.remove('lock');
+          document.body.classList.remove('no-scroll');
+        } else {
+          mask.classList.add('lock');
+          document.body.classList.add('no-scroll');
+        }
+      }
+    });
+    windowSize.addEventListener('change', () => {
+      this.closeCategoryNav(title, mask);
+    });
+    this.closeCategoryNavOnBurgerClick(title, mask);
+  }
+
+  public fillProductsContainer(products: ProductProjection[]): void {
+    this.pagination.toggleBtnsState(this.pagination.currentPage.get());
+
+    if (!products.length) {
+      this.productsContainer.classList.add('not-found');
+      const notFoundMessage = el('.catalog-not-found-message', 'No products found', el('img', { src: notFoundIcon }));
+      setChildren(this.productsContainer, [notFoundMessage]);
+      return;
+    } else {
+      this.productsContainer.classList.remove('not-found');
+
+      getCart().then((cart) => {
+        this.productsContainer.innerHTML = '';
+        products.forEach((product) => {
+          const card = new ProductCard(product).create();
+          const isProductInCart = cart?.lineItems.some((item) => item.productId === product.id);
+          if (isProductInCart) {
+            card.classList.add('in-cart');
+          }
+          mount(this.productsContainer, card);
+        });
+        router.updatePageLinks();
+      });
+    }
+  }
+
+  public switchToFirstPage(): void {
+    this.pagination.currentPage.set(1);
+    this.pagination.pageNumberItem.textContent = '1';
+  }
+
+  public showLoadingScreen(): void {
+    const loadingScreen = el('.catalog-loading-screen', [
+      createLoadAnimItem('products-load-anim'),
+      el('p', 'Loading...'),
+    ]);
+    setChildren(this.productsContainer, [loadingScreen]);
   }
 }
 

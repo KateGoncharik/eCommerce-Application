@@ -1,34 +1,29 @@
 import { Page } from '@templates/page';
 import { el, mount } from 'redom';
-import { getUserGender, getUser } from '@app/state';
-import { getUserOrError } from '@helpers/get-user-or-error ';
-import girlAvatar from '@icons/avatar-girl.png';
-import boyAvatar from '@icons/avatar-boy.png';
-import { getFullCountryName } from '@helpers/get-full-country-name';
-import { ValidationForm } from '@app/validation/validation-registration-form';
-import { updateUser } from '@app/sdk/requests';
 import { getRemoveAddressAction, collectAllInputsActions } from '@helpers/get-actions';
-import { toggleInputsState } from '@helpers/toggle-inputs-state';
-import { toggleSaveButtonState } from '@helpers/toggle-save-button-state';
+import { getUserOrError } from '@helpers/get-user-or-error ';
+import { getFullCountryName } from '@helpers/get-full-country-name';
+import { safeQuerySelector } from '@helpers/safe-query-selector';
+import { toggleInputsState, toggleSaveButtonState } from '@helpers/toggls';
+import { updateUser } from '@app/sdk/requests';
+import { ValidationForm } from '@app/validation/validation-registration-form';
 import { Route } from '@app/types/route';
 import { redirect } from '@app/router';
-import { safeQuerySelector } from '@helpers/safe-query-selector';
+import { getUserGender, getUser, rememberUserGender } from '@app/state';
+import girlAvatar from '@icons/avatar-girl.png';
+import boyAvatar from '@icons/avatar-boy.png';
 
 class UserPage extends Page {
+  private validation = new ValidationForm();
+
   protected textObject = {
     title: 'User page',
   };
 
-  private validation = new ValidationForm();
-
   private createAvatar(): HTMLElement {
-    const userAvatarWrapper = el('.user-avatar-wrapper');
     const userGender = getUserGender();
-
     const src = this.getAvatarByGender(userGender);
-    const userAvatar = el('.avatar-wrapper', [el('img.avatar', { src: src, alt: 'girl' })]);
-    mount(userAvatarWrapper, userAvatar);
-    return userAvatarWrapper;
+    return el('img.avatar', { src: src, alt: 'girl' });
   }
 
   private getAvatarByGender(gender: string): HTMLImageElement {
@@ -53,7 +48,7 @@ class UserPage extends Page {
     });
     const infoBlock = el('.user-info-wrapper', [
       el('span.user-info-title', 'User information'),
-      this.createAvatar(),
+      el('.avatar-wrapper', [this.createAvatar()]),
       el('.user-info-block', [
         el('.user-name-block', [
           el('.input-block', [
@@ -136,22 +131,6 @@ class UserPage extends Page {
     this.validation.eventInput(infoBlock);
 
     return infoBlock;
-  }
-
-  public fillUserAddressesBlock(addressesBlock: HTMLElement): void {
-    const user = getUser();
-    if (user === null || !user.shippingAddressIds || !user.billingAddressIds) {
-      throw new Error('User with addresses expected');
-    }
-    addressesBlock.innerHTML = '';
-    const userShippingAddressesIds = user.shippingAddressIds;
-    const userBillingAddressesIds = user.billingAddressIds;
-    userShippingAddressesIds.forEach((shippingAddressId) => {
-      mount(addressesBlock, this.createBlockShipping(shippingAddressId));
-    });
-    userBillingAddressesIds.forEach((billingAddressId) => {
-      mount(addressesBlock, this.createBlockBilling(billingAddressId));
-    });
   }
 
   private createBlockShipping(shippingAddressId: string): HTMLElement {
@@ -296,12 +275,16 @@ class UserPage extends Page {
     }
     button.disabled = true;
     button.addEventListener('click', async () => {
-      const actions = collectAllInputsActions();
-      if (this.isFormValid()) {
-        const result = await updateUser(actions);
+      const genderInput = safeQuerySelector<HTMLInputElement>('.gender-input', document);
+      if (this.isFormValid() && genderInput.classList.contains('input-valid')) {
+        const result = await updateUser(collectAllInputsActions());
         if (!result) {
           throw new Error('User update failure');
         }
+        rememberUserGender(genderInput.value);
+        const avatarWrapper = safeQuerySelector('.avatar-wrapper');
+        avatarWrapper.innerHTML = '';
+        mount(avatarWrapper, this.createAvatar());
       }
     });
     return button;
@@ -359,6 +342,22 @@ class UserPage extends Page {
 
   protected build(): HTMLElement {
     return this.createUserInfoBlock();
+  }
+
+  public fillUserAddressesBlock(addressesBlock: HTMLElement): void {
+    const user = getUser();
+    if (user === null || !user.shippingAddressIds || !user.billingAddressIds) {
+      throw new Error('User with addresses expected');
+    }
+    addressesBlock.innerHTML = '';
+    const userShippingAddressesIds = user.shippingAddressIds;
+    const userBillingAddressesIds = user.billingAddressIds;
+    userShippingAddressesIds.forEach((shippingAddressId) => {
+      mount(addressesBlock, this.createBlockShipping(shippingAddressId));
+    });
+    userBillingAddressesIds.forEach((billingAddressId) => {
+      mount(addressesBlock, this.createBlockBilling(billingAddressId));
+    });
   }
 }
 

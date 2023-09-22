@@ -18,4 +18,16 @@ export enum Colors {
   Orange = '#ffa500',
   Gold = '#ffd700',
   Grey = '#808080',
+  Black = '#000000',
+}
+
+export enum LinkText {
+  toMain = 'Home',
+  toCatalog = 'Catalog',
+  toAboutUs = 'About us',
+  toLogIn = 'Log in',
+  toLogOut = 'Log out',
+  toJoin = 'Join',
+  userPage = 'User page',
+  cart = 'Cart',
 }

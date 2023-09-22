@@ -1,4 +1,4 @@
-import { Address, CustomerUpdateAction } from '@commercetools/platform-sdk';
+import { Address, MyCartUpdateAction, CustomerUpdateAction, LineItem } from '@commercetools/platform-sdk';
 import { safeQuerySelector } from './safe-query-selector';
 
 export function getFirstNameAction(newFirstName: string): CustomerUpdateAction {
@@ -67,4 +67,20 @@ export function collectAllInputsActions(): CustomerUpdateAction[] {
     getDateOfBirthAction(dateInput.value),
     getChangeEmailAction(emailInput.value),
   ];
+}
+
+export function getRemoveItemAction(itemId: string, itemQuantity: number): MyCartUpdateAction {
+  return {
+    action: 'removeLineItem',
+    lineItemId: itemId,
+    quantity: itemQuantity,
+  };
+}
+
+export function getAllItemsRemoveActions(lineItems: LineItem[]): MyCartUpdateAction[] {
+  const actions: MyCartUpdateAction[] = [];
+  lineItems.forEach((item) => {
+    actions.push(getRemoveItemAction(item.id, item.quantity));
+  });
+  return actions;
 }

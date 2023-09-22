@@ -1,226 +1,3 @@
-body.no-scroll {
-  overflow: hidden;
-}
-
-.catalog {
-  display: flex;
-  overflow: hidden;
-}
-
-.catalog-mask {
-  background-color: transparent;
-  transition: 0.5s;
-
-  &.lock {
-    position: fixed;
-    z-index: 1;
-    top: 56px;
-    left: 0;
-    height: 100vh;
-    width: 100vw;
-    background-color: rgba($color: #292929, $alpha: 60%);
-  }
-}
-
-.products-wrapper {
-  flex: 0 1 75%;
-
-  @media (width <= 992px) {
-    flex: 0 1 50%;
-  }
-
-  @media (width <= 768px) {
-    flex: auto;
-  }
-}
-
-.breadcrumbs-search-wrap {
-  display: grid;
-  grid-template-columns: 1.3367fr 0.6633fr;
-  border-bottom: 1px solid $black;
-  border-right: 1px solid $black;
-
-  @media (width <= 992px) {
-    grid-template: 1fr 1fr / 1fr;
-  }
-}
-
-.breadcrumbs {
-  flex: auto;
-  padding: 10.2px;
-  border-right: 1px solid $black;
-
-  @media (width <= 992px) {
-    border-right: none;
-    border-bottom: 1px solid $black;
-  }
-}
-
-.breadcrumbs-link {
-  display: inline-block;
-  margin-right: 5px;
-  color: inherit;
-  font-weight: 500;
-
-  &:hover {
-    color: $hover-color;
-  }
-
-  &::after {
-    content: '>';
-    margin-left: 5px;
-    line-height: 16px;
-    vertical-align: text-bottom;
-  }
-}
-
-.breadcrumbs-current {
-  font-weight: 500;
-  color: $grey;
-}
-
-.catalog-search {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-right: 10px;
-
-  input {
-    flex: auto;
-    margin: 0;
-    padding: 0 10px;
-  }
-}
-
-.products {
-  display: grid;
-  grid-template-columns: 1fr 1.003fr 0.997fr;
-
-  @media (width <= 992px) {
-    grid-template-columns: 1.003fr 0.997fr;
-  }
-
-  @media (width <= 768px) {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  @media (width <= 375px) {
-    grid-template-columns: 1fr;
-  }
-}
-
-.card-content {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 100%;
-  padding: 0 1% 4%;
-  text-align: center;
-}
-
-.card-image-wrapper {
-  flex: 1 1 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.card-image {
-  max-width: 70%;
-  max-height: 270px;
-
-  @media (768px < width <= 1350px) {
-    max-height: 170px;
-  }
-
-  @media (768px < width <= 992px) {
-    max-height: 130px;
-  }
-
-  @media (width <= 710px) {
-    max-height: 200px;
-  }
-
-  @media (375px <= width <= 550px) {
-    max-height: 130px;
-  }
-}
-
-.card-description,
-.card-short-desc {
-  display: none;
-}
-
-.card-name {
-  margin: 1% 0 2%;
-  font-weight: 500;
-  font-size: 18px;
-}
-
-.card-old-price {
-  color: $grey;
-  font-size: 18px;
-  text-decoration: line-through;
-  margin-right: 2%;
-}
-
-.card-new-price {
-  color: $black;
-  font-size: 18px;
-  font-weight: 700;
-}
-
-@media (768px < width <= 1180px) or (width <= 640px) {
-  .card-short-desc {
-    display: block;
-    font-size: 15px;
-  }
-
-  .card-long-desc {
-    display: none;
-  }
-}
-
-.product-card {
-  position: relative;
-  display: block;
-  border-right: 1px solid $black;
-  border-bottom: 1px solid $black;
-  color: inherit;
-  line-height: 120%;
-  background-color: #fff;
-  cursor: pointer;
-  transition: all 0.3s;
-
-  &::after {
-    content: '';
-    padding-top: 100%;
-    display: block;
-  }
-
-  &:hover {
-    z-index: 5;
-    transform: scale(1.01);
-    border: none;
-    box-shadow: 0 0 5px $black;
-
-    .card-image {
-      display: none;
-    }
-
-    .card-description {
-      display: block;
-      padding: 0 10%;
-      text-align: justify;
-    }
-  }
-
-  @media (width <= 992px) {
-    line-height: 100%;
-  }
-}
-
 // SIDEBAR ===============================================================================================================
 .catalog-sidebar {
   position: relative;
@@ -427,9 +204,9 @@ $range-h: 1em;
 
 .filters-price-wrap {
   --from: 0;
-  --to: 5;
+  --to: 100;
   --min: 0;
-  --max: 5;
+  --max: 100;
   --dif: calc(var(--max) - var(--min));
 
   display: grid;
@@ -525,7 +302,7 @@ input[type='range'] {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 2%;
+  gap: 7px;
 }
 
 .filters-color-circle {
@@ -538,4 +315,22 @@ input[type='range'] {
   &.active {
     border: 3px solid $black;
   }
+
+  &[data-color='Black'].active {
+    border: 3px solid $black;
+    outline: #fff solid 1px;
+    outline-offset: -3px;
+  }
+}
+
+.filters-gradient-circle {
+  background: linear-gradient(0deg, #f0f, #ffd700);
+}
+
+.filters-rainbow-circle {
+  background: url('../assets/images/rainbow-bg.jpg') 0 0 / cover no-repeat;
+}
+
+.filters-multicolor-circle {
+  background: url('../assets/icons/multicolor.png') 0 0 / cover no-repeat;
 }

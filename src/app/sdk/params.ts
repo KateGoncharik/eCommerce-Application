@@ -1,3 +1,5 @@
+import { TokenCache, TokenStore } from '@commercetools/sdk-client-v2';
+
 const projectKey = 'wonderland';
 
 const scopes = [
@@ -10,4 +12,22 @@ const clientSecret = 'gXkEffP_zxsBc-VmiabriuRmg6gX6Tzr';
 const apiHost = 'https://api.us-central1.gcp.commercetools.com';
 const oauthUri = 'https://auth.us-central1.gcp.commercetools.com';
 
-export { projectKey, oauthUri, scopes, clientId, clientSecret, apiHost };
+const myTokenCache: TokenCache = {
+  get(): TokenStore {
+    const savedStore = localStorage.getItem('tokenStore');
+    if (!savedStore) {
+      return {
+        token: '',
+        expirationTime: 0,
+        refreshToken: '',
+      };
+    }
+    return JSON.parse(savedStore);
+  },
+
+  set(cache: TokenStore): void {
+    localStorage.setItem('tokenStore', JSON.stringify(cache));
+  },
+};
+
+export { projectKey, oauthUri, scopes, clientId, clientSecret, apiHost, myTokenCache };

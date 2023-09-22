@@ -1,9 +1,9 @@
 import { Page } from '@templates/page';
 import { el, mount } from 'redom';
-import { LoginFormValidator } from '@validation/login-form-validator';
-import { authorizeUser } from '@app/sdk/requests';
-import { safeQuerySelector } from '@helpers/safe-query-selector';
 import { renderHeader } from '@helpers/render-header';
+import { safeQuerySelector } from '@helpers/safe-query-selector';
+import { authorizeUser } from '@app/sdk/requests';
+import { LoginFormValidator } from '@validation/login-form-validator';
 import { router, redirect } from '@app/router';
 import { Route } from '@customTypes/route';
 
@@ -13,15 +13,6 @@ class LoginPage extends Page {
   protected textObject = {
     title: 'Login page',
   };
-
-  protected createHeader(): HTMLHeadingElement {
-    const headerBlock = el('h2.form-header');
-    if (!(headerBlock instanceof HTMLHeadingElement)) {
-      throw new Error('HTMLHeadingElement expected');
-    }
-    headerBlock.textContent = 'Sign in';
-    return headerBlock;
-  }
 
   private createInputs(): HTMLElement {
     const inputsBlock = el('.inputs-block');
@@ -115,6 +106,15 @@ class LoginPage extends Page {
     mount(form, inputs);
     mount(form, buttonBlock);
     return formWrapper;
+  }
+
+  protected createHeader(): HTMLHeadingElement {
+    const headerBlock = el('h2.form-header');
+    if (!(headerBlock instanceof HTMLHeadingElement)) {
+      throw new Error('HTMLHeadingElement expected');
+    }
+    headerBlock.textContent = 'Sign in';
+    return headerBlock;
   }
 
   protected build(): HTMLElement {

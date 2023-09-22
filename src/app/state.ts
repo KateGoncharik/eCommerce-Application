@@ -1,11 +1,16 @@
 import { Customer } from '@commercetools/platform-sdk';
 import { getUserOrError } from '@helpers/get-user-or-error ';
+import { myTokenCache } from '@sdk/params';
 
 const userKey = 'user';
 const genderKey = 'gender';
 
 function rememberAuthorizedUser(customer: Customer): void {
   localStorage.setItem(userKey, JSON.stringify(customer));
+}
+
+function rememberUserGender(gender: string): void {
+  localStorage.setItem(getUserOrError().id, gender);
 }
 
 function getUser(): Customer | null {
@@ -19,6 +24,7 @@ function getUser(): Customer | null {
 function logOutUser(): void {
   localStorage.removeItem(userKey);
   localStorage.removeItem(genderKey);
+  myTokenCache.set({ token: '', expirationTime: 0, refreshToken: '' });
 }
 
 function isUserAuthorized(): boolean {
@@ -34,4 +40,4 @@ function getUserGender(): string {
   return userGender;
 }
 
-export { getUser, getUserGender, isUserAuthorized, logOutUser, rememberAuthorizedUser };
+export { getUser, getUserGender, isUserAuthorized, logOutUser, rememberAuthorizedUser, rememberUserGender };

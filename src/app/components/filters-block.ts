@@ -1,68 +1,20 @@
 import { Button } from '@components/button';
 import { el, mount, unmount, setChildren } from 'redom';
 import { router } from '@app/router';
-import { getCategoryByKey, getFilteredProducts } from '@sdk/requests';
-import { extractProductData } from '@helpers/catalog';
+import { getCategoryByKey, getFilteredProducts, getProducts } from '@sdk/requests';
 import { CatalogPageType } from '@customTypes/catalog';
 import { Colors } from '@customTypes/enums';
 
 class FiltersBlock {
-  constructor(private catalog: CatalogPageType) {}
-
   private minPrice = 0;
-  private maxPrice = 5;
+  private maxPrice = 100;
   private priceFrom = this.minPrice;
   private priceTo = this.maxPrice;
   private filtersPriceBlock = el('.filters-unit');
   private filtersColorBlock = el('.filters-unit');
   private colorCircles: HTMLElement[] = [];
 
-  public create(): HTMLElement {
-    const title = el('h3.filters-title.sidebar-dropdown-title', [el('span', 'Filters')]);
-    const applyBtn = new Button('Apply', 'black').render();
-    const resetBtn = new Button('Reset', 'black').render();
-    const priceFilters = this.createPriceRange();
-    const colorFilters = this.createColorFiltersBlock();
-
-    priceFilters?.classList.remove('applied');
-    colorFilters.classList.remove('applied');
-
-    const container = el('.filters', [
-      title,
-      el('.sidebar-dropdown-content', [priceFilters, colorFilters, el('.filters-buttons', [resetBtn, applyBtn])]),
-    ]);
-    applyBtn.addEventListener('click', () => {
-      this.applyFilters();
-    });
-    resetBtn.addEventListener('click', () => {
-      if (!this.isPriceFiltersApplied() && !this.isColorFiltersApplied()) {
-        return;
-      }
-      unmount(this.catalog.sideBar, container);
-      mount(this.catalog.sideBar, this.create());
-      this.catalog.createProductContainer();
-    });
-    this.catalog.listenTitleClick(title);
-    router.updatePageLinks();
-    return container;
-  }
-
-  public async applyFilters(userQuery?: string): Promise<void> {
-    const queryArgs = this.assembleQueryArgs();
-
-    if (userQuery) {
-      queryArgs.push(`searchKeywords.en-US.text:${userQuery}`);
-    }
-    if (!queryArgs.length) {
-      return;
-    }
-    if (this.catalog.categoryKey) {
-      const category = await getCategoryByKey(this.catalog.categoryKey);
-      queryArgs.push(`categories.id:"${category?.id}"`);
-    }
-    const products = await extractProductData(getFilteredProducts(queryArgs));
-    this.catalog.fillProductsContainer(products);
-  }
+  constructor(private catalog: CatalogPageType) {}
 
   private assembleQueryArgs(): string[] {
     const queryArgs: string[] = [];
@@ -96,8 +48,8 @@ class FiltersBlock {
   }
 
   private createPriceRange(): HTMLElement | void {
-    const thumbFrom = el('input#from', { type: 'range', min: this.minPrice, value: '0', max: this.maxPrice });
-    const thumbTo = el('input#to', { type: 'range', min: this.minPrice, value: '5', max: this.maxPrice });
+    const thumbFrom = el('input#from', { type: 'range', min: this.minPrice, value: this.minPrice, max: this.maxPrice });
+    const thumbTo = el('input#to', { type: 'range', min: this.minPrice, value: this.maxPrice, max: this.maxPrice });
 
     if (!(thumbFrom instanceof HTMLInputElement) || !(thumbTo instanceof HTMLInputElement)) {
       return;
@@ -131,17 +83,84 @@ class FiltersBlock {
     this.colorCircles = [];
     for (const [color, hex] of Object.entries(Colors)) {
       const circle = el('.filters-color-circle', { style: `background-color: ${hex}`, 'data-color': color });
+      this.colorCircles.push(circle);
+    }
+    const gradientCircle = el('.filters-color-circle.filters-gradient-circle', {
+      'data-color': 'Gradient',
+    });
+    const rainbowCircle = el('.filters-color-circle.filters-rainbow-circle', {
+      'data-color': 'Rainbow',
+    });
+    const multicolorCircle = el('.filters-color-circle.filters-multicolor-circle', {
+      'data-color': 'Multicolor',
+    });
+    this.colorCircles.push(gradientCircle, rainbowCircle, multicolorCircle);
+
+    this.colorCircles.forEach((circle) => {
       circle.addEventListener('click', () => {
         circle.classList.toggle('active');
       });
-      this.colorCircles.push(circle);
-    }
+    });
+
     setChildren(this.filtersColorBlock, [
       el('h4.filters-colors-title.filters-unit-title', 'Colors'),
       el('.filters-colors-content', this.colorCircles),
     ]);
     return this.filtersColorBlock;
   }
+
+  
+  public create(): HTMLElement {
+    const title = el('h3.filters-title.sidebar-dropdown-title', [el('span', 'Filters')]);
+    const applyBtn = new Button('Apply', 'black').render();
+    const resetBtn = new Button('Reset', 'black').render();
+    const priceFilters = this.createPriceRange();
+    const colorFilters = this.createColorFiltersBlock();
+
+    priceFilters?.classList.remove('applied');
+    colorFilters.classList.remove('applied');
+
+    const container = el('.filters', [
+      title,
+      el('.sidebar-dropdown-content', [priceFilters, colorFilters, el('.filters-buttons', [resetBtn, applyBtn])]),
+    ]);
+    applyBtn.addEventListener('click', () => {
+      this.catalog.switchToFirstPage();
+      this.applyFilters();
+    });
+    resetBtn.addEventListener('click', () => {
+      if (!this.isPriceFiltersApplied() && !this.isColorFiltersApplied()) {
+        return;
+      }
+      this.priceFrom = this.minPrice;
+      this.priceTo = this.maxPrice;
+      unmount(this.catalog.sideBar, container);
+      mount(this.catalog.sideBar, this.create());
+      this.catalog.createProductContainer();
+    });
+    this.catalog.listenTitleClick(title);
+    router.updatePageLinks();
+    return container;
+  }
+
+  public async applyFilters(userQuery?: string | null, offset = 0): Promise<void> {
+    this.catalog.showLoadingScreen();
+
+    const queryArgs = this.assembleQueryArgs();
+
+    if (userQuery) {
+      queryArgs.push(`searchKeywords.en-US.text:${userQuery}`);
+    }
+    if (this.catalog.categoryKey) {
+      const category = await getCategoryByKey(this.catalog.categoryKey);
+      queryArgs.push(`categories.id:"${category?.id}"`);
+    }
+    const request = queryArgs.length ? await getFilteredProducts(queryArgs, offset) : await getProducts(offset);
+    const products = request?.results || [];
+    this.catalog.productCount = request?.total || 0;
+    this.catalog.fillProductsContainer(products);
+  }
+
 }
 
 export { FiltersBlock };

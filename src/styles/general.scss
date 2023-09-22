@@ -3,6 +3,16 @@ body {
   font-size: 16px;
 }
 
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.main {
+  flex: 1 1 auto;
+}
+
 .default-btn {
   padding: 15px 24px;
   font-weight: 500;
@@ -32,4 +42,11 @@ body {
     color: $black;
     background-color: #fff;
   }
+}
+
+.old-price {
+  color: $grey;
+  font-size: 18px;
+  text-decoration: line-through;
+  margin-right: 2%;
 }
