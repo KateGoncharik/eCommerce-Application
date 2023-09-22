@@ -48,7 +48,7 @@ export async function isUserExist(email: string): Promise<boolean | null> {
   }
 }
 
-export async function authorizeUser(email: string, password: string): Promise<string | null | void> {
+export async function authorizeUser(email: string, password: string): Promise<string | null> {
   try {
     return await withPasswordFlowClient(email, password)
       .login()
@@ -57,6 +57,7 @@ export async function authorizeUser(email: string, password: string): Promise<st
       .then(
         (result) => {
           rememberAuthorizedUser(result.body.customer);
+          return null
         },
         (errorResponse: ClientResponse<ErrorResponse>) => {
           const emailInput = safeQuerySelector<HTMLInputElement>('.email-input', document);
