@@ -17,7 +17,7 @@ import { getApiRoot, getApiRootForCartRequests } from '@sdk/build-client';
 import { withPasswordFlowClient } from '@sdk/login-api';
 import { getUserOrError } from '@helpers/get-user-or-error ';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
-import { markInputAsInvalid } from '@helpers/toggle-validation-state';
+import { markInputAsInvalid } from '@helpers/toggls';
 import { ProductData } from '@customTypes/data-product';
 import { DataUser } from '@customTypes/datauser';
 import { rememberAuthorizedUser } from '@app/state';
@@ -25,10 +25,10 @@ import { rememberAuthorizedUser } from '@app/state';
 const errorMessage = 'Error: no connection to server';
 export const productsPerPage = 12;
 
-export async function createUser(form: DataUser): Promise<number | undefined | null> {
+export async function createUser(form: DataUser): Promise<number | null> {
   try {
     const request = await getApiRoot().customers().post(form).execute();
-    return request.statusCode;
+    return request.statusCode as number;
   } catch (e) {
     console.error(errorMessage);
     return null;
@@ -48,7 +48,7 @@ export async function isUserExist(email: string): Promise<boolean | null> {
   }
 }
 
-export async function authorizeUser(email: string, password: string): Promise<void | string | null> {
+export async function authorizeUser(email: string, password: string): Promise<string | null | void> {
   try {
     return await withPasswordFlowClient(email, password)
       .login()
@@ -148,7 +148,7 @@ export const getProduct = async (key: string): Promise<ProductData | null> => {
     });
 };
 
-export async function getProductsOfCategory(id: string, offset = 0): Promise<ProductProjection[] | null> {
+export async function getProductsOfCategory(id: string, offset = 0): Promise<ProductProjection[]> {
   const queryArgs = {
     where: `categories(id="${id}")`,
     limit: productsPerPage,
@@ -160,7 +160,7 @@ export async function getProductsOfCategory(id: string, offset = 0): Promise<Pro
     return products;
   } catch (err) {
     console.error(errorMessage);
-    return null;
+    return [];
   }
 }
 

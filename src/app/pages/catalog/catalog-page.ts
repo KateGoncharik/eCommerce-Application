@@ -13,6 +13,8 @@ import magnifier from '@icons/magnifying-glass.svg';
 import notFoundIcon from '@icons/nothing-found.png';
 
 class CatalogPage extends Page {
+  private productsContainer = el('.products');
+  private mask = el('.catalog-mask');
   protected textObject = {
     title: 'Catalog',
   };
@@ -25,8 +27,6 @@ class CatalogPage extends Page {
   public searchInput = el('input.catalog-search-input', {
     placeholder: 'Search...',
   });
-  private productsContainer = el('.products');
-  private mask = el('.catalog-mask');
 
   constructor(public categoryKey?: string) {
     super();
@@ -256,7 +256,6 @@ class CatalogPage extends Page {
     ]);
     setChildren(this.productsContainer, [loadingScreen]);
   }
-
 }
 
 export { CatalogPage };

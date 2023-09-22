@@ -1,6 +1,6 @@
 import { emailSchema, passwordSchema } from '@schemas/login-form-schema';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
-import { markInputAsInvalid, markInputAsValid } from '@helpers/toggle-validation-state';
+import { markInputAsInvalid, markInputAsValid } from '@helpers/toggls';
 
 export class LoginFormValidator {
   public validateInput(input: HTMLInputElement): void {

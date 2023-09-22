@@ -2,7 +2,7 @@ import { Page } from '@templates/page';
 import { el } from 'redom';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
 import { getUserOrError } from '@helpers/get-user-or-error ';
-import { togglePasswordVisibility } from '@helpers/toggle-password-visibility';
+import { togglePasswordVisibility } from '@helpers/toggls';
 import { editUserPassword } from '@sdk/requests';
 import { ValidationForm } from '@validation/validation-registration-form';
 

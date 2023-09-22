@@ -1,5 +1,4 @@
 import { Page } from '@templates/page';
-import { Burger } from '@components/burger';
 import { el, mount, setChildren, unmount } from 'redom';
 import { Cart, LineItem } from '@commercetools/platform-sdk';
 import {
@@ -15,15 +14,14 @@ import { Route } from '@app/types/route';
 import { getAllItemsRemoveActions, getRemoveItemAction } from '@helpers/get-actions';
 import { getPriceInUsd } from '@helpers/get-price-in-usd';
 import { safeQuerySelector } from '@helpers/safe-query-selector';
-import { toggleIconsState } from '@helpers/toggle-icons-state';
+import { toggleIconsState } from '@helpers/toggls';
 import { updateHeaderItemsAmount } from '@helpers/update-counter-items-amount';
 import minus from '@icons/minus.png';
 import addIconSrc from '@icons/add.png';
 import trashCan from '@icons/trash-can.png';
+import { LinkText } from '@app/types/enums';
 
 class CartPage extends Page {
-  private burger = new Burger();
-
   protected textObject = {
     title: 'Cart page',
   };
@@ -35,7 +33,7 @@ class CartPage extends Page {
   private createNoProductsContainer(cartContainer: HTMLElement): void {
     const noProductsWrapper = el('.no-items-wrapper', [
       el('p.no-items-message', 'No products added to cart. Take a look at our products here.'),
-      el('a.no-items-link', this.burger.linkText.toCatalog, {
+      el('a.no-items-link', LinkText.toCatalog, {
         href: Route.Catalog,
         'data-navigo': '',
       }),
@@ -330,7 +328,6 @@ class CartPage extends Page {
     }
     throw new Error('Positive items amount expected');
   }
-
 }
 
 export { CartPage };

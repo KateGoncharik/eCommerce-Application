@@ -3,53 +3,43 @@ import { Route } from '@customTypes/route';
 import { isUserAuthorized, logOutUser } from '@app/state';
 import { router, redirect } from '@app/router';
 import { renderHeader } from '@helpers/render-header';
+import { LinkText } from '@app/types/enums';
 
 class Burger {
-  public linkText: Record<string, string> = {
-    toMain: 'Home',
-    toCatalog: 'Catalog',
-    toAboutUs: 'About us',
-    toLogIn: 'Log in',
-    toLogOut: 'Log out',
-    toJoin: 'Join',
-    userPage: 'User page',
-    cart: 'Cart',
-  };
-
-  private mainPageLink = el('a.burger-link', this.linkText.toMain, {
+  private mainPageLink = el('a.burger-link', LinkText.toMain, {
     href: Route.Main,
     'data-navigo': '',
   });
 
-  private catalogPageLink = el('a.burger-link', this.linkText.toCatalog, {
+  private catalogPageLink = el('a.burger-link', LinkText.toCatalog, {
     href: Route.Catalog,
     'data-navigo': '',
   });
 
-  private aboutUsPageLink = el('span.burger-link', this.linkText.toAboutUs);
+  private aboutUsPageLink = el('span.burger-link', LinkText.toAboutUs);
 
-  private logInPageLink = el('a.burger-link', this.linkText.toLogIn, {
+  private logInPageLink = el('a.burger-link', LinkText.toLogIn, {
     href: Route.Login,
     'data-navigo': '',
   });
 
-  private joinPageLink = el('a.burger-link', this.linkText.toJoin, {
+  private joinPageLink = el('a.burger-link', LinkText.toJoin, {
     href: Route.Registration,
     'data-navigo': '',
   });
 
-  private userPageLink = el('a.user-page-link.burger-link', this.linkText.userPage, {
+  private userPageLink = el('a.user-page-link.burger-link', LinkText.userPage, {
     href: Route.UserPage,
     'data-navigo': '',
   });
 
   public createLogInLink(): HTMLAnchorElement {
-    return el('a', this.linkText.toLogIn, {
+    return el('a', LinkText.toLogIn, {
       href: Route.Login,
       'data-navigo': '',
     });
   }
-  
+
   public mask = el('.header-mask');
 
   public burgerIcon = this.createBurgerIcon();
@@ -104,7 +94,7 @@ class Burger {
   }
 
   public createLogOutLink(): HTMLAnchorElement {
-    const logOutLink = el('a.logout', this.linkText.toLogOut, {
+    const logOutLink = el('a.logout', LinkText.toLogOut, {
       href: '/logout',
       'data-navigo': '',
     });
