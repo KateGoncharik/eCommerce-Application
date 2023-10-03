@@ -1,13 +1,13 @@
 import { TokenCache, TokenStore } from '@commercetools/sdk-client-v2';
 
-const projectKey = 'wonderland';
+const projectKey = 'wonderland-2';
 
 const scopes = [
-  'manage_products:wonderland manage_customers:wonderland manage_my_orders:wonderland manage_states:wonderland manage_orders:wonderland manage_my_profile:wonderland manage_categories:wonderland create_anonymous_token:wonderland manage_shopping_lists:wonderland manage_discount_codes:wonderland manage_types:wonderland view_project_settings:wonderland manage_product_selections:wonderland manage_customer_groups:wonderland manage_my_shopping_lists:wonderland manage_order_edits:wonderland manage_cart_discounts:wonderland manage_shipping_methods:wonderland view_api_clients:wonderland introspect_oauth_tokens:wonderland',
+  'manage_product_selections:wonderland-2 manage_discount_codes:wonderland-2 manage_shipping_methods:wonderland-2 manage_products:wonderland-2 manage_customers:wonderland-2 create_anonymous_token:wonderland-2 manage_states:wonderland-2 manage_payments:wonderland-2 manage_my_orders:wonderland-2 manage_orders:wonderland-2 manage_my_payments:wonderland-2 view_project_settings:wonderland-2 manage_my_profile:wonderland-2 manage_categories:wonderland-2 manage_my_shopping_lists:wonderland-2 introspect_oauth_tokens:wonderland-2 manage_order_edits:wonderland-2 manage_cart_discounts:wonderland-2 manage_customer_groups:wonderland-2 view_api_clients:wonderland-2 manage_shopping_lists:wonderland-2 manage_types:wonderland-2',
 ];
 
-const clientId = '2urgH4Xsd9iLmBZ8N4faM8fZ';
-const clientSecret = 'gXkEffP_zxsBc-VmiabriuRmg6gX6Tzr';
+const clientId = 'k9LNkK0ruKP5wYUAWvBh4k-t';
+const clientSecret = 'C0vU6pLH9IYJzCV8xXiibdSt0vqxzp9H';
 
 const apiHost = 'https://api.us-central1.gcp.commercetools.com';
 const oauthUri = 'https://auth.us-central1.gcp.commercetools.com';
