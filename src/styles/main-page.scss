@@ -208,7 +208,12 @@
 
   img {
     max-width: 85%;
+    height: 20vw;
     transition: all 0.3s;
+
+    @media (width <= 768px) {
+      height: 40vw;
+    }
   }
 }
 

@@ -72,7 +72,7 @@ class MainPage extends Page {
           return;
         }
         const products = await getProductsOfCategory(category.id);
-        const image = products?.results[0].masterVariant.images?.[0].url;
+        const image = products?.results[0]?.masterVariant.images?.[0].url;
         const card = el(
           '.category-card',
           el('.category-card-content', [
