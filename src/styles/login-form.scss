@@ -1,0 +1,126 @@
+.form-wrapper {
+  max-width: 75%;
+  margin: 0 auto;
+  border: 1px solid black;
+  background-color: #fff;
+}
+
+.form-block {
+  display: flex;
+  justify-content: center;
+  max-width: 80%;
+  min-height: 400px;
+  margin: 0 auto;
+}
+
+.form {
+  width: 100%;
+  min-height: 75%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.inputs-block {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 100%;
+  min-height: 30%;
+}
+
+.login-input-block {
+  width: 100%;
+  min-height: 56px;
+  font-size: 20px;
+}
+
+.email-input,
+.password-input {
+  width: 100%;
+  font-family: Gilroy, serif;
+  padding: 2%;
+}
+
+.form-wrapper .valid {
+  border: 1px solid green;
+}
+
+.form-wrapper .invalid {
+  border: 1px solid red;
+}
+
+.password-visability-block {
+  font-size: 15px;
+  margin: 2%;
+  width: 50%;
+  font-family: Gilroy, serif;
+}
+
+.password-checkbox {
+  margin: 2%;
+}
+
+.email-error-block,
+.password-error-block {
+  font:
+    14px Gilroy,
+    serif;
+  color: red;
+  padding: 5px 0;
+}
+
+.form-header {
+  font-family: Gilroy, serif;
+  font-size: 50px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 120%;
+}
+
+.form-button {
+  width: 100%;
+  background-color: #121212;
+  color: #fff;
+  height: 56px;
+  font-family: Gilroy, serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 120%;
+  letter-spacing: 0.48px;
+  text-transform: uppercase;
+}
+
+@media (width <=900px) {
+  .form-wrapper {
+    max-width: 80%;
+  }
+
+  .form-block {
+    max-width: 85%;
+  }
+}
+
+@media (width <=500px) {
+  .form-wrapper {
+    min-width: 95%;
+  }
+
+  .form-header {
+    font-size: 34px;
+  }
+
+  .form-button {
+    font-size: 14px;
+    max-height: 46px;
+  }
+
+  .email-input-block {
+    min-height: 46px;
+  }
+
+  .password-input-block {
+    min-height: 46px;
+  }
+}

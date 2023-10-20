@@ -1,0 +1,59 @@
+.input-error {
+  border-color: red;
+}
+
+.input-valid {
+  border-color: green;
+}
+
+.show-validation {
+  display: none;
+  align-items: center;
+  padding-top: 5px;
+  font:
+    14px Gilroy,
+    serif;
+  color: red;
+}
+
+.disabled-input {
+  background: rgba($color: #979696, $alpha: 20%);
+  border: 1px solid gray;
+}
+
+.successful {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  gap: 20px;
+}
+
+.icon-successful {
+  width: 100px;
+  height: auto;
+}
+
+.message {
+  font:
+    26px Gilroy,
+    serif;
+}
+
+.gender-label {
+  font:
+    16px Gilroy,
+    serif;
+}
+
+@media (width <= 650px) {
+  .message {
+    font-size: 16px;
+  }
+
+  .icon-successful {
+    width: 60px;
+  }
+}

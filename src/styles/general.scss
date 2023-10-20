@@ -1,0 +1,60 @@
+body {
+  font-family: Gilroy, sans-serif;
+  font-size: 16px;
+}
+
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.main {
+  flex: 1 1 auto;
+}
+
+.default-btn {
+  padding: 15px 24px;
+  font-weight: 500;
+  line-height: 120%;
+  letter-spacing: 0.48px;
+  text-transform: uppercase;
+  border: 1px solid $black;
+  background-color: #fff;
+  transition: all 0.2s;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  &:not(:disabled):hover {
+    color: #fff;
+    background-color: $black;
+  }
+}
+
+.default-btn-black {
+  color: #fff;
+  background-color: $black;
+
+  &:not(:disabled):hover {
+    color: $black;
+    background-color: #fff;
+  }
+}
+
+.old-price {
+  color: $grey;
+  font-size: 18px;
+  text-decoration: line-through;
+  margin-right: 2%;
+}
+
+.loading-screen {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+}

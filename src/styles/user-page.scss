@@ -1,0 +1,147 @@
+.user-info-wrapper {
+  width: 75%;
+  min-height: 90vh;
+  margin: 0 auto;
+  padding: 2%;
+  border: 1px solid $black;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.user-info-title {
+  font-family: Gilroy, serif;
+  font-size: 50px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 120%;
+  align-self: start;
+}
+
+.user-info-block {
+  width: 100%;
+  margin: 5% auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.input-gender-block {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 56px;
+  gap: 2%;
+  font-size: 20px;
+}
+
+.user-name-block,
+.user-date-gender-block {
+  width: 45%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.gender-input {
+  width: 100%;
+  height: 56px;
+  padding: 2%;
+}
+
+.show-validation-gender {
+  display: none;
+  align-items: center;
+  padding-top: 5px;
+  font:
+    14px Gilroy,
+    serif;
+  color: red;
+}
+
+.save-button,
+.edit-button,
+.password-edit-button,
+.cancel-button,
+.remove-address-button,
+.add-address-button {
+  width: 100%;
+  height: 56px;
+  margin: 0.3em;
+  background-color: $black;
+  color: $white;
+  font-family: Gilroy, serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 120%;
+  letter-spacing: 0.48px;
+  text-transform: uppercase;
+}
+
+.password-edit-button {
+  margin: 5px 5px 0 0;
+}
+
+.save-button:disabled,
+.password-edit-button:disabled {
+  background-color: $light-grey;
+  color: $grey;
+}
+
+input:disabled {
+  font-size: 16px;
+  background-color: $light-grey;
+}
+
+.user-addresses-block {
+  margin: 2% 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.block-shipping,
+.block-billing {
+  margin: 0 auto;
+  width: 65%;
+}
+
+.user-info-subtitle,
+.addresses-subtitle {
+  font-size: 18px;
+  margin-top: 1%;
+}
+
+.avatar-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+img.avatar {
+  width: 15%;
+  border-radius: 100px;
+  background-color: $black;
+}
+
+.email-password-block {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.password-update-block,
+.add-address-block {
+  width: 75%;
+  margin: 0 auto;
+  padding: 2%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 1px solid $black;
+}
+
+.hidden {
+  display: none;
+}

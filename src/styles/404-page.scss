@@ -1,0 +1,21 @@
+.page-404 {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8%;
+}
+
+.anim-item-404 {
+  width: 30%;
+}
+
+.title-404 {
+  font-size: 50px;
+  font-weight: 700;
+
+  @media (width <= 700px) {
+    font-size: 35px;
+  }
+}
